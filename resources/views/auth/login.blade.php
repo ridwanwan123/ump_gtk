@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Login — UMP GTK (Full-bleed, responsive hide left)</title>
+  <title>Login | UMP GTK</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -67,7 +67,7 @@
 
     .form-title{ font-size:24px; font-weight:700; margin:8px 0 16px 0; color:#162029; }
 
-    .form-control{ border-radius:50px; padding:12px 18px; border:1px solid #e6edf2; box-shadow:none; }
+    .form-control{ border-radius:50px; padding:12px 18px; border:1px solid #e6edf2; box-shadow:none;  border: 1px solid var(--green) !important;}
     .form-control:focus{ box-shadow: 0 8px 20px rgba(47,143,70,0.08); border-color: var(--green-dark); }
     .btn-pill{ border-radius:50px; padding:10px 16px; font-weight:600; }
 
@@ -90,7 +90,11 @@
   </style>
 </head>
 <body>
-
+@if ($errors->any())
+  <div class="alert alert-danger">
+    {{ $errors->first() }}
+  </div>
+@endif
   <main class="auth-full" role="main" aria-labelledby="login-title">
     <section class="hero-left" aria-hidden="true">
       <div class="hero-inner" role="presentation">
@@ -112,16 +116,20 @@
 
         <h2 id="login-title" class="form-title">Login</h2>
 
-        <form action="/login" method="POST" novalidate>
-
+        <form action="{{ route('login.submit') }}" method="POST" novalidate>
+          @csrf
           <div class="mb-3">
             <label for="username" class="form-label small fw-semibold">Username</label>
-            <input id="username" name="username" type="text" class="form-control" placeholder="Masukan Username" autocomplete="username" required>
+            <input id="username" name="username" type="text" class="form-control @error('username') is-invalid @enderror" value="{{ old('username') }}" required>
+            @error('username')
+              <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
           </div>
 
           <div class="mb-3">
             <label for="password" class="form-label small fw-semibold">Password</label>
-            <input id="password" name="password" type="password" class="form-control" placeholder="Masukan Password" autocomplete="current-password" required>
+            <input id="password" name="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="Masukan Password" autocomplete="current-password" required>
+            @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
           </div>
 
           <div class="d-grid gap-2 mb-2">
