@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('jabatan')->nullable();    // jabatan
             $table->text('alamat_gtk')->nullable();   // alamat GTK
             $table->string('no_rek_bank_dki')->nullable(); // nomor rekening
-            $table->string('tempat_tugas')->nullable();    // tempat tugas (unit_kerja)
+            $table->foreignId('id_madrasah')->constrained('madrasah');    // tempat tugas (unit_kerja)
             $table->string('nik')->nullable();             // NIK
             $table->string('pegid')->nullable();           // pegid
             $table->string('tempat_lahir')->nullable();    // tempat lahir
