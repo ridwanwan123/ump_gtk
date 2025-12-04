@@ -14,7 +14,7 @@ class RolesPermissionsSeeder extends Seeder
         // reset cache
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // permissions
+        // permission
         $perms = [
             'manage-all',        // superadmin convenience
             'view-pegawai',
