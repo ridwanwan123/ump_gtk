@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('username')->unique();
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('unit_kerja')->nullable();
+            $table->foreignId('unit_kerja')->nullable()->constrained('madrasah');
             $table->timestamps();
         });
     }

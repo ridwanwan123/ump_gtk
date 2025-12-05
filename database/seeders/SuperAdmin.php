@@ -16,7 +16,7 @@ class SuperAdmin extends Seeder
                 'name' => 'Super Admin',
                 'username' => 'superadmin',
                 'password' => Hash::make('penmad123'),
-                'unit_kerja' => "Kanwil DKI Jakarta",
+                'unit_kerja' => NULL,
             ]
         );
 
