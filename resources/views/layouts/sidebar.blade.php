@@ -4,7 +4,7 @@
             <img src="{{ asset('assets/images/kemenag/kemenag.png') }}" alt="User Image">
         </div>
         <div class="info">
-            <a href="#" class="d-block">{{ auth()->user()->unit_kerja }} Jakarta</a>
+            <a href="#" class="d-block">{{ auth()->user()->madrasah->nama_madrasah ?? 'KANWIL DKI JAKARTA' }}</a>
         </div>
     </div>
 
@@ -22,10 +22,10 @@
 
         <li class="nav-header">Data Pegawai</li>
         <li class="nav-item">
-            {{-- <a href="{{ route('admin.pegawai.index') }}" class="nav-link {{ request()->routeIs('admin.pegawai.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.pegawai.index') }}" class="nav-link {{ request()->routeIs('admin.pegawai.*') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-users"></i>
                 <p>Data Pegawai</p>
-            </a> --}}
+            </a>
         </li>
     </ul>
     </nav>
