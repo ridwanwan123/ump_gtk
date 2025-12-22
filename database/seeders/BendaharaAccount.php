@@ -2,69 +2,59 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class BendaharaAccount extends Seeder
 {
-    public function run()
+    public function run(): void
     {
-        // MAN 1 - 22
-        for ($i = 1; $i <= 22; $i++) {
-            $unit = "MAN $i";
-            $email = "bendahara.man$i@test.local";
+        $path = database_path('seeders/data/akun_madrasah.json');
 
-            $user = User::firstOrCreate(
-                ['email' => $email],
-                [
-                    'name' => "Bendahara $unit",
-                    'username' => "bendahara_man_$i",
-                    'password' => Hash::make('penmad123'),
-                    'unit_kerja' => $unit,
-                ]
-            );
-
-            $user->assignRole('bendahara');
+        if (!File::exists($path)) {
+            throw new \Exception("File akun_madrasah.json tidak ditemukan: $path");
         }
 
-        // MTSN 1 - 42
-        for ($i = 1; $i <= 42; $i++) {
-            $unit = "MTSN $i";
-            $email = "bendahara.mtsn$i@test.local";
+        $data = json_decode(File::get($path), true);
 
-            $user = User::firstOrCreate(
-                ['email' => $email],
-                [
-                    'name' => "Bendahara $unit",
-                    'username' => "bendahara_mtsn_$i",
-                    'password' => Hash::make('penmad123'),
-                    'unit_kerja' => $unit,
-                ]
-            );
-
-            $user->assignRole('bendahara');
+        if (!is_array($data)) {
+            throw new \Exception("Format JSON tidak valid.");
         }
 
-        // MIN 1 - 22
-        for ($i = 1; $i <= 22; $i++) {
-            $unit = "MIN $i";
-            $email = "bendahara.min$i@test.local";
+        DB::transaction(function () use ($data) {
+            foreach ($data as $acc) {
+                // pastikan field yang diperlukan ada
+                if (!isset($acc['email'])) {
+                    // skip atau bisa throw exception tergantung preferensi
+                    continue;
+                }
 
-            $user = User::firstOrCreate(
-                ['email' => $email],
-                [
-                    'name' => "Bendahara $unit",
-                    'username' => "bendahara_min_$i",
-                    'password' => Hash::make('penmad123'),
-                    'unit_kerja' => $unit,
-                ]
-            );
+                // create jika belum ada, password hanya di-set saat create
+                $user = User::firstOrCreate(
+                    ['email' => $acc['email']],
+                    [
+                        'name'       => $acc['name'] ?? $acc['email'],
+                        'username'   => $acc['username'] ?? null,
+                        'unit_kerja' => $acc['unit_kerja'] ?? null,
+                        'password'   => Hash::make('penmad123'),
+                    ]
+                );
 
-            $user->assignRole('bendahara');
-        }
+                // selalu update field non-sensitive (tanpa merubah password)
+                $user->update([
+                    'name'       => $acc['name'] ?? $user->name,
+                    'username'   => $acc['username'] ?? $user->username,
+                    'unit_kerja' => $acc['unit_kerja'] ?? $user->unit_kerja,
+                ]);
+
+                // assign role (safe to call berulang kali jika paket role-mgmt menangani duplikat)
+                if (method_exists($user, 'assignRole')) {
+                    $user->assignRole('bendahara');
+                }
+            }
+        });
     }
 }
