@@ -6,17 +6,18 @@ use Illuminate\Http\Request;
 
 class PegawaiController extends Controller
 {
-    public function __construct()
+    public function index()
     {
-        $this->middleware(['auth','set.unit']); // penting
-        $this->middleware('role:superadmin|bendahara')->only('index');
+        $this->authorize('viewAny', Pegawai::class);
+
+        $pegawais = Pegawai::paginate(15);
+        return view('pegawai.index', compact('pegawais'));
     }
 
-    public function index(Request $request)
+    public function show(Pegawai $pegawai)
     {
-        // global scope sudah lakukan filter untuk bendahara
-        $pegawais = Pegawai::orderBy('nama_rekening')->paginate(20);
+        $this->authorize('view', $pegawai);
 
-        return view('pegawai.index', compact('pegawais'));
+        return view('pegawai.show', compact('pegawai'));
     }
 }

@@ -2,6 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\Pegawai;
+use App\Policies\PegawaiPolicy;
+use App\Models\AbsensiPegawai;
+use App\Policies\AbsensiPegawaiPolicy;
+
 // use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -13,7 +18,8 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        //
+        Pegawai::class => PegawaiPolicy::class,
+        AbsensiPegawai::class => AbsensiPegawaiPolicy::class,
     ];
 
     /**
