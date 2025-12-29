@@ -51,13 +51,19 @@ Route::middleware(['auth', 'set.unit'])->group(function () {
     | Superadmin: semua
     | Bendahara: otomatis difilter unit_kerja
     */
+    // Semua orang bisa lihat index & show
+    Route::get('pegawai/export', [PegawaiController::class, 'export'])
+        ->name('pegawai.export');
+
     Route::resource('pegawai', PegawaiController::class)
         ->only(['index', 'show', 'create']);
 
-    Route::middleware('role:superadmin')->group(function () {
-        Route::resource('pegawai', PegawaiController::class)
-            ->only(['create', 'store', 'edit', 'update', 'destroy']);
-    });
+        // Hanya superadmin bisa create, store, edit, update, destroy
+        Route::middleware('role:superadmin')->group(function () {
+            Route::resource('pegawai', PegawaiController::class)
+                ->only(['create', 'store', 'edit', 'update', 'destroy']);
+        });
+
 
     /*
     | Absensi Pegawai (RESTFUL)

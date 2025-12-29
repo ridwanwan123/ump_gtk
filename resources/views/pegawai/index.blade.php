@@ -11,8 +11,14 @@
                     <i class="fas fa-plus"></i> Tambah Pegawai
                 </a>
             @endcan
+            @can('viewAny', App\Models\Pegawai::class)
+                <a href="{{ route('pegawai.export') }}" class="btn btn-success">
+                    Export Pegawai
+                </a>
+            @endcan
         </div>
     </div>
+
 
     <form method="GET" class="mb-3">
         <div class="input-group" style="max-width: 300px;">

@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 use App\Models\Pegawai;
 use App\Models\Madrasah;
 use Illuminate\Http\Request;
+use App\Exports\PegawaiExport;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PegawaiController extends Controller
 {
@@ -166,4 +168,10 @@ class PegawaiController extends Controller
         }
     }
 
+    public function export()
+    {
+        $this->authorize('viewAny', Pegawai::class); // atur permission
+
+        return Excel::download(new PegawaiExport, 'pegawai.xlsx');
+    }
 }
