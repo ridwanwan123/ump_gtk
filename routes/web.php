@@ -5,7 +5,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\AbsensiPegawaiController;
-use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\Admin\MadrasahController;
 
 /*
@@ -54,6 +54,11 @@ Route::middleware(['auth', 'set.unit'])->group(function () {
     Route::resource('pegawai', PegawaiController::class)
         ->only(['index', 'show']);
 
+    Route::middleware('role:superadmin')->group(function () {
+        Route::resource('pegawai', PegawaiController::class)
+            ->only(['create', 'store', 'edit', 'update', 'destroy']);
+    });
+
     /*
     | Absensi Pegawai (RESTFUL)
     */
@@ -71,6 +76,6 @@ Route::prefix('admin')
     ->name('admin.')
     ->group(function () {
 
-        Route::resource('users', UserController::class);
+        Route::resource('users', UserManagementController::class);
         Route::resource('madrasah', MadrasahController::class);
     });

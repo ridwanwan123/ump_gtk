@@ -14,6 +14,8 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('assets/dist/css/adminlte.min.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/images/kemenag/kemenag.png') }}" />
+
+    @stack('styles')
 </head>
 <style type="text/css">
     .user-panel .user-image {
@@ -74,11 +76,27 @@
     </div>
     <!-- ./wrapper -->
 
+    <!-- jQuery -->
     <script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
+
+    <!-- Bootstrap Bundle (Popper + Bootstrap JS) -->
     <script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+    <!-- AdminLTE -->
     <script src="{{ asset('assets/dist/js/adminlte.min.js') }}"></script>
-    <script src="{{ asset('assets/dist/js/demo.js') }}"></script>
+
+    <!-- DataTables core JS -->
+    <script src="{{ asset('assets/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+
+    <!-- DataTables Bootstrap4 integration -->
+    <script src="{{ asset('assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+
+    <!-- DataTables Responsive extension -->
+    <script src="{{ asset('assets/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+
+
+    @stack('scripts')
 </body>
-@stack('scripts')
 
 </html>

@@ -31,4 +31,9 @@ class Pegawai extends Model
             // jika null -> superadmin -> tidak ditambahkan where, lihat semua
         });
     }
+
+    public function madrasah()
+    {
+        return $this->belongsTo(Madrasah::class, 'id_madrasah');
+    }
 }
