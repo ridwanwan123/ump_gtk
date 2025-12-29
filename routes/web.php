@@ -52,7 +52,7 @@ Route::middleware(['auth', 'set.unit'])->group(function () {
     | Bendahara: otomatis difilter unit_kerja
     */
     Route::resource('pegawai', PegawaiController::class)
-        ->only(['index', 'show']);
+        ->only(['index', 'show', 'create']);
 
     Route::middleware('role:superadmin')->group(function () {
         Route::resource('pegawai', PegawaiController::class)
