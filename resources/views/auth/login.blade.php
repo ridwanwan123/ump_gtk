@@ -11,6 +11,7 @@
 
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/images/kemenag/kemenag.png') }}" />
     <style>
+        /* Reset & base */
         html,
         body {
             height: 100%;
@@ -21,67 +22,79 @@
             font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            background: linear-gradient(135deg, #0D47A1 0%, #1DE9B6 100%);
+            color: #162029;
         }
 
-        :root {
-            --navy: #0f3552;
-            --navy-dark: #0b2b44;
-            --green: #3fb05a;
-            --green-dark: #2f8f46;
-            --muted: #f6f8fb;
-        }
-
+        /* Container utama: flex dengan split kiri kanan */
         .auth-full {
             min-height: 100vh;
             width: 100vw;
             display: flex;
             flex-direction: row;
+            box-shadow: inset 0 0 150px rgba(0, 0, 0, 0.15);
         }
 
+        /* Bagian kiri dengan background gradien dan teks */
         .hero-left {
             flex: 1 1 50%;
             min-width: 0;
-            background: linear-gradient(180deg, var(--navy), var(--navy-dark));
+            background: linear-gradient(180deg, #0D47A1, #1DE9B6);
             color: #eaf7ec;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            gap: 18px;
-            padding: 48px;
-        }
-
-        .hero-inner {
-            max-width: 480px;
-            width: 100%;
-            margin: auto;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 18px;
+            justify-content: center;
+            text-align: center;
+            padding: 60px 48px;
+            position: relative;
+            overflow: hidden;
         }
 
+        /* Animasi lembut gambar emblem */
         .hero-emblem {
             width: 180px;
             height: auto;
             object-fit: contain;
-            filter: drop-shadow(0 8px 22px rgba(0, 0, 0, 0.25));
+            filter: drop-shadow(0 8px 25px rgba(0, 0, 0, 0.3));
+            animation: floatUpDown 4s ease-in-out infinite;
+            margin-bottom: 28px;
         }
 
+        @keyframes floatUpDown {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Judul utama */
         .hero-title {
             margin: 0;
-            font-size: 26px;
+            font-size: 32px;
             font-weight: 700;
-            color: #39b04f;
-            line-height: 1.05;
+            color: #fff;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            line-height: 1.1;
+            letter-spacing: 1.3px;
         }
 
+        /* Subjudul */
         .hero-sub {
-            margin: 0;
-            font-size: 13px;
+            margin: 6px 0 0;
+            font-size: 14px;
             color: rgba(255, 255, 255, 0.85);
+            letter-spacing: 0.8px;
+            font-weight: 600;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
         }
 
+        /* Bagian kanan untuk form */
         .form-right {
             flex: 1 1 50%;
             min-width: 0;
@@ -90,54 +103,84 @@
             justify-content: center;
             background: #fff;
             padding: 48px 56px;
+            box-shadow: -8px 0 30px -5px rgba(13, 71, 161, 0.3);
+            border-radius: 0 12px 12px 0;
+            position: relative;
         }
 
+        /* Wrapper form */
         .form-wrap {
             width: 100%;
             max-width: 420px;
         }
 
+        /* Logo Penmad di atas form */
         .brand-logo {
-            height: 46px;
+            height: 56px;
             object-fit: contain;
-            display: inline-block;
+            display: block;
+            margin: 0 auto 24px;
+            filter: drop-shadow(0 2px 6px rgba(13, 71, 161, 0.25));
+            transition: transform 0.3s ease;
         }
 
+        .brand-logo:hover {
+            transform: scale(1.1);
+        }
+
+        /* Judul form */
         .form-title {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 700;
-            margin: 8px 0 16px 0;
-            color: #162029;
+            margin-bottom: 24px;
+            color: #0D47A1;
+            text-align: center;
         }
 
+        /* Style input */
         .form-control {
             border-radius: 50px;
-            padding: 12px 18px;
-            border: 1px solid #e6edf2;
+            padding: 14px 20px;
+            border: 2px solid #3fb05a;
             box-shadow: none;
-            border: 1px solid var(--green) !important;
+            transition: all 0.3s ease;
+            font-size: 1rem;
         }
 
         .form-control:focus {
-            box-shadow: 0 8px 20px rgba(47, 143, 70, 0.08);
-            border-color: var(--green-dark);
+            box-shadow: 0 8px 20px rgba(63, 176, 90, 0.3);
+            border-color: #2f8f46;
+            outline: none;
         }
 
+        /* Tombol submit */
         .btn-pill {
             border-radius: 50px;
-            padding: 10px 16px;
+            padding: 12px 16px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            background: linear-gradient(90deg, #0D47A1, #1DE9B6);
+            border: none;
+            color: white;
+            box-shadow: 0 8px 20px rgba(29, 233, 182, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .btn-pill:hover,
+        .btn-pill:focus {
+            background: linear-gradient(90deg, #1DE9B6, #0D47A1);
+            box-shadow: 0 12px 30px rgba(13, 71, 161, 0.6);
+            outline: none;
+        }
+
+        /* Feedback error */
+        .invalid-feedback {
+            font-size: 0.9rem;
             font-weight: 600;
+            color: #d6336c;
         }
 
-        .muted-small {
-            font-size: 13px;
-            color: #6b7280;
-        }
-
-        .g-0 {
-            gap: 0 !important;
-        }
-
+        /* Responsive */
         @media (max-width: 992px) {
             .auth-full {
                 flex-direction: column;
@@ -151,26 +194,19 @@
             .form-right {
                 flex: 1 1 100%;
                 width: 100%;
-                padding: 28px;
-            }
-
-            .brand-inline {
-                display: block;
-                margin-bottom: 10px;
+                padding: 36px 28px;
+                border-radius: 0;
+                box-shadow: none;
             }
         }
 
-        .brand-inline {
-            display: none;
-        }
-
-        @media (max-width:420px) {
+        @media (max-width: 420px) {
             .form-right {
-                padding: 18px;
+                padding: 28px 18px;
             }
 
-            .hero-title {
-                font-size: 20px;
+            .form-title {
+                font-size: 22px;
             }
         }
     </style>
@@ -178,48 +214,43 @@
 
 <body>
     @if ($errors->any())
-        <div class="alert alert-danger">
-            {{ $errors->first() }}
+        <div class="alert alert-danger m-3 rounded-3 shadow-sm" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i> {{ $errors->first() }}
         </div>
     @endif
+
     <main class="auth-full" role="main" aria-labelledby="login-title">
         <section class="hero-left" aria-hidden="true">
             <div class="hero-inner" role="presentation">
                 <img src="{{ asset('assets/images/kemenag/kemenag.png') }}" alt="Emblem" class="hero-emblem" />
-                <div>
-                    <h1 class="hero-title">Upah Minimum Provinsi</h1>
-                    <p class="hero-sub">Guru & Tenaga Kependidikan</p>
-                    <p class="hero-sub">DKI Jakarta</p>
-                </div>
+                <h1 class="hero-title">Upah Minimum Provinsi</h1>
+                <p class="hero-sub">Guru & Tenaga Kependidikan</p>
+                <p class="hero-sub">DKI Jakarta</p>
             </div>
         </section>
 
         <section class="form-right">
             <div class="form-wrap" aria-labelledby="login-title">
-                <img src="{{ asset('assets/images/kemenag/penmad.png') }}" alt="Logo"
-                    class="brand-logo brand-inline" />
-                <div class="mb-1 d-none d-lg-flex justify-content-end">
-                    <img src="{{ asset('assets/images/kemenag/penmad.png') }}" alt="Logo" class="brand-logo" />
-                </div>
+                <img src="{{ asset('assets/images/kemenag/penmad.png') }}" alt="Logo" class="brand-logo" />
 
-                <h2 id="login-title" class="form-title">Login</h2>
+                <h2 id="login-title" class="form-title">Masuk ke Akun Anda</h2>
 
                 <form action="{{ route('login.submit') }}" method="POST" novalidate>
                     @csrf
                     <div class="mb-3">
-                        <label for="username" class="form-label small fw-semibold">Username</label>
+                        <label for="username" class="form-label small fw-semibold text-secondary">Username</label>
                         <input id="username" name="username" type="text"
                             class="form-control @error('username') is-invalid @enderror" value="{{ old('username') }}"
-                            required>
+                            required autofocus>
                         @error('username')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="mb-3">
-                        <label for="password" class="form-label small fw-semibold">Password</label>
-                        <input id="password" value="penmad123" name="password" type="password"
-                            class="form-control @error('password') is-invalid @enderror" placeholder="Masukan Password"
+                        <label for="password" class="form-label small fw-semibold text-secondary">Password</label>
+                        <input id="password" name="password" type="password"
+                            class="form-control @error('password') is-invalid @enderror" placeholder="Masukkan password"
                             autocomplete="current-password" required>
                         @error('password')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -227,15 +258,15 @@
                     </div>
 
                     <div class="d-grid gap-2 mb-2">
-                        <button type="submit" class="btn btn-success btn-pill">Masuk</button>
+                        <button type="submit" class="btn btn-pill">Masuk</button>
                     </div>
-
                 </form>
             </div>
         </section>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 
 </html>

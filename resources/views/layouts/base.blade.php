@@ -110,6 +110,47 @@
             font-size: 1.1rem;
             font-weight: 700;
         }
+
+        .footer-modern {
+            background: linear-gradient(90deg, #0D47A1, #1DE9B6);
+            color: #ffffff;
+            padding: 15px 20px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.15);
+            transition: background 0.3s;
+        }
+
+        .footer-modern:hover {
+            background: linear-gradient(90deg, #1DE9B6, #0D47A1);
+        }
+
+        .footer-modern .version-badge {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        .footer-modern .footer-logo {
+            height: 28px;
+            object-fit: contain;
+        }
+
+        /* Responsive footer */
+        @media (max-width: 576px) {
+            .footer-modern {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-modern .d-flex {
+                justify-content: center;
+                margin-top: 8px;
+            }
+        }
     </style>
 </head>
 
@@ -132,12 +173,19 @@
             </section>
         </div>
 
-        <footer class="main-footer">
-            <div class="float-right d-none d-sm-block">
-                <b>Version</b> 1.1.0
+        <footer class="main-footer footer-modern">
+            <div class="container-fluid d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>&copy; 2025 Penmad Jakarta.</strong>
+                    <span class="d-none d-md-inline">Semua hak cipta dilindungi.</span>
+                </div>
+                <div class="d-flex align-items-center">
+                    <span class="version-badge">v1.1.0</span>
+                    <img src="{{ asset('assets/images/kemenag/kemenag.png') }}" alt="Logo" class="footer-logo ms-2">
+                </div>
             </div>
-            <strong>&copy; 2025 Penmad Jakarta.</strong>
         </footer>
+
 
         <aside class="control-sidebar control-sidebar-dark"></aside>
     </div>
