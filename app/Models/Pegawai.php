@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+use App\Models\Madrasah;
+use App\Models\AbsensiPegawai;
+
 class Pegawai extends Model
 {
     use HasFactory;
@@ -35,5 +38,10 @@ class Pegawai extends Model
     public function madrasah()
     {
         return $this->belongsTo(Madrasah::class, 'id_madrasah');
+    }
+
+    public function absensi()
+    {
+        return $this->hasMany(AbsensiPegawai::class);
     }
 }

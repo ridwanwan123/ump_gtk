@@ -10,6 +10,7 @@ class AbsensiPegawaiPolicy
 {
     public function before(User $user)
     {
+        // Superadmin bisa melakukan semua aksi
         if ($user->hasRole('superadmin')) {
             return true;
         }
@@ -20,6 +21,11 @@ class AbsensiPegawaiPolicy
      */
     public function viewAny(User $user): bool
     {
+        // Superadmin dan bendahara bisa melihat daftar absensi pegawai
+        if ($user->hasRole('superadmin')) {
+            return true;
+        }
+
         return $user->hasRole('bendahara');
     }
 
@@ -28,7 +34,12 @@ class AbsensiPegawaiPolicy
      */
     public function view(User $user, AbsensiPegawai $absensiPegawai): bool
     {
-        //
+        // Superadmin dan bendahara bisa melihat absensi pegawai
+        if ($user->hasRole('superadmin')) {
+            return true;
+        }
+
+        return $user->hasRole('bendahara');
     }
 
     /**
@@ -36,7 +47,8 @@ class AbsensiPegawaiPolicy
      */
     public function create(User $user): bool
     {
-        //
+        // Hanya bendahara yang bisa membuat absensi
+        return $user->hasRole('bendahara');
     }
 
     /**
@@ -44,7 +56,8 @@ class AbsensiPegawaiPolicy
      */
     public function update(User $user, AbsensiPegawai $absensiPegawai): bool
     {
-        return $user->unit_kerja === $absensi->pegawai->id_madrasah;
+        // Hanya bendahara yang bisa mengupdate absensi
+        return $user->hasRole('bendahara');
     }
 
     /**
@@ -52,22 +65,17 @@ class AbsensiPegawaiPolicy
      */
     public function delete(User $user, AbsensiPegawai $absensiPegawai): bool
     {
-        return $user->unit_kerja === $absensi->pegawai->id_madrasah;
+        // Hanya bendahara yang bisa menghapus absensi
+        return $user->hasRole('bendahara');
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
     public function restore(User $user, AbsensiPegawai $absensiPegawai): bool
     {
-        //
+        return false;  // Tidak ada yang bisa restore absensi
     }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
     public function forceDelete(User $user, AbsensiPegawai $absensiPegawai): bool
     {
-        //
+        return false;  // Tidak ada yang bisa force delete absensi
     }
 }

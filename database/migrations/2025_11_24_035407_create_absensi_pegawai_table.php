@@ -19,6 +19,8 @@ return new class extends Migration
             $table->integer('ketidakhadiran')->default(0);
             $table->integer('dinas_luar')->default(0);
             $table->integer('cuti')->default(0);
+            $table->integer('tw');
+            $table->integer('tahun');
             $table->timestamps();
 
             $table->foreign('pegawai_id')->references('id')->on('pegawai')->onDelete('cascade');
