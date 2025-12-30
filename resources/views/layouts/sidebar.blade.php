@@ -1,20 +1,16 @@
 <div class="sidebar">
-
     {{-- User Panel --}}
-    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+    <div class="user-panel d-flex align-items-center mt-3 mb-3">
         <div class="image">
             <img src="{{ asset('assets/images/kemenag/kemenag.png') }}" alt="User Image" class="user-image">
         </div>
-        <div class="info">
+        <div class="info ml-2">
             <a href="#" class="d-block">
                 {{ auth()->user()->madrasah->nama_madrasah ?? 'KANWIL DKI JAKARTA' }}
             </a>
-            <small class="text-muted">
-                {{ auth()->user()->getRoleNames()->first() }}
-            </small>
+            <small>{{ auth()->user()->getRoleNames()->first() }}</small>
         </div>
     </div>
-
 
     {{-- Menu --}}
     <nav class="mt-2">
@@ -29,9 +25,8 @@
                 </a>
             </li>
 
-            {{-- DATA PEGAWAI --}}
+            {{-- DATA UMP --}}
             <li class="nav-header">Data UMP</li>
-
             <li class="nav-item">
                 <a href="{{ route('pegawai.index') }}"
                     class="nav-link {{ request()->routeIs('pegawai.*') ? 'active' : '' }}">
@@ -39,7 +34,6 @@
                     <p>Data Pegawai</p>
                 </a>
             </li>
-
             <li class="nav-item">
                 <a href="{{ route('absensi.index') }}"
                     class="nav-link {{ request()->routeIs('absensi.*') ? 'active' : '' }}">
@@ -51,7 +45,6 @@
             {{-- ADMIN ONLY --}}
             @role('superadmin')
                 <li class="nav-header">Admin</li>
-
                 <li class="nav-item">
                     <a href="{{ route('admin.users.index') }}"
                         class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
@@ -59,7 +52,6 @@
                         <p>Manajemen User</p>
                     </a>
                 </li>
-
                 <li class="nav-item">
                     <a href="{{ route('admin.madrasah.index') }}"
                         class="nav-link {{ request()->routeIs('admin.madrasah.*') ? 'active' : '' }}">
@@ -71,5 +63,4 @@
 
         </ul>
     </nav>
-
 </div>
