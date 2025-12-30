@@ -4,9 +4,7 @@
 
 @push('styles')
     <style>
-        /* ------------------------------
-                                                                           Filter dan Form
-                                                                        -------------------------------*/
+        /* ------------------------------ Filter dan Form ------------------------------- */
         .form-group label {
             font-weight: 600;
             font-size: 0.85rem;
@@ -21,9 +19,7 @@
             border-radius: 0.35rem;
         }
 
-        /* ------------------------------
-                                                                           Tabel
-                                                                        -------------------------------*/
+        /* ------------------------------ Tabel ------------------------------- */
         .table-responsive {
             max-height: 520px;
             overflow-x: auto;
@@ -103,6 +99,21 @@
             font-size: 0.8rem;
             background-color: #17a2b8;
         }
+
+        .btn-create-absensi {
+            font-size: 0.85rem;
+            font-weight: 600;
+            background-color: #28a745;
+            border-color: #28a745;
+            color: white;
+            border-radius: 0.35rem;
+            transition: 0.3s;
+        }
+
+        .btn-create-absensi:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
     </style>
 @endpush
 
@@ -164,6 +175,15 @@
                 </form>
             </div>
         </div>
+
+        {{-- BUTTON CREATE ABSENSI --}}
+        @can('create', App\Models\AbsensiPegawai::class)
+            <div class="mb-3">
+                <a href="{{ route('absensi.create') }}" class="btn btn-success btn-create-absensi">
+                    <i class="fas fa-plus"></i> Input Absensi
+                </a>
+            </div>
+        @endcan
 
         {{-- TABLE CARD --}}
         <div class="card card-outline card-info shadow-sm">
