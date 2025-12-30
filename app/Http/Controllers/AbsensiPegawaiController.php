@@ -32,7 +32,6 @@ class AbsensiPegawaiController extends Controller
                 'madrasah',
                 'absensi' => fn($q) => $q->where('tw', $tw)
             ])
-            ->orderBy('nama_rekening')
             ->get()
             ->map(fn($p) => (object)[
                 'nama_madrasah' => $p->madrasah->nama_madrasah ?? '-',
@@ -43,7 +42,11 @@ class AbsensiPegawaiController extends Controller
                 'kt'            => $p->absensi->first()?->ketidakhadiran ?? 0,
                 'dl'            => $p->absensi->first()?->dinas_luar ?? 0,
                 'c'             => $p->absensi->first()?->cuti ?? 0,
-            ]);
+            ])->sortBy([
+                fn($a, $b) => $a->nama_madrasah <=> $b->nama_madrasah,
+                fn($a, $b) => $a->nama_rekening <=> $b->nama_rekening
+            ])
+            ->values();
 
         // Hitung total absensi per kategori
         $totalAbsensi = [
