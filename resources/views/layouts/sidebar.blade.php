@@ -1,9 +1,9 @@
 <div class="sidebar">
     {{-- User Panel --}}
     <div class="user-panel d-flex align-items-center mt-3 mb-3">
-        <div class="image">
-            <img src="{{ asset('assets/images/kemenag/kemenag.png') }}" alt="User Image" class="user-image">
-        </div>
+        {{-- <div class="image"> --}}
+        <img src="{{ asset('assets/images/kemenag/kemenag.png') }}" alt="User Image" class="user-image">
+        {{-- </div> --}}
         <div class="info ml-2">
             <a href="#" class="d-block">
                 {{ auth()->user()->madrasah->nama_madrasah ?? 'KANWIL DKI JAKARTA' }}

@@ -65,8 +65,19 @@
             width: 50px;
             height: 50px;
             object-fit: cover;
-            border-radius: 50%;
-            border: 2px solid #ffc107;
+            /* bentuk pentagon */
+            clip-path: polygon(50% 0%,
+                    /* atas tengah */
+                    100% 30%,
+                    /* kanan atas */
+                    84% 100%,
+                    /* kanan bawah */
+                    18% 100%,
+                    /* kiri bawah */
+                    0% 38%
+                    /* kiri atas */
+                );
+            border: 1px solid #ffc107;
             transition: all 0.2s ease-in-out;
         }
 
