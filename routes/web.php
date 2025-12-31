@@ -67,24 +67,18 @@ Route::middleware(['auth', 'set.unit'])->group(function () {
     /*
     | Absensi Pegawai (RESTFUL)
     */
-    // Semua orang bisa melihat data absensi dan ekspor (untuk superadmin)
+    // Semua orang bisa melihat absensi
+    Route::resource('absensi', AbsensiPegawaiController::class)
+        ->only(['index']);
+
+    // Semua role boleh export
     Route::get('absensi/export', [AbsensiPegawaiController::class, 'export'])
         ->name('absensi.export');
 
-    // Semua orang bisa melihat absensi
-    Route::resource('absensi', AbsensiPegawaiController::class)
-        ->only(['index', 'show', 'create']);
-
-    // Hanya bendahara yang bisa membuat dan mengupdate absensi
+    // Hanya bendahara yang bisa create & update
     Route::middleware('role:bendahara')->group(function () {
-        Route::get('absensi/create', [AbsensiPegawaiController::class, 'create'])->name('absensi.create');
-        Route::post('absensi/store', [AbsensiPegawaiController::class, 'store'])->name('absensi.store');
-        Route::put('absensi/update/{absensiPegawai}', [AbsensiPegawaiController::class, 'update'])->name('absensi.update');
-    });
-
-    // Superadmin hanya bisa melihat dan ekspor data absensi
-    Route::middleware('role:superadmin')->group(function () {
-        Route::get('absensi/export', [AbsensiPegawaiController::class, 'export'])->name('absensi.export');
+        Route::resource('absensi', AbsensiPegawaiController::class)
+            ->only(['create', 'store', 'update']);
     });
 });
 
