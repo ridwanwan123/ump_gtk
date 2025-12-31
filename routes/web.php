@@ -5,8 +5,8 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\AbsensiPegawaiController;
-use App\Http\Controllers\UserManagementController;
-use App\Http\Controllers\Admin\MadrasahController;
+use App\Http\Controllers\Admin\UserManagementController;
+// use App\Http\Controllers\Admin\MadrasahController;
 
 /*
 |--------------------------------------------------------------------------|
@@ -91,7 +91,6 @@ Route::prefix('admin')
     ->middleware(['auth', 'role:superadmin'])
     ->name('admin.')
     ->group(function () {
-
-        Route::resource('users', UserManagementController::class);
-        Route::resource('madrasah', MadrasahController::class);
+        Route::get('users', [UserManagementController::class, 'index'])->name('users.index');
+        Route::post('users/{user}/role', [UserManagementController::class, 'updateRole'])->name('users.updateRole');
     });
