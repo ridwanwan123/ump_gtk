@@ -27,7 +27,7 @@ class Pegawai extends Model
                 ? app('current_madrasah_id')
                 : null;
 
-            // jika ada current madrasah id (bendahara), filter
+            // jika ada current madrasah id (operator), filter
             if ($mid !== null) {
                 $builder->where('id_madrasah', $mid);
             }

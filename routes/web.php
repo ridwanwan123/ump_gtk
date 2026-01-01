@@ -49,7 +49,7 @@ Route::middleware(['auth', 'set.unit'])->group(function () {
     /*
     | Pegawai (RESTFUL)
     | Superadmin: semua
-    | Bendahara: otomatis difilter unit_kerja
+    | Operator: otomatis difilter unit_kerja
     */
     // Semua orang bisa lihat index & show
     Route::get('pegawai/export', [PegawaiController::class, 'export'])
@@ -75,8 +75,8 @@ Route::middleware(['auth', 'set.unit'])->group(function () {
     Route::get('absensi/export', [AbsensiPegawaiController::class, 'export'])
         ->name('absensi.export');
 
-    // Hanya bendahara yang bisa create & update
-    Route::middleware('role:bendahara')->group(function () {
+    // Hanya operator yang bisa create & update
+    Route::middleware('role:operator')->group(function () {
         Route::resource('absensi', AbsensiPegawaiController::class)
             ->only(['create', 'store', 'update']);
     });

@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
             RolesPermissionsSeeder::class,
             MadrasahSeeder::class,
             SuperAdmin::class,
-            BendaharaAccount::class,
+            OperatorAccount::class,
         ]);
         // \App\Models\User::factory(10)->create();
 

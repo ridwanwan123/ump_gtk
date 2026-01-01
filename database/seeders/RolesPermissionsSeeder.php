@@ -32,12 +32,12 @@ class RolesPermissionsSeeder extends Seeder
 
         // roles
         $rSuper = Role::firstOrCreate(['name' => 'superadmin']);
-        $rBend  = Role::firstOrCreate(['name' => 'bendahara']);
+        $rBend  = Role::firstOrCreate(['name' => 'operator']);
 
         // assign permissions
         $rSuper->givePermissionTo(Permission::all());
 
-        // Bendahara: view pegawai di unit sendiri + manage absensi di unit sendiri
+        // Operator: view pegawai di unit sendiri + manage absensi di unit sendiri
         $rBend->givePermissionTo(['view-pegawai','view-absensi','create-absensi','edit-absensi']);
     }
 }

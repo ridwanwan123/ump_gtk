@@ -2,431 +2,431 @@
   {
     "nama_madrasah": "MAN 01 JAKARTA",
     "alamat_madrasah": "Jl. Komp. Joglo Baru No.77",
-    "type": "Joglo"
+    "type": "MAN"
   },
   {
     "nama_madrasah": "MAN 02 JAKARTA",
     "alamat_madrasah": "Penganten Ali No.112",
-    "type": "Ciracas"
+    "type": "MAN"
   },
   {
     "nama_madrasah": "MAN 03 JAKARTA",
     "alamat_madrasah": "Jl. Komp. Perkantoran Rw. Kerbau No.11 16",
-    "type": "RT.16/RW.2"
+    "type": "MAN"
   },
   {
     "nama_madrasah": "MAN 04 JAKARTA",
     "alamat_madrasah": "Jl. Ciputat Raya No.5",
-    "type": "RT.5/RW.8"
+  "type": "MAN"
   },
   {
     "nama_madrasah": "MAN 05 JAKARTA",
     "alamat_madrasah": "Jl. Marunda Baru III No.30",
-    "type": "RT.4/RW.6"
+  "type": "MAN"
   },
   {
     "nama_madrasah": "MAN 06 JAKARTA",
     "alamat_madrasah": "Jl. MAN 6 Blk. E No.27",
-    "type": "RT.10/RW.4"
+    "type": "MAN"
   },
   {
     "nama_madrasah": "MAN 07 JAKARTA",
     "alamat_madrasah": "Jl. Binawarga No.99",
-    "type": "RT.8/RW.7"
+  "type": "MAN"
   },
   {
     "nama_madrasah": "MAN 08 JAKARTA",
     "alamat_madrasah": "Jl. Balai Rakyat No.19",
-    "type": "RT.15/RW.1"
+    "type": "MAN"
   },
   {
     "nama_madrasah": "MAN 09 JAKARTA",
     "alamat_madrasah": "Jl. H. Dogol No.54",
-    "type": "RT.16/RW.7"
+    "type": "MAN"
   },
   {
     "nama_madrasah": "MAN 10 JAKARTA",
     "alamat_madrasah": "Jl. R. Moch. Kahfi I Rt 007/01 No.34",
-    "type": "Ciganjur"
+  "type": "MAN"
   },
   {
     "nama_madrasah": "MAN 11 JAKARTA",
     "alamat_madrasah": "Jl. H. Gandun No.60 12",
-    "type": "RT.7/RW.8"
+  "type": "MAN"
   },
   {
     "nama_madrasah": "MAN 12 JAKARTA",
     "alamat_madrasah": "Jl. Raya Duri Kosambi No.3",
-    "type": "RT.2/RW.8"
+  "type": "MAN"
   },
   {
     "nama_madrasah": "MAN 13 JAKARTA",
     "alamat_madrasah": "Jl. Inayah Jl. Raya Klp. Dua Wetan No.24",
-    "type": "RT.3/RW.8"
+  "type": "MAN"
   },
   {
     "nama_madrasah": "MAN 14 JAKARTA",
     "alamat_madrasah": "Jl. Madrasah No.80 3",
-    "type": "RT.3/RW.9"
+  "type": "MAN"
   },
   {
     "nama_madrasah": "MAN 15 JAKARTA",
     "alamat_madrasah": "Jl. H. Junaidi No.104 1",
-    "type": "RT.1/RW.17"
+    "type": "MAN"
   },
   {
     "nama_madrasah": "MAN 16 JAKARTA",
     "alamat_madrasah": "Jl. Kamal Raya No.3",
-    "type": "RT.6/RW.2"
+  "type": "MAN"
   },
   {
     "nama_madrasah": "MAN 17 JAKARTA",
     "alamat_madrasah": "Jl.Manunggal I No.33 5",
-    "type": "RT.5/RW.11"
+    "type": "MAN"
   },
   {
     "nama_madrasah": "MAN 18 JAKARTA",
     "alamat_madrasah": "Jl. Padat Karya III No.8",
-    "type": "RT.8/RW.1"
+  "type": "MAN"
   },
   {
     "nama_madrasah": "MAN 19 JAKARTA",
     "alamat_madrasah": "Jl. Haji Jaelani 3",
-    "type": "RT.5/RW.1"
+  "type": "MAN"
   },
   {
     "nama_madrasah": "MAN 20 JAKARTA",
     "alamat_madrasah": "Jl. Dr. KRT Radjiman Widyodiningrat Jl. Swadaya Kp. Rw. Badung",
-    "type": "RT.8/RW.7"
+  "type": "MAN"
   },
   {
     "nama_madrasah": "MAN 21 JAKARTA",
     "alamat_madrasah": "Jl. Tambun Rengas No. 48",
-    "type": "RT. 001/07"
+    "type": "MAN"
   },
   {
     "nama_madrasah": "MAN 22 JAKARTA",
     "alamat_madrasah": "Jl. H. Junaidi No.104 1",
-    "type": "RT.1/RW.17"
+    "type": "MAN"
   },
   {
     "nama_madrasah": "MTsN 01 JAKARTA",
     "alamat_madrasah": "Jl. Bangka IX B No.26 6",
-    "type": "RT.12/RW.10"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 02 JAKARTA",
     "alamat_madrasah": "Jl. Rw. Bahagia No.6 7",
-    "type": "RT.2/RW.4"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 03 JAKARTA",
     "alamat_madrasah": "Jl. Pupan No.3 B",
-    "type": "RT.5/RW.8"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 04 JAKARTA",
     "alamat_madrasah": "Jl. Rw. Kuning No.63 1",
-    "type": "RT.1/RW.7"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 05 JAKARTA",
     "alamat_madrasah": "Jl. Cilincing Landak No.10 8",
-    "type": "RT.11/RW.5"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 06 JAKARTA",
     "alamat_madrasah": "Jl. Mangga No.40 2",
-    "type": "RT.2/RW.3"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 07 JAKARTA",
     "alamat_madrasah": "Jl. Pengantin Ali No.13",
-    "type": "RT.8/RW.6"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 08 JAKARTA",
     "alamat_madrasah": "Jl. Seruni Komp. Btn Kresek Indah Rt. 007/012",
-    "type": "Duri Kosambi"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 09 JAKARTA",
     "alamat_madrasah": "Jl. Johar Baru Utara I No.50",
-    "type": "RT.5/RW.3"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 10 JAKARTA",
     "alamat_madrasah": "Jl. Perdana No.10",
-    "type": "RT.1/RW.1"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 11 JAKARTA",
     "alamat_madrasah": "Jalan Komp. Depag",
-    "type": "RT 11 / RW 03"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 12 JAKARTA",
     "alamat_madrasah": "Jl. Harun Raya No.35 9",
-    "type": "RT.9/RW.7"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 13 JAKARTA",
     "alamat_madrasah": "Jl. Inspeksi No.9",
-    "type": "RT.9/RW.7"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 14 JAKARTA",
     "alamat_madrasah": "Jl. Elang",
-    "type": "RT.1/RW.10"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 15 JAKARTA",
     "alamat_madrasah": "Jl. Marunda Baru III No.28",
-    "type": "Cilincing"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 16 JAKARTA",
     "alamat_madrasah": "Jl. Gading Raya No.1 10",
-    "type": "RT.10/RW.14"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 17 JAKARTA",
     "alamat_madrasah": "Jl. Bakti I",
-    "type": "RT.5/RW.9"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 18 JAKARTA",
     "alamat_madrasah": "JL SATYA KOMPLEK KOPASSUS. CIJANTUNG JAKARTA TIMUR",
-    "type": "MTS"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 19 JAKARTA",
     "alamat_madrasah": "Jl. Pinang Kalijati RT 008/09 No. 1",
-    "type": "Pondok Labu"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 20 JAKARTA",
     "alamat_madrasah": "Jl. Gading Raya No.1 10",
-    "type": "RT.10/RW.14"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 21 JAKARTA",
     "alamat_madrasah": "Jl. Makmur No.50",
-    "type": "RT.5/RW.3"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 22 JAKARTA",
     "alamat_madrasah": "Jl Buni No.81 Rt.003/05",
-    "type": "Cilangkap"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 23 JAKARTA",
     "alamat_madrasah": "Jl. Kemuning Dalam I No.148 11",
-    "type": "RT.11/RW.6"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 24 JAKARTA",
     "alamat_madrasah": "Jl. Marzuki VII Jl. Manggis No.12",
-    "type": "RT.3/RW.14"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 25 JAKARTA",
     "alamat_madrasah": "Jl. I Gusti Ngurah Rai No.75 1",
-    "type": "RT.1/RW.5"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 26 JAKARTA",
     "alamat_madrasah": "Jl. Kampung Baru Rt 001/03",
-    "type": "Pulau Tidung"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 27 JAKARTA",
     "alamat_madrasah": "Jl. Sayur Asem No.82",
-    "type": "RT.2/RW.6"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 28 JAKARTA",
     "alamat_madrasah": "Gg. Timbul Jl. Rw. Kuning No.32",
-    "type": "RT.10/RW.2"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 29 JAKARTA",
     "alamat_madrasah": "Jl. Yon Zikon 14 No.5",
-    "type": "RT.5/RW.6"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 30 JAKARTA",
     "alamat_madrasah": "Jl. Masjid Al-Akbar No.51 8",
-    "type": "RT.3/RW.1"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 31 JAKARTA",
     "alamat_madrasah": "Jl. Dr. KRT. Radjiman Widiyodiningrat",
-    "type": "Kp. Rawa Badung T. 011/007"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 32 JAKARTA",
     "alamat_madrasah": "Jl. H. Liun",
-    "type": "RT.13/RW.11"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 33 JAKARTA",
     "alamat_madrasah": "Jl. Pertengahan No.3 A 1",
-    "type": "RT.1/RW.3"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 34 JAKARTA",
     "alamat_madrasah": "Jl. Kerja Bakti 7 Rt.009/07 Kel. Makasar Kec. Makasar Jakarta Timur",
-    "type": "Makasar"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 35 JAKARTA",
     "alamat_madrasah": "Jl. Manunggal No.I 5",
-    "type": "RT.5/RW.11"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 36 JAKARTA",
     "alamat_madrasah": "Jalan Kebon Dua Ratus No.200",
-    "type": "RT. 3"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 37 JAKARTA",
     "alamat_madrasah": "Jalan Kebon Dua Ratus No.200",
-    "type": "RT. 3"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 38 JAKARTA",
     "alamat_madrasah": "Jl. Tambun Rengas No.47 1",
-    "type": "RT.1/RW.7"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 39 JAKARTA",
     "alamat_madrasah": "Jl. Bina Husada No.11 5",
-    "type": "RT.6/RW.7"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 40 JAKARTA",
     "alamat_madrasah": "Jl. H. Asenih",
-    "type": "Pintu Air Semanan"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 41 JAKARTA",
     "alamat_madrasah": "Jl. Moch. Kahfi II No.6A",
-    "type": "RT.13/RW.9"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MTsN 42 JAKARTA",
     "alamat_madrasah": "Jl. Rw. Kuning No. 63 1",
-    "type": "RT 1/RW 7"
+    "type": "MTSN"
   },
   {
     "nama_madrasah": "MIN 01 JAKARTA",
     "alamat_madrasah": "Jl. Prepedan Dalam No.10",
-    "type": "RT.10/RW.7"
+    "type": "MIN"
   },
   {
     "nama_madrasah": "MIN 02 JAKARTA",
     "alamat_madrasah": "Jl Johar Baru Utara 1 No 50",
-    "type": "Johar Baru"
+    "type": "MIN"
   },
   {
     "nama_madrasah": "MIN 03 JAKARTA",
     "alamat_madrasah": "Jl. SATYA RAYA KOMPLEK KOPASSUS No.RT.1",
-    "type": "RT.1/RW.3"
+    "type": "MIN"
   },
   {
     "nama_madrasah": "MIN 04 JAKARTA",
     "alamat_madrasah": "Jl. Pupan No.3a",
-    "type": "RT.5/RW.8"
+    "type": "MIN"
   },
   {
     "nama_madrasah": "MIN 05 JAKARTA",
     "alamat_madrasah": "Jl. Bendungan Melayu No.100",
-    "type": "RT.3/RW.1"
+    "type": "MIN"
   },
   {
     "nama_madrasah": "MIN 06 JAKARTA",
     "alamat_madrasah": "Jl. Gandaria V No.15 9",
-    "type": "RT.2/RW.2"
+    "type": "MIN"
   },
   {
     "nama_madrasah": "MIN 07 JAKARTA",
     "alamat_madrasah": "Jl. Fajar Baru Utara No.34",
-    "type": "RT.5/RW.9"
+    "type": "MIN"
   },
   {
     "nama_madrasah": "MIN 08 JAKARTA",
     "alamat_madrasah": "10",
-    "type": "RT.11/RW.1"
+    "type": "MIN"
   },
   {
     "nama_madrasah": "MIN 09 JAKARTA",
     "alamat_madrasah": "Jl. Madrasah Komplek Bumi No.1",
-    "type": "Petukangan Selatan Pesanggrahan"
+    "type": "MIN"
   },
   {
     "nama_madrasah": "MIN 10 JAKARTA",
     "alamat_madrasah": "Jl. Komp. Perumahan Duren Sawit Tim. Blok B8 No.4",
-    "type": "RT.8/RW.11"
+    "type": "MIN"
   },
   {
     "nama_madrasah": "MIN 11 JAKARTA",
     "alamat_madrasah": "Jalan Madrasah RT.3/RW.4",
-    "type": "Pegadungan"
+    "type": "MIN"
   },
   {
     "nama_madrasah": "MIN 12 JAKARTA",
     "alamat_madrasah": "Jalan Abdurrahman Blok Dukuh",
-    "type": "RT.2/RW.10"
+    "type": "MIN"
   },
   {
     "nama_madrasah": "MIN 13 JAKARTA",
     "alamat_madrasah": "Jl. Al - Bariyah No.35 11",
-    "type": "RT.11/RW.4"
+    "type": "MIN"
   },
   {
     "nama_madrasah": "MIN 14 JAKARTA",
     "alamat_madrasah": "Jl. Moch. Kahfi II No.6a",
-    "type": "RT.13/RW.9"
+    "type": "MIN"
   },
   {
     "nama_madrasah": "MIN 15 JAKARTA",
     "alamat_madrasah": "Jl. Mawar 1 No.73",
-    "type": "RT.2/RW.13"
+    "type": "MIN"
   },
   {
     "nama_madrasah": "MIN 16 JAKARTA",
     "alamat_madrasah": "Jl. Mabes TNI RT. 03/06",
-    "type": "Cipayung"
+    "type": "MIN"
   },
   {
     "nama_madrasah": "MIN 17 JAKARTA",
     "alamat_madrasah": "JL. MADRASAH Rt. 004/001. Kabupaten/Kota",
-    "type": "KAB. ADM. KEP. SERIBU"
+    "type": "MIN"
   },
   {
     "nama_madrasah": "MIN 18 JAKARTA",
     "alamat_madrasah": "Jalan Bulak Sari No.41",
-    "type": "RT.10/RW.09"
+    "type": "MIN"
   },
   {
     "nama_madrasah": "MIN 19 JAKARTA",
     "alamat_madrasah": "Jl. H. Saaba Raya Blok B2",
-    "type": "RT.1/RW.3"
+    "type": "MIN"
   },
   {
     "nama_madrasah": "MIN 20 JAKARTA",
     "alamat_madrasah": "Jl. Marunda Baru No.25",
-    "type": "Marunda"
+    "type": "MIN"
   },
   {
     "nama_madrasah": "MIN 21 JAKARTA",
     "alamat_madrasah": "Jl. Rw. Kuning No.43 10",
-    "type": "RT.10/RW.2"
+    "type": "MIN"
   },
   {
     "nama_madrasah": "MIN 22 JAKARTA",
     "alamat_madrasah": "Jl. Tambun Rengas No.49",
-    "type": "RT.020/RW.7"
+    "type": "MIN"
   }
 ]

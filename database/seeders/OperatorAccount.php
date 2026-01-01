@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 
-class BendaharaAccount extends Seeder
+class OperatorAccount extends Seeder
 {
     public function run(): void
     {
@@ -52,7 +52,7 @@ class BendaharaAccount extends Seeder
 
                 // assign role (safe to call berulang kali jika paket role-mgmt menangani duplikat)
                 if (method_exists($user, 'assignRole')) {
-                    $user->assignRole('bendahara');
+                    $user->assignRole('operator');
                 }
             }
         });

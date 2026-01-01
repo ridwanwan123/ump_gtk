@@ -15,53 +15,90 @@ class AbsensiPegawaiController extends Controller
     {
         $this->authorize('viewAny', AbsensiPegawai::class);
 
-        // Default TW berdasarkan bulan sekarang
-        $currentMonth = date('n'); // 1-12
-        $tw = $request->tw ?? ceil($currentMonth / 3); // Januari-Maret=1, dst.
+        $tahun = $request->tahun ?? now()->year;
+        $currentMonth = now()->month;
+        $tw = $request->tw ?? ceil($currentMonth / 3);
 
-        // Definisikan bulan per TW
-        $bulanTriwulan = [
-            1 => ['Januari', 'Februari', 'Maret'],
-            2 => ['April', 'Mei', 'Juni'],
-            3 => ['Juli', 'Agustus', 'September'],
-            4 => ['Oktober', 'November', 'Desember'],
+        // Bulan angka per TW
+        $bulanAngka = [
+            1 => [1, 2, 3],
+            2 => [4, 5, 6],
+            3 => [7, 8, 9],
+            4 => [10, 11, 12],
         ];
 
-        // Ambil data pegawai + absensi sesuai TW
-        $pegawaiList = Pegawai::with([
-                'madrasah',
-                'absensi' => fn($q) => $q->where('tw', $tw)
-            ])
-            ->get()
-            ->map(fn($p) => (object)[
+        $namaBulan = [
+            1 => 'Januari', 2 => 'Februari', 3 => 'Maret',
+            4 => 'April', 5 => 'Mei', 6 => 'Juni',
+            7 => 'Juli', 8 => 'Agustus', 9 => 'September',
+            10 => 'Oktober', 11 => 'November', 12 => 'Desember',
+        ];
+
+        $bulanTW = $bulanAngka[$tw];
+
+        $pegawaiList = Pegawai::whereHas('absensi', function ($q) use ($tahun, $bulanTW) {
+                    $q->where('tahun', $tahun)
+                    ->whereIn('bulan', $bulanTW);
+                })
+                ->with([
+                    'madrasah',
+                    'absensi' => fn ($q) =>
+                        $q->where('tahun', $tahun)
+                        ->whereIn('bulan', $bulanTW)
+                ])
+                ->orderBy('nama_rekening')
+                ->get();
+
+        // Mapping data supaya blade enak
+        $pegawaiList = $pegawaiList->map(function ($p) use ($bulanTW) {
+            $absensi = $p->absensi->keyBy('bulan');
+
+            return (object) [
                 'nama_madrasah' => $p->madrasah->nama_madrasah ?? '-',
                 'nama_rekening' => $p->nama_rekening,
-                'jabatan'       => $p->jabatan,
-                's'             => $p->absensi->first()?->sakit ?? 0,
-                'i'             => $p->absensi->first()?->izin ?? 0,
-                'kt'            => $p->absensi->first()?->ketidakhadiran ?? 0,
-                'dl'            => $p->absensi->first()?->dinas_luar ?? 0,
-                'c'             => $p->absensi->first()?->cuti ?? 0,
-            ])->sortBy([
-                fn($a, $b) => $a->nama_madrasah <=> $b->nama_madrasah,
-                fn($a, $b) => $a->nama_rekening <=> $b->nama_rekening
-            ])
-            ->values();
 
-        // Hitung total absensi per kategori
+                'bulan' => collect($bulanTW)->mapWithKeys(function ($b) use ($absensi) {
+                    $a = $absensi[$b] ?? null; // aman jika kosong
+                    return [
+                        $b => [
+                            's'  => $a->sakit ?? 0,
+                            'i'  => $a->izin ?? 0,
+                            'kt' => $a->ketidakhadiran ?? 0,
+                            'dl' => $a->dinas_luar ?? 0,
+                            'c'  => $a->cuti ?? 0,
+                        ]
+                    ];
+                })
+            ];
+        });
+
+        // Total keseluruhan
         $totalAbsensi = [
-            's'  => $pegawaiList->sum('s'),
-            'i'  => $pegawaiList->sum('i'),
-            'kt' => $pegawaiList->sum('kt'),
-            'dl' => $pegawaiList->sum('dl'),
-            'c'  => $pegawaiList->sum('c'),
+            's'  => $pegawaiList->sum(fn ($p) => $p->bulan->sum('s')),
+            'i'  => $pegawaiList->sum(fn ($p) => $p->bulan->sum('i')),
+            'kt' => $pegawaiList->sum(fn ($p) => $p->bulan->sum('kt')),
+            'dl' => $pegawaiList->sum(fn ($p) => $p->bulan->sum('dl')),
+            'c'  => $pegawaiList->sum(fn ($p) => $p->bulan->sum('c')),
         ];
 
+        $totalPerBulan = [];
+
+        foreach ($pegawaiList as $pegawai) {
+            foreach ($pegawai->bulan as $bulan => $data) {
+                $totalPerBulan[$bulan]['s']  = ($totalPerBulan[$bulan]['s']  ?? 0) + $data['s'];
+                $totalPerBulan[$bulan]['i']  = ($totalPerBulan[$bulan]['i']  ?? 0) + $data['i'];
+                $totalPerBulan[$bulan]['kt'] = ($totalPerBulan[$bulan]['kt'] ?? 0) + $data['kt'];
+                $totalPerBulan[$bulan]['dl'] = ($totalPerBulan[$bulan]['dl'] ?? 0) + $data['dl'];
+                $totalPerBulan[$bulan]['c']  = ($totalPerBulan[$bulan]['c']  ?? 0) + $data['c'];
+            }
+        }
+
         return view('absensi.index', [
-            'pegawaiList'    => $pegawaiList,
-            'tw'             => $tw,
-            'bulanTriwulan'  => $bulanTriwulan[$tw],
-            'totalAbsensi'   => $totalAbsensi,
+            'pegawaiList'   => $pegawaiList,
+            'tw'            => $tw,
+            'bulanTriwulan' => array_map(fn ($b) => $namaBulan[$b], $bulanTW),
+            // 'totalAbsensi'  => $totalAbsensi,
+            'totalPerBulan' => $totalPerBulan,
         ]);
     }
 
@@ -70,64 +107,84 @@ class AbsensiPegawaiController extends Controller
     {
         $this->authorize('viewAny', AbsensiPegawai::class);
 
+        $tahun = $request->tahun ?? now()->year;
         $tw = $request->tw ?? ceil(now()->month / 3);
 
         $bulanPerTW = [
-            1 => ['Januari','Februari','Maret'],
-            2 => ['April','Mei','Juni'],
-            3 => ['Juli','Agustus','September'],
-            4 => ['Oktober','November','Desember'],
+            1 => [1, 2, 3],
+            2 => [4, 5, 6],
+            3 => [7, 8, 9],
+            4 => [10, 11, 12],
         ];
 
-        $bulan = $bulanPerTW[$tw];
+        $namaBulan = [
+            1 => 'Januari', 2 => 'Februari', 3 => 'Maret',
+            4 => 'April', 5 => 'Mei', 6 => 'Juni',
+            7 => 'Juli', 8 => 'Agustus', 9 => 'September',
+            10 => 'Oktober', 11 => 'November', 12 => 'Desember',
+        ];
 
-        // 🔥 tampilkan semua pegawai
+        $bulanAngka = $bulanPerTW[$tw];
+        $bulan = array_map(fn ($b) => $namaBulan[$b], $bulanAngka);
+
         $pegawaiList = Pegawai::orderBy('nama_rekening')->get();
 
-        return view('absensi.create', compact('pegawaiList', 'bulan', 'tw'));
+        // 🔥 Ambil absensi yg sudah ada
+        $absensiExisting = AbsensiPegawai::where('tahun', $tahun)
+            ->where('tw', $tw)
+            ->get()
+            ->groupBy(['pegawai_id', 'bulan']);
+
+        return view('absensi.create', compact(
+            'pegawaiList',
+            'bulan',
+            'bulanAngka',
+            'absensiExisting',
+            'tw',
+            'tahun'
+        ));
     }
 
     public function store(Request $request)
     {
         $this->authorize('create', AbsensiPegawai::class);
 
+        $request->validate([
+            'tahun' => 'required|integer',
+            'tw' => 'required|integer|min:1|max:4',
+            'absensi' => 'array'
+        ]);
+
+        $tahun = $request->tahun;
         $tw = $request->tw;
         $absensiData = $request->input('absensi', []);
 
-        $pegawaiList = Pegawai::all();
+        DB::transaction(function () use ($absensiData, $tahun, $tw) {
 
-        DB::transaction(function () use ($pegawaiList, $absensiData, $tw) {
+            foreach ($absensiData as $pegawaiId => $bulanList) {
 
-            foreach ($pegawaiList as $pegawai) {
+                foreach ($bulanList as $bulan => $data) {
 
-                // default 0
-                $total = [
-                    'sakit' => 0,
-                    'izin' => 0,
-                    'ketidakhadiran' => 0,
-                    'dinas_luar' => 0,
-                    'cuti' => 0,
-                ];
-
-                // jumlahkan 3 bulan
-                if (isset($absensiData[$pegawai->id])) {
-                    foreach ($absensiData[$pegawai->id] as $bulanData) {
-                        foreach ($total as $key => $val) {
-                            $total[$key] += (int) ($bulanData[$key] ?? 0);
-                        }
-                    }
+                    AbsensiPegawai::updateOrCreate(
+                        [
+                            'pegawai_id' => $pegawaiId,
+                            'bulan'      => $bulan,
+                            'tahun'      => $tahun,
+                            'tw'         => $tw, // tambahkan ini
+                        ],
+                        [
+                            'sakit'           => (int) ($data['sakit'] ?? 0),
+                            'izin'            => (int) ($data['izin'] ?? 0),
+                            'ketidakhadiran'  => (int) ($data['ketidakhadiran'] ?? 0),
+                            'dinas_luar'      => (int) ($data['dinas_luar'] ?? 0),
+                            'cuti'            => (int) ($data['cuti'] ?? 0),
+                        ]
+                    );
                 }
-
-                AbsensiPegawai::updateOrCreate(
-                    [
-                        'pegawai_id' => $pegawai->id,
-                        'tw' => $tw,
-                    ],
-                    $total
-                );
             }
         });
 
-        return back()->with('success', 'Absensi triwulan berhasil disimpan.');
+        return back()->with('success', 'Absensi berhasil disimpan / diperbarui.');
     }
+
 }

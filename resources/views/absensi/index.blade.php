@@ -193,92 +193,96 @@
             </div>
 
             <div class="card-body table-responsive p-1">
-                <table class="table table-bordered table-hover table-sm nowrap">
-                    <thead class="text-center">
-                        <tr>
-                            <th rowspan="2">No</th>
-                            <th rowspan="2">Madrasah</th>
-                            <th rowspan="2">Nama Pegawai</th>
-
-                            <th colspan="5" class="bulan-pertama">{{ $bulanTriwulan[0] }}</th>
-                            <th colspan="5" class="bulan-kedua">{{ $bulanTriwulan[1] }}</th>
-                            <th colspan="5" class="bulan-ketiga">{{ $bulanTriwulan[2] }}</th>
-                        </tr>
-                        <tr class="font-weight-bold">
-                            @foreach (['S', 'I', 'TK', 'DL', 'C'] as $h)
-                                <th class="bulan-pertama sub-header">{{ $h }}</th>
-                            @endforeach
-                            @foreach (['S', 'I', 'TK', 'DL', 'C'] as $h)
-                                <th class="bulan-kedua sub-header">{{ $h }}</th>
-                            @endforeach
-                            @foreach (['S', 'I', 'TK', 'DL', 'C'] as $h)
-                                <th class="bulan-ketiga sub-header">{{ $h }}</th>
-                            @endforeach
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        @foreach ($pegawaiList as $i => $pegawai)
+                @if ($pegawaiList->isEmpty())
+                    <div class="text-center py-4 font-weight-bold">
+                        Data Absensi Belum Ada
+                    </div>
+                @else
+                    <table class="table table-bordered table-hover table-sm nowrap">
+                        <thead class="text-center">
                             <tr>
-                                <td class="text-center">{{ $i + 1 }}</td>
-                                <td>{{ $pegawai->nama_madrasah }}</td>
-                                <td class="nama-pegawai">{{ $pegawai->nama_rekening }}</td>
+                                <th rowspan="2">No</th>
+                                <th rowspan="2">Madrasah</th>
+                                <th rowspan="2">Nama Pegawai</th>
 
-                                {{-- Bulan 1 --}}
-                                <td class="text-center bulan-pertama">{{ $pegawai->s }}</td>
-                                <td class="text-center bulan-pertama">{{ $pegawai->i }}</td>
-                                <td class="text-center bulan-pertama">{{ $pegawai->kt }}</td>
-                                <td class="text-center bulan-pertama">{{ $pegawai->dl }}</td>
-                                <td class="text-center bulan-pertama">{{ $pegawai->c }}</td>
-
-                                {{-- Bulan 2 --}}
-                                <td class="text-center bulan-kedua">0</td>
-                                <td class="text-center bulan-kedua">0</td>
-                                <td class="text-center bulan-kedua">0</td>
-                                <td class="text-center bulan-kedua">0</td>
-                                <td class="text-center bulan-kedua">0</td>
-
-                                {{-- Bulan 3 --}}
-                                <td class="text-center bulan-ketiga">0</td>
-                                <td class="text-center bulan-ketiga">0</td>
-                                <td class="text-center bulan-ketiga">0</td>
-                                <td class="text-center bulan-ketiga">0</td>
-                                <td class="text-center bulan-ketiga">0</td>
+                                <th colspan="5" class="bulan-pertama">{{ $bulanTriwulan[0] }}</th>
+                                <th colspan="5" class="bulan-kedua">{{ $bulanTriwulan[1] }}</th>
+                                <th colspan="5" class="bulan-ketiga">{{ $bulanTriwulan[2] }}</th>
                             </tr>
-                        @endforeach
-                    </tbody>
+                            <tr class="font-weight-bold">
+                                @foreach (['S', 'I', 'TK', 'DL', 'C'] as $h)
+                                    <th class="bulan-pertama sub-header">{{ $h }}</th>
+                                @endforeach
+                                @foreach (['S', 'I', 'TK', 'DL', 'C'] as $h)
+                                    <th class="bulan-kedua sub-header">{{ $h }}</th>
+                                @endforeach
+                                @foreach (['S', 'I', 'TK', 'DL', 'C'] as $h)
+                                    <th class="bulan-ketiga sub-header">{{ $h }}</th>
+                                @endforeach
+                            </tr>
+                        </thead>
 
-                    {{-- FOOTER TOTAL --}}
-                    <tfoot class="text-center font-weight-bold">
-                        <tr>
-                            <td colspan="3">JUMLAH KESELURUHAN ABSENSI</td>
+                        <tbody>
+                            @foreach ($pegawaiList as $i => $pegawai)
+                                <tr>
+                                    <td class="text-center">{{ $i + 1 }}</td>
+                                    <td>{{ $pegawai->nama_madrasah }}</td>
+                                    <td class="nama-pegawai">{{ $pegawai->nama_rekening }}</td>
 
-                            {{-- Bulan 1 --}}
-                            <td class="bulan-pertama">{{ $totalAbsensi['s'] }}</td>
-                            <td class="bulan-pertama">{{ $totalAbsensi['i'] }}</td>
-                            <td class="bulan-pertama">{{ $totalAbsensi['kt'] }}</td>
-                            <td class="bulan-pertama">{{ $totalAbsensi['dl'] }}</td>
-                            <td class="bulan-pertama">{{ $totalAbsensi['c'] }}</td>
+                                    @foreach ($pegawai->bulan as $idx => $data)
+                                        @php
+                                            $kelas = ['bulan-pertama', 'bulan-kedua', 'bulan-ketiga'][
+                                                array_search($idx, array_keys($pegawai->bulan->toArray()))
+                                            ];
+                                        @endphp
 
-                            {{-- Bulan 2 --}}
-                            <td class="bulan-kedua">0</td>
-                            <td class="bulan-kedua">0</td>
-                            <td class="bulan-kedua">0</td>
-                            <td class="bulan-kedua">0</td>
-                            <td class="bulan-kedua">0</td>
+                                        <td class="text-center {{ $kelas }}">{{ $data['s'] }}</td>
+                                        <td class="text-center {{ $kelas }}">{{ $data['i'] }}</td>
+                                        <td class="text-center {{ $kelas }}">{{ $data['kt'] }}</td>
+                                        <td class="text-center {{ $kelas }}">{{ $data['dl'] }}</td>
+                                        <td class="text-center {{ $kelas }}">{{ $data['c'] }}</td>
+                                    @endforeach
+                                </tr>
+                            @endforeach
+                        </tbody>
 
-                            {{-- Bulan 3 --}}
-                            <td class="bulan-ketiga">0</td>
-                            <td class="bulan-ketiga">0</td>
-                            <td class="bulan-ketiga">0</td>
-                            <td class="bulan-ketiga">0</td>
-                            <td class="bulan-ketiga">0</td>
-                        </tr>
-                    </tfoot>
+                        {{-- Footer --}}
+                        @if (!$pegawaiList->isEmpty())
+                            <tfoot class="text-center font-weight-bold">
+                                <tr>
+                                    <td colspan="3">JUMLAH KESELURUHAN ABSENSI</td>
 
-                </table>
+                                    @foreach ($pegawaiList->first()->bulan as $bulan => $dummy)
+                                        @php
+                                            $kelas = ['bulan-pertama', 'bulan-kedua', 'bulan-ketiga'][
+                                                array_search(
+                                                    $bulan,
+                                                    array_keys($pegawaiList->first()->bulan->toArray()),
+                                                )
+                                            ];
+                                            $total = $totalPerBulan[$bulan] ?? [
+                                                's' => 0,
+                                                'i' => 0,
+                                                'kt' => 0,
+                                                'dl' => 0,
+                                                'c' => 0,
+                                            ];
+                                        @endphp
 
+                                        <td class="{{ $kelas }}">{{ $total['s'] }}</td>
+                                        <td class="{{ $kelas }}">{{ $total['i'] }}</td>
+                                        <td class="{{ $kelas }}">{{ $total['kt'] }}</td>
+                                        <td class="{{ $kelas }}">{{ $total['dl'] }}</td>
+                                        <td class="{{ $kelas }}">{{ $total['c'] }}</td>
+                                    @endforeach
+                                </tr>
+                            </tfoot>
+                        @endif
+                    </table>
+                @endif
             </div>
+
+
         </div>
 
     </div>

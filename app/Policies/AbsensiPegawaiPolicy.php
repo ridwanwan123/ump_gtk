@@ -9,40 +9,40 @@ use Illuminate\Auth\Access\Response;
 class AbsensiPegawaiPolicy
 {
     /**
-     * Superadmin & bendahara boleh lihat data
+     * Superadmin & operator boleh lihat data
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasRole(['superadmin', 'bendahara']);
+        return $user->hasRole(['superadmin', 'operator']);
     }
 
     public function view(User $user, AbsensiPegawai $absensiPegawai): bool
     {
-        return $user->hasRole(['superadmin', 'bendahara']);
+        return $user->hasRole(['superadmin', 'operator']);
     }
 
     /**
-     * HANYA bendahara boleh create
+     * HANYA operator boleh create
      */
     public function create(User $user): bool
     {
-        return $user->hasRole('bendahara');
+        return $user->hasRole('operator');
     }
 
     /**
-     * HANYA bendahara boleh update
+     * HANYA operator boleh update
      */
     public function update(User $user, AbsensiPegawai $absensiPegawai): bool
     {
-        return $user->hasRole('bendahara');
+        return $user->hasRole('operator');
     }
 
     /**
-     * HANYA bendahara boleh delete
+     * HANYA operator boleh delete
      */
     public function delete(User $user, AbsensiPegawai $absensiPegawai): bool
     {
-        return $user->hasRole('bendahara');
+        return $user->hasRole('operator');
     }
 
     public function restore(User $user, AbsensiPegawai $absensiPegawai): bool

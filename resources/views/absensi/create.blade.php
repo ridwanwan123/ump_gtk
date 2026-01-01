@@ -94,6 +94,13 @@
             margin: 0;
         }
 
+        /* Bold untuk angka selain 0 */
+        input.non-zero {
+            font-weight: 700;
+            /* bold */
+            color: #000;
+        }
+
         /* Badge keterangan */
         .absensi-keterangan {
             font-size: 0.8rem;
@@ -112,118 +119,161 @@
 
         @media (max-width: 768px) {
             .table-responsive {
-                overflow-x: auto; /* Scroll horizontal aktif */
-                padding-bottom: 1rem; /* Sedikit jarak bawah */
+                overflow-x: auto;
+                padding-bottom: 1rem;
             }
 
             table.table-sm th,
             table.table-sm td {
-                padding: 0.75rem 1rem !important; /* Lebih lega biar gampang disentuh */
+                padding: 0.75rem 1rem !important;
                 font-size: 0.9rem !important;
-                white-space: nowrap; /* supaya tetap satu baris */
+                white-space: nowrap;
             }
 
-            /* Jangan dipaksa rapat, biarkan ada jarak */
             input.form-control-sm {
                 padding: 0.3rem 0.5rem;
                 font-size: 0.85rem;
-                min-width: 40px; /* Minimal lebar input biar tidak terlalu kecil */
+                min-width: 40px;
             }
         }
     </style>
 @endpush
 
 @section('content')
-<div class="container-fluid p-2">
-
-    <div class="card card-outline card-info shadow-sm">
-        <div class="card-header d-flex align-items-center">
-            <h3 class="card-title mb-0">
-                <i class="fas fa-calendar-check mr-1"></i> Input Absensi Pegawai
-            </h3>
-            <span class="badge badge-info ml-2">
-                TRIWULAN {{ request('tw', ceil(now()->month / 3)) }} - {{ request('tahun', now()->year) }}
+    <div class="container-fluid p-2">
+        @if ($absensiExisting->isNotEmpty())
+            <span class="badge badge-warning ml-2">
+                Data sudah ada – mode edit
             </span>
-        </div>
+        @endif
+        <div class="card card-outline card-info shadow-sm">
+            <div class="card-header d-flex align-items-center">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-calendar-check mr-1"></i> Input Absensi Pegawai
+                </h3>
+                <span class="badge badge-info ml-2">
+                    TRIWULAN {{ request('tw', ceil(now()->month / 3)) }} - {{ request('tahun', now()->year) }}
+                </span>
+            </div>
 
-        <form action="{{ route('absensi.store') }}" method="POST">
-            @csrf
-            <input type="hidden" name="tahun" value="{{ request('tahun', now()->year) }}">
-            <input type="hidden" name="tw" value="{{ request('tw', ceil(now()->month / 3)) }}">
+            <form action="{{ route('absensi.store') }}" method="POST">
+                @csrf
+                <input type="hidden" name="tahun" value="{{ request('tahun', now()->year) }}">
+                <input type="hidden" name="tw" value="{{ request('tw', ceil(now()->month / 3)) }}">
 
-            <div class="card-body table-responsive p-1" style="max-height: calc(100vh - 200px); overflow-y: auto;">
-                <div class="absensi-keterangan">
-                    <strong>Petunjuk Pengisian:</strong><br>
-                    <span class="badge badge-danger">S</span>Sakit
-                    <span class="badge badge-warning">I</span>Izin
-                    <span class="badge badge-secondary">TK</span>Tanpa Keterangan
-                    <span class="badge badge-info">DL</span>Dinas Luar
-                    <span class="badge badge-success">C</span>Cuti
-                </div>
+                <div class="card-body table-responsive p-1" style="max-height: calc(100vh - 200px); overflow-y: auto;">
+                    <div class="absensi-keterangan">
+                        <strong>Petunjuk Pengisian:</strong><br>
+                        <span class="badge badge-danger">S</span>Sakit
+                        <span class="badge badge-warning">I</span>Izin
+                        <span class="badge badge-secondary">TK</span>Tanpa Keterangan
+                        <span class="badge badge-info">DL</span>Dinas Luar
+                        <span class="badge badge-success">C</span>Cuti
+                    </div>
 
-                <table class="table table-bordered table-hover table-sm nowrap">
-                    <thead class="text-center">
-                        <tr>
-                            <th rowspan="2">No</th>
-                            <th rowspan="2">Nama Pegawai</th>
-                            <th rowspan="2">Jabatan Pegawai</th>
-                            @foreach ($bulan as $index => $b)
-                                @php
-                                    $kelasBulan = ['bulan-pertama','bulan-kedua','bulan-ketiga'][$index];
-                                @endphp
-                                <th colspan="5" class="{{ $kelasBulan }}">{{ $b }}</th>
-                            @endforeach
-                        </tr>
-                        <tr class="text-center">
-                            @foreach ($bulan as $index => $b)
-                                @php
-                                    $kelasBulan = ['bulan-pertama','bulan-kedua','bulan-ketiga'][$index];
-                                @endphp
-                                @foreach (['S', 'I', 'TK', 'DL', 'C'] as $jenis)
-                                    <th class="{{ $kelasBulan }}">{{ $jenis }}</th>
-                                @endforeach
-                            @endforeach
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($pegawaiList as $i => $pegawai)
+                    <table class="table table-bordered table-hover table-sm nowrap">
+                        <thead class="text-center">
                             <tr>
-                                <td class="text-center">{{ $i + 1 }}</td>
-                                <td class="nama-pegawai">{{ $pegawai->nama_rekening }}</td>
-                                <td class="nama-pegawai">{{ $pegawai->jabatan }}</td>
-
+                                <th rowspan="2">No</th>
+                                <th rowspan="2">Nama Pegawai</th>
+                                <th rowspan="2">Jabatan Pegawai</th>
                                 @foreach ($bulan as $index => $b)
                                     @php
-                                        $kelasBulan = ['bulan-pertama','bulan-kedua','bulan-ketiga'][$index];
-                                        $bulanAngka = $index + (($tw-1)*3) + 1; // hitung bulan sesuai TW
+                                        $kelasBulan = ['bulan-pertama', 'bulan-kedua', 'bulan-ketiga'][$index];
                                     @endphp
-                                    @foreach (['sakit','izin','ketidakhadiran','dinas_luar','cuti'] as $key)
-                                        <td class="{{ $kelasBulan }}">
-                                            <input type="number"
-                                                name="absensi[{{ $pegawai->id }}][{{ $bulanAngka }}][{{ $key }}]"
-                                                placeholder="0"
-                                                value=""
-                                                min="0"
-                                                class="form-control form-control-sm"
-                                                oninput="this.value = this.value.replace(/^0+/, '')">
-                                        </td>
+                                    <th colspan="5" class="{{ $kelasBulan }}">{{ $b }}</th>
+                                @endforeach
+                            </tr>
+                            <tr class="text-center">
+                                @foreach ($bulan as $index => $b)
+                                    @php
+                                        $kelasBulan = ['bulan-pertama', 'bulan-kedua', 'bulan-ketiga'][$index];
+                                    @endphp
+                                    @foreach (['S', 'I', 'TK', 'DL', 'C'] as $jenis)
+                                        <th class="{{ $kelasBulan }}">{{ $jenis }}</th>
                                     @endforeach
                                 @endforeach
-
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            @foreach ($pegawaiList as $i => $pegawai)
+                                <tr>
+                                    <td class="text-center">{{ $i + 1 }}</td>
+                                    <td class="nama-pegawai">{{ $pegawai->nama_rekening }}</td>
+                                    <td class="nama-pegawai">{{ $pegawai->jabatan }}</td>
 
-            <div class="card-footer d-flex align-items-center p-2">
-                <button type="submit" class="btn btn-info btn-sm ml-auto">
-                    <i class="fas fa-save"></i> Simpan Semua Absensi
-                </button>
-            </div>
+                                    @foreach ($bulan as $index => $b)
+                                        @php
+                                            $kelasBulan = ['bulan-pertama', 'bulan-kedua', 'bulan-ketiga'][$index];
+                                            $bulanAngka = $index + ($tw - 1) * 3 + 1;
+                                        @endphp
 
-        </form>
+                                        @foreach (['sakit', 'izin', 'ketidakhadiran', 'dinas_luar', 'cuti'] as $key)
+                                            @php
+                                                $value = $absensiExisting[$pegawai->id][$bulanAngka][0]->{$key} ?? 0;
+                                            @endphp
+
+                                            <td class="{{ $kelasBulan }}">
+                                                <input type="number"
+                                                    name="absensi[{{ $pegawai->id }}][{{ $bulanAngka }}][{{ $key }}]"
+                                                    value="{{ $value }}" placeholder="0" min="0"
+                                                    step="1" class="form-control form-control-sm">
+                                            </td>
+                                        @endforeach
+                                    @endforeach
+
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card-footer d-flex align-items-center p-2">
+                    <button type="submit" class="btn btn-info btn-sm ml-auto">
+                        <i class="fas fa-save"></i> Simpan Semua Absensi
+                    </button>
+                </div>
+
+            </form>
+        </div>
     </div>
+@endsection
 
-</div>
+@section('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            function updateBold(input) {
+                if (input.value && input.value != '0') {
+                    input.classList.add('non-zero');
+                } else {
+                    input.classList.remove('non-zero');
+                }
+            }
+
+            document.querySelectorAll('input[type="number"]').forEach(input => {
+                // Hapus leading zero & update bold saat input
+                input.addEventListener('input', (e) => {
+                    if (e.target.value.length > 1 && e.target.value.startsWith('0')) {
+                        e.target.value = e.target.value.replace(/^0+/, '');
+                    }
+                    updateBold(e.target);
+                });
+
+                // Focus: hilangkan 0
+                input.addEventListener('focus', (e) => {
+                    if (e.target.value === '0') e.target.value = '';
+                });
+
+                // Blur: kembalikan 0 jika kosong
+                input.addEventListener('blur', (e) => {
+                    if (e.target.value === '') e.target.value = '0';
+                    updateBold(e.target);
+                });
+
+                // Inisialisasi bold saat load
+                updateBold(input);
+            });
+        });
+    </script>
 @endsection

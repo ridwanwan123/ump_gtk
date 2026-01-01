@@ -12,15 +12,17 @@ class AbsensiPegawai extends Model
     use HasFactory;
 
     protected $table = 'absensi_pegawai';
+    
     protected $fillable = [
         'pegawai_id',
+        'bulan',
         'tahun',
         'tw',
         'sakit',
         'izin',
         'ketidakhadiran',
         'dinas_luar',
-        'cuti'
+        'cuti',
     ];
 
     public function pegawai()

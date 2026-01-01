@@ -11,7 +11,16 @@ class Madrasah extends Model
 
     protected $table = 'madrasah';
 
-    protected  $fillable = [
+    protected $fillable = [
         'nama_madrasah'
     ];
+
+    // ===========================
+    // Relasi ke pegawai
+    // ===========================
+    public function pegawai()
+    {
+        return $this->hasMany(Pegawai::class, 'id_madrasah'); 
+        // id_madrasah adalah foreign key di tabel pegawai
+    }
 }

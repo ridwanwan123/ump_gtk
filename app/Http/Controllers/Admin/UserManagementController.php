@@ -17,10 +17,10 @@ class UserManagementController extends Controller
         // Hitung total global (bukan hanya paginate)
         $totalUsers = User::count();
         $totalSuperadmin = User::role('superadmin')->count();
-        $totalBendahara = User::role('bendahara')->count();
+        $totalOperator = User::role('operator')->count();
 
         return view('user_management.index', compact(
-            'users', 'roles', 'totalUsers', 'totalSuperadmin', 'totalBendahara'
+            'users', 'roles', 'totalUsers', 'totalSuperadmin', 'totalOperator'
         ));
     }
 
