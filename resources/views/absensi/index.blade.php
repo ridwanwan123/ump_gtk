@@ -236,11 +236,12 @@
                                             ];
                                         @endphp
 
-                                        <td class="text-center {{ $kelas }}">{{ $data['s'] }}</td>
-                                        <td class="text-center {{ $kelas }}">{{ $data['i'] }}</td>
-                                        <td class="text-center {{ $kelas }}">{{ $data['kt'] }}</td>
-                                        <td class="text-center {{ $kelas }}">{{ $data['dl'] }}</td>
-                                        <td class="text-center {{ $kelas }}">{{ $data['c'] }}</td>
+                                        <td class="text-center {{ $kelas }} {{ $data['s'] != 0 ? 'font-weight-bold' : 'text-muted' }}">{{ $data['s'] }}</td>
+                                        <td class="text-center {{ $kelas }} {{ $data['i'] != 0 ? 'font-weight-bold' : 'text-muted' }}">{{ $data['i'] }}</td>
+                                        <td class="text-center {{ $kelas }} {{ $data['kt'] != 0 ? 'font-weight-bold' : 'text-muted' }}">{{ $data['kt'] }}</td>
+                                        <td class="text-center {{ $kelas }} {{ $data['dl'] != 0 ? 'font-weight-bold' : 'text-muted' }}">{{ $data['dl'] }}</td>
+                                        <td class="text-center {{ $kelas }} {{ $data['c'] != 0 ? 'font-weight-bold' : 'text-muted' }}">{{ $data['c'] }}</td>
+
                                     @endforeach
                                 </tr>
                             @endforeach

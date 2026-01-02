@@ -97,8 +97,13 @@
         /* Bold untuk angka selain 0 */
         input.non-zero {
             font-weight: 700;
-            /* bold */
-            color: #000;
+            color: #000 !important; /* paksa hitam */
+        }
+
+        /* Muted untuk angka 0 */
+        input.zero {
+            font-weight: normal;
+            color: #6c757d !important; /* paksa abu-abu */
         }
 
         /* Badge keterangan */
@@ -237,22 +242,20 @@
             </form>
         </div>
     </div>
-@endsection
-
-@section('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-
             function updateBold(input) {
                 if (input.value && input.value != '0') {
                     input.classList.add('non-zero');
+                    input.classList.remove('zero');
                 } else {
                     input.classList.remove('non-zero');
+                    input.classList.add('zero');
                 }
             }
-
             document.querySelectorAll('input[type="number"]').forEach(input => {
-                // Hapus leading zero & update bold saat input
+
+                // Hapus leading zero saat ketik
                 input.addEventListener('input', (e) => {
                     if (e.target.value.length > 1 && e.target.value.startsWith('0')) {
                         e.target.value = e.target.value.replace(/^0+/, '');
@@ -260,7 +263,7 @@
                     updateBold(e.target);
                 });
 
-                // Focus: hilangkan 0
+                // Focus: kosongkan 0
                 input.addEventListener('focus', (e) => {
                     if (e.target.value === '0') e.target.value = '';
                 });
@@ -271,9 +274,10 @@
                     updateBold(e.target);
                 });
 
-                // Inisialisasi bold saat load
+                // Inisialisasi saat load
                 updateBold(input);
             });
         });
+
     </script>
 @endsection
