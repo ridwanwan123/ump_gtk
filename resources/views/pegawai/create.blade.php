@@ -124,9 +124,14 @@
 
                             <div class="form-group">
                                 <label>Jabatan</label>
-                                <input type="text" name="jabatan"
-                                    class="form-control @error('jabatan') is-invalid @enderror"
-                                    value="{{ old('jabatan') }}">
+                                <select name="jabatan" class="form-control form-control-sm">
+                                    <option value="">-- Semua Jabatan --</option>
+                                    @foreach($jabatanList as $jabatan)
+                                        <option value="{{ $jabatan }}" {{ old('jabatan') == $jabatan ? 'selected' : '' }}>
+                                            {{ $jabatan }}
+                                        </option>
+                                    @endforeach
+                                </select>
                                 @error('jabatan')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror

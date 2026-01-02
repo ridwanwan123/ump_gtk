@@ -46,7 +46,8 @@ class AbsensiPegawaiController extends Controller
                         $q->where('tahun', $tahun)
                         ->whereIn('bulan', $bulanTW)
                 ])
-                ->orderBy('nama_rekening')
+                ->orderBy('id_madrasah', 'asc')
+                ->orderBy('nama_rekening', 'asc')
                 ->get();
 
         // Mapping data supaya blade enak

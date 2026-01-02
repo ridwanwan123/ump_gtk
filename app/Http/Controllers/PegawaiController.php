@@ -15,33 +15,54 @@ class PegawaiController extends Controller
     {
         $this->authorize('viewAny', Pegawai::class);
 
-        $query = Pegawai::query()
-            ->leftJoin('madrasah', 'pegawai.id_madrasah', '=', 'madrasah.id')
-            ->select('pegawai.*');
+        $query = Pegawai::with('madrasah'); // gunakan eager loading untuk nama madrasah
 
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where('pegawai.nama_rekening', 'like', "%{$search}%")
-                ->orWhere('pegawai.jabatan', 'like', "%{$search}%")
-                ->orWhere('madrasah.nama_madrasah', 'like', "%{$search}%");
+        // Filter Madrasah
+        if ($request->filled('madrasah')) {
+            $query->where('id_madrasah', $request->madrasah);
         }
 
-        $pegawais = $query->orderBy('madrasah.nama_madrasah', 'asc')
-                        ->orderBy('pegawai.nama_rekening', 'asc')
-                        ->paginate(20);
+        // Filter Jabatan
+        if ($request->filled('jabatan')) {
+            $query->where('jabatan', $request->jabatan);
+        }
 
-        return view('pegawai.index', compact('pegawais'));
+        // Filter Nama Pegawai
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where('nama_rekening', 'like', "%{$search}%");
+        }
+
+        $pegawais = $query->orderBy('id_madrasah', 'asc')
+                        ->orderBy('nama_rekening', 'asc')
+                        ->paginate(20)
+                        ->withQueryString();
+
+        $jabatanList = Pegawai::select('jabatan')
+                ->distinct()
+                ->orderBy('jabatan')
+                ->pluck('jabatan');
+
+        $madrasahs = Madrasah::orderBy('nama_madrasah')->get(); // untuk select box
+
+        return view('pegawai.index', compact('pegawais', 'madrasahs', 'jabatanList'));
     }
-
 
     public function create()
     {
         $this->authorize('create', Pegawai::class);
 
         $madrasah = Madrasah::all();
+
+        $jabatanList = Pegawai::select('jabatan')
+                ->distinct()
+                ->orderBy('jabatan')
+                ->pluck('jabatan');
+
         return view('pegawai.form', [
             'pegawai' => new Pegawai(),
             'madrasah' => $madrasah,
+            'jabatanList' => $jabatanList,
             'mode' => 'create'
         ]);
     }
