@@ -242,42 +242,62 @@
             </form>
         </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            function updateBold(input) {
-                if (input.value && input.value != '0') {
-                    input.classList.add('non-zero');
-                    input.classList.remove('zero');
-                } else {
-                    input.classList.remove('non-zero');
-                    input.classList.add('zero');
-                }
-            }
-            document.querySelectorAll('input[type="number"]').forEach(input => {
-
-                // Hapus leading zero saat ketik
-                input.addEventListener('input', (e) => {
-                    if (e.target.value.length > 1 && e.target.value.startsWith('0')) {
-                        e.target.value = e.target.value.replace(/^0+/, '');
-                    }
-                    updateBold(e.target);
-                });
-
-                // Focus: kosongkan 0
-                input.addEventListener('focus', (e) => {
-                    if (e.target.value === '0') e.target.value = '';
-                });
-
-                // Blur: kembalikan 0 jika kosong
-                input.addEventListener('blur', (e) => {
-                    if (e.target.value === '') e.target.value = '0';
-                    updateBold(e.target);
-                });
-
-                // Inisialisasi saat load
-                updateBold(input);
+    @push('scripts')
+        @if(session('swal_success'))
+        <script>
+            Swal.fire({
+                title: '🎉 Sukses!',
+                text: "{{ session('swal_success') }}",
+                icon: 'success',
+                iconColor: '#28a745',
+                color: '#ffffff',
+                showConfirmButton: true,
+                confirmButtonText: 'Oke',
+                confirmButtonColor: '#0D47A1',
+                timer: 1800,
+                timerProgressBar: true
             });
-        });
+        </script>
+        @endif
 
-    </script>
+         <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                function updateBold(input) {
+                    if (input.value && input.value != '0') {
+                        input.classList.add('non-zero');
+                        input.classList.remove('zero');
+                    } else {
+                        input.classList.remove('non-zero');
+                        input.classList.add('zero');
+                    }
+                }
+                document.querySelectorAll('input[type="number"]').forEach(input => {
+
+                    // Hapus leading zero saat ketik
+                    input.addEventListener('input', (e) => {
+                        if (e.target.value.length > 1 && e.target.value.startsWith('0')) {
+                            e.target.value = e.target.value.replace(/^0+/, '');
+                        }
+                        updateBold(e.target);
+                    });
+
+                    // Focus: kosongkan 0
+                    input.addEventListener('focus', (e) => {
+                        if (e.target.value === '0') e.target.value = '';
+                    });
+
+                    // Blur: kembalikan 0 jika kosong
+                    input.addEventListener('blur', (e) => {
+                        if (e.target.value === '') e.target.value = '0';
+                        updateBold(e.target);
+                    });
+
+                    // Inisialisasi saat load
+                    updateBold(input);
+                });
+            });
+
+        </script>
+    @endpush
+   
 @endsection

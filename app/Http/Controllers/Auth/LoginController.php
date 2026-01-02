@@ -17,13 +17,18 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        // VALIDASI INPUT
         $credentials = $request->validate([
             'username' => ['required', 'string'],
             'password' => ['required', 'string'],
         ]);
 
         $remember = $request->boolean('remember');
+
+        if (!Auth::attempt($credentials, $remember)) {
+            return redirect()->back()
+                ->withInput($request->only('username'))
+                ->with('swal_error', 'Username atau password salah');
+        }
 
         Log::info('Percobaan login', [
             'username' => $credentials['username'],
@@ -37,9 +42,10 @@ class LoginController extends Controller
                 'ip' => $request->ip(),
             ]);
 
-            throw ValidationException::withMessages([
-                'username' => __('auth.failed'),
-            ]);
+            // Return dengan flash message error ke session
+            return redirect()->back()
+                ->withInput($request->only('username'))
+                ->with('swal_error', __('auth.failed'));
         }
 
         $request->session()->regenerate();
@@ -53,9 +59,11 @@ class LoginController extends Controller
             'ip' => $request->ip(),
         ]);
 
-        // ✅ SATU DASHBOARD SAJA
-        return redirect()->intended(route('dashboard'));
+        // Kirim flash message sukses
+        return redirect()->intended(route('dashboard'))
+            ->with('swal_success', 'Login berhasil! Selamat datang, ' . $user->name);
     }
+
 
     // logout
     public function logout(Request $request)

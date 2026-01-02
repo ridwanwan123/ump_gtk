@@ -34,6 +34,6 @@ class UserManagementController extends Controller
         $user->syncRoles([$request->role]);
 
         return redirect()->route('admin.users.index')
-            ->with('success', 'Role user berhasil diperbarui!');
+            ->with('swal_success', 'Role user berhasil diperbarui!');
     }
 }

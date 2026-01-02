@@ -60,7 +60,7 @@
                 <small class="text-muted">Kelola akun pengguna aplikasi</small>
             </div>
             <div class="col-sm-6 text-right">
-                <a href="" class="btn btn-info btn-sm">
+                <a href="" class="btn btn-info btn-sm" hidden>
                     <i class="fas fa-user-plus mr-1"></i> Tambah User
                 </a>
             </div>
@@ -215,6 +215,23 @@
 @endsection
 
 @push('scripts')
+    @if(session('swal_success'))
+        <script>
+            Swal.fire({
+                title: '✅ Berhasil!',
+                text: "{{ session('swal_success') }}",
+                icon: 'success',
+                iconColor: '#28a745',
+                color: '#ffffff',
+                showConfirmButton: true,
+                confirmButtonText: 'Oke',
+                confirmButtonColor: '#ffc107',
+                timer: 2000,
+                timerProgressBar: true
+            });
+        </script>
+    @endif
+
     <script>
         $('#modalRole').on('show.bs.modal', function(event) {
             let button = $(event.relatedTarget);

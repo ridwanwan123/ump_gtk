@@ -184,7 +184,7 @@ class AbsensiPegawaiController extends Controller
             }
         });
 
-        return back()->with('success', 'Absensi berhasil disimpan / diperbarui.');
+        return back()->with('swal_success', 'Absensi berhasil disimpan / diperbarui.');
     }
 
 }

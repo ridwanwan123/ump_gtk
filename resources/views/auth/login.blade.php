@@ -10,6 +10,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/images/kemenag/kemenag.png') }}" />
+
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.27/dist/sweetalert2.min.css">
+
     <style>
         /* Reset & base */
         html,
@@ -213,11 +217,6 @@
 </head>
 
 <body>
-    @if ($errors->any())
-        <div class="alert alert-danger m-3 rounded-3 shadow-sm" role="alert">
-            <i class="fas fa-exclamation-triangle me-2"></i> {{ $errors->first() }}
-        </div>
-    @endif
 
     <main class="auth-full" role="main" aria-labelledby="login-title">
         <section class="hero-left" aria-hidden="true">
@@ -265,8 +264,43 @@
         </section>
     </main>
 
+    <!-- Bootstrap dan FontAwesome -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.27/dist/sweetalert2.all.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            @if(session('swal_success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: "{{ session('swal_success') }}",
+                    confirmButtonText: 'OK'
+                });
+            @endif
+
+            @if(session('swal_error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: "{{ session('swal_error') }}",
+                    confirmButtonText: 'Coba Lagi'
+                });
+            @endif
+
+            @if ($errors->any())
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Perhatian',
+                    text: "{{ $errors->first() }}",
+                    confirmButtonText: 'OK'
+                });
+            @endif
+        });
+    </script>
 </body>
 
 </html>

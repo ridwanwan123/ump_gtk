@@ -393,4 +393,32 @@
             </div>
         </div>
     </section>
+
+    @push('scripts')
+        @if(session('swal_success'))
+        <script>
+            Swal.fire({
+                title: '🎉 Selamat Datang!',
+                text: "{{ session('swal_success') }}",
+                icon: 'success',
+                iconColor: '#28a745', // hijau cerah
+                // background: 'linear-gradient(135deg, #1DE9B6, #0D47A1)',
+                color: '#ffffff',
+                showConfirmButton: true,
+                confirmButtonText: 'Lanjut ke Dashboard',
+                confirmButtonColor: '#ffc107',
+                timer: 1500,
+                timerProgressBar: true,
+                didOpen: () => {
+                    const b = Swal.getHtmlContainer().querySelector('b')
+                    Swal.showLoading()
+                },
+                willClose: () => {
+                    console.log('Swal ditutup')
+                }
+            });
+        </script>
+        @endif
+    @endpush
+
 @endsection
