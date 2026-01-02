@@ -215,7 +215,7 @@
 @endsection
 
 @push('scripts')
-    @if(session('swal_success'))
+    @if (session('swal_success'))
         <script>
             Swal.fire({
                 title: '✅ Berhasil!',

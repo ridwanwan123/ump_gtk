@@ -272,8 +272,8 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.27/dist/sweetalert2.all.min.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            @if(session('swal_success'))
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (session('swal_success'))
                 Swal.fire({
                     icon: 'success',
                     title: 'Berhasil',
@@ -282,7 +282,7 @@
                 });
             @endif
 
-            @if(session('swal_error'))
+            @if (session('swal_error'))
                 Swal.fire({
                     icon: 'error',
                     title: 'Gagal',

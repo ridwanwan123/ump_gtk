@@ -127,8 +127,9 @@
                                 <label>Jabatan</label>
                                 <select name="jabatan" class="form-control form-control-sm">
                                     <option value="">-- Semua Jabatan --</option>
-                                    @foreach($jabatanList as $jabatan)
-                                        <option value="{{ $jabatan }}" {{ old('jabatan') == $jabatan ? 'selected' : '' }}>
+                                    @foreach ($jabatanList as $jabatan)
+                                        <option value="{{ $jabatan }}"
+                                            {{ old('jabatan', $pegawai->jabatan) == $jabatan ? 'selected' : '' }}>
                                             {{ $jabatan }}
                                         </option>
                                     @endforeach
@@ -243,4 +244,23 @@
 
         </form>
     </div>
+
+    @push('scripts')
+        @if (session('swal_success'))
+            <script>
+                Swal.fire({
+                    title: '🎉 Sukses!',
+                    text: "{{ session('swal_success') }}",
+                    icon: 'success',
+                    iconColor: '#28a745',
+                    color: '#ffffff',
+                    showConfirmButton: true,
+                    confirmButtonText: 'Oke',
+                    confirmButtonColor: '#0D47A1',
+                    timer: 1800,
+                    timerProgressBar: true
+                });
+            </script>
+        @endif
+    @endpush
 @endsection

@@ -97,13 +97,15 @@
         /* Bold untuk angka selain 0 */
         input.non-zero {
             font-weight: 700;
-            color: #000 !important; /* paksa hitam */
+            color: #000 !important;
+            /* paksa hitam */
         }
 
         /* Muted untuk angka 0 */
         input.zero {
             font-weight: normal;
-            color: #6c757d !important; /* paksa abu-abu */
+            color: #6c757d !important;
+            /* paksa abu-abu */
         }
 
         /* Badge keterangan */
@@ -243,24 +245,24 @@
         </div>
     </div>
     @push('scripts')
-        @if(session('swal_success'))
-        <script>
-            Swal.fire({
-                title: '🎉 Sukses!',
-                text: "{{ session('swal_success') }}",
-                icon: 'success',
-                iconColor: '#28a745',
-                color: '#ffffff',
-                showConfirmButton: true,
-                confirmButtonText: 'Oke',
-                confirmButtonColor: '#0D47A1',
-                timer: 1800,
-                timerProgressBar: true
-            });
-        </script>
+        @if (session('swal_success'))
+            <script>
+                Swal.fire({
+                    title: '🎉 Sukses!',
+                    text: "{{ session('swal_success') }}",
+                    icon: 'success',
+                    iconColor: '#28a745',
+                    color: '#ffffff',
+                    showConfirmButton: true,
+                    confirmButtonText: 'Oke',
+                    confirmButtonColor: '#0D47A1',
+                    timer: 1800,
+                    timerProgressBar: true
+                });
+            </script>
         @endif
 
-         <script>
+        <script>
             document.addEventListener('DOMContentLoaded', function() {
                 function updateBold(input) {
                     if (input.value && input.value != '0') {
@@ -296,8 +298,7 @@
                     updateBold(input);
                 });
             });
-
         </script>
     @endpush
-   
+
 @endsection

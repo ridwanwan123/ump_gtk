@@ -96,7 +96,7 @@ class PegawaiController extends Controller
             DB::commit();
 
             return redirect()->route('pegawai.index')
-                            ->with('success', 'Pegawai berhasil ditambahkan');
+                            ->with('swal_success', 'Pegawai berhasil ditambahkan');
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error("Gagal menambahkan pegawai: ".$e->getMessage());
@@ -117,9 +117,15 @@ class PegawaiController extends Controller
     public function edit(Pegawai $pegawai)
     {
         $madrasah = Madrasah::all();
+        $jabatanList = Pegawai::select('jabatan')
+                ->distinct()
+                ->orderBy('jabatan')
+                ->pluck('jabatan');
+
         return view('pegawai.form', [
             'pegawai' => $pegawai,
             'madrasah' => $madrasah,
+            'jabatanList' => $jabatanList,
             'mode' => 'edit'
         ]);
     }
@@ -154,7 +160,7 @@ class PegawaiController extends Controller
 
             return redirect()
                 ->route('pegawai.show', $pegawai->id)
-                ->with('success', 'Data pegawai berhasil diperbarui');
+                ->with('swal_success', 'Data pegawai berhasil diperbarui');
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error("Gagal update pegawai: ".$e->getMessage());

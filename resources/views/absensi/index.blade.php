@@ -177,19 +177,20 @@
         </div>
 
         {{-- HEADER & ACTION --}}
-    <div class="d-flex justify-content-between mb-3">
-        {{-- <h2 class="fw-bold">Data Absensi Pegawai</h2> --}}
-        <div>
-            @can('create', App\Models\AbsensiPegawai::class)
-                <a href="{{ route('absensi.create') }}" class="btn btn-success btn-create-absensi">
-                    <i class="fas fa-plus"></i> Input Absensi
-                </a>
-            @endcan
-            @can('viewAny', App\Models\AbsensiPegawai::class)
-                <a href="{{ route('absensi.export') }}" class="btn btn-success btn-sm"><i class="fas fa-file-export"></i> Export</a>
-            @endcan
+        <div class="d-flex justify-content-between mb-3">
+            <h2 class="fw-bold">Data Absensi Pegawai</h2>
+            <div>
+                @can('create', App\Models\AbsensiPegawai::class)
+                    <a href="{{ route('absensi.create') }}" class="btn btn-success btn-create-absensi">
+                        <i class="fas fa-plus"></i> Input Absensi
+                    </a>
+                @endcan
+                @can('viewAny', App\Models\AbsensiPegawai::class)
+                    <a href="{{ route('absensi.export') }}" class="btn btn-success btn-sm"><i class="fas fa-file-export"></i>
+                        Export</a>
+                @endcan
+            </div>
         </div>
-    </div>
 
         {{-- TABLE CARD --}}
         <div class="card card-outline card-info shadow-sm">
@@ -242,12 +243,21 @@
                                             ];
                                         @endphp
 
-                                        <td class="text-center {{ $kelas }} {{ $data['s'] != 0 ? 'font-weight-bold' : 'text-muted' }}">{{ $data['s'] }}</td>
-                                        <td class="text-center {{ $kelas }} {{ $data['i'] != 0 ? 'font-weight-bold' : 'text-muted' }}">{{ $data['i'] }}</td>
-                                        <td class="text-center {{ $kelas }} {{ $data['kt'] != 0 ? 'font-weight-bold' : 'text-muted' }}">{{ $data['kt'] }}</td>
-                                        <td class="text-center {{ $kelas }} {{ $data['dl'] != 0 ? 'font-weight-bold' : 'text-muted' }}">{{ $data['dl'] }}</td>
-                                        <td class="text-center {{ $kelas }} {{ $data['c'] != 0 ? 'font-weight-bold' : 'text-muted' }}">{{ $data['c'] }}</td>
-
+                                        <td
+                                            class="text-center {{ $kelas }} {{ $data['s'] != 0 ? 'font-weight-bold' : 'text-muted' }}">
+                                            {{ $data['s'] }}</td>
+                                        <td
+                                            class="text-center {{ $kelas }} {{ $data['i'] != 0 ? 'font-weight-bold' : 'text-muted' }}">
+                                            {{ $data['i'] }}</td>
+                                        <td
+                                            class="text-center {{ $kelas }} {{ $data['kt'] != 0 ? 'font-weight-bold' : 'text-muted' }}">
+                                            {{ $data['kt'] }}</td>
+                                        <td
+                                            class="text-center {{ $kelas }} {{ $data['dl'] != 0 ? 'font-weight-bold' : 'text-muted' }}">
+                                            {{ $data['dl'] }}</td>
+                                        <td
+                                            class="text-center {{ $kelas }} {{ $data['c'] != 0 ? 'font-weight-bold' : 'text-muted' }}">
+                                            {{ $data['c'] }}</td>
                                     @endforeach
                                 </tr>
                             @endforeach

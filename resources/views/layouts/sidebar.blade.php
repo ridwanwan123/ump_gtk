@@ -53,8 +53,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href=""
-                        class="nav-link {{ request()->routeIs('admin.madrasah.*') ? 'active' : '' }}">
+                    <a href="" class="nav-link {{ request()->routeIs('admin.madrasah.*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-school"></i>
                         <p>Data Madrasah</p>
                     </a>

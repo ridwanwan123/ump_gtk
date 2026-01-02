@@ -183,7 +183,8 @@
                 </div>
                 <div class="d-flex align-items-center">
                     <span class="version-badge">v1.1.0</span>
-                    <img src="{{ asset('assets/images/kemenag/penmad.png') }}" alt="Logo" class="footer-logo ms-3 ml-2">
+                    <img src="{{ asset('assets/images/kemenag/penmad.png') }}" alt="Logo"
+                        class="footer-logo ms-3 ml-2">
                 </div>
             </div>
         </footer>

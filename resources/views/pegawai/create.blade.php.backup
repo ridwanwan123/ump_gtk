@@ -126,8 +126,9 @@
                                 <label>Jabatan</label>
                                 <select name="jabatan" class="form-control form-control-sm">
                                     <option value="">-- Semua Jabatan --</option>
-                                    @foreach($jabatanList as $jabatan)
-                                        <option value="{{ $jabatan }}" {{ old('jabatan') == $jabatan ? 'selected' : '' }}>
+                                    @foreach ($jabatanList as $jabatan)
+                                        <option value="{{ $jabatan }}"
+                                            {{ old('jabatan') == $jabatan ? 'selected' : '' }}>
                                             {{ $jabatan }}
                                         </option>
                                     @endforeach

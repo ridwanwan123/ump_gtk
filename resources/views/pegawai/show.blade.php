@@ -165,4 +165,24 @@
             </div>
         </div>
     </section>
+
+    @push('scripts')
+        @if (session('swal_success'))
+            <script>
+                Swal.fire({
+                    title: '🎉 Sukses!',
+                    text: "{{ session('swal_success') }}",
+                    icon: 'success',
+                    iconColor: '#28a745',
+                    color: '#ffffff',
+                    showConfirmButton: true,
+                    confirmButtonText: 'Oke',
+                    confirmButtonColor: '#0D47A1',
+                    timer: 1800,
+                    timerProgressBar: true
+                });
+            </script>
+        @endif
+    @endpush
+
 @endsection
