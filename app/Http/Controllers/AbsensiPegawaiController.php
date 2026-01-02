@@ -188,4 +188,16 @@ class AbsensiPegawaiController extends Controller
         return back()->with('swal_success', 'Absensi berhasil disimpan / diperbarui.');
     }
 
+    public function export(Request $request)
+    {
+        $tahun = $request->tahun ?? now()->year;
+        $tw = $request->tw ?? 1; // default TW 1
+
+        return \Maatwebsite\Excel\Facades\Excel::download(
+            new \App\Exports\AbsensiPegawaiExport($tahun, $tw),
+            "absensi_pegawai_TW{$tw}_{$tahun}.xlsx"
+        );
+    }
+
+
 }

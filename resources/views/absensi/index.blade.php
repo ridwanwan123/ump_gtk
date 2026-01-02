@@ -176,14 +176,20 @@
             </div>
         </div>
 
-        {{-- BUTTON CREATE ABSENSI --}}
-        @can('create', App\Models\AbsensiPegawai::class)
-            <div class="mb-3">
+        {{-- HEADER & ACTION --}}
+    <div class="d-flex justify-content-between mb-3">
+        {{-- <h2 class="fw-bold">Data Absensi Pegawai</h2> --}}
+        <div>
+            @can('create', App\Models\AbsensiPegawai::class)
                 <a href="{{ route('absensi.create') }}" class="btn btn-success btn-create-absensi">
                     <i class="fas fa-plus"></i> Input Absensi
                 </a>
-            </div>
-        @endcan
+            @endcan
+            @can('viewAny', App\Models\AbsensiPegawai::class)
+                <a href="{{ route('absensi.export') }}" class="btn btn-success btn-sm"><i class="fas fa-file-export"></i> Export</a>
+            @endcan
+        </div>
+    </div>
 
         {{-- TABLE CARD --}}
         <div class="card card-outline card-info shadow-sm">
