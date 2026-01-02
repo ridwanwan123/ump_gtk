@@ -286,9 +286,9 @@
             <div class="modal-dialog modal-dialog-scrollable modal-lg">
                 <div class="modal-content border-0 shadow-lg">
                     <div class="modal-header text-white" style="background: linear-gradient(135deg, #1cc88a, #13855c); border-bottom: none;">
-                        <div class="d-flex align-items-center">
-                            <i class="fas fa-check-circle fa-lg me-3"></i>
-                            <div>
+                        <div class="d-flex align-items-center justify-content-center w-100">
+                            {{-- <i class="fas fa-check-circle fa-lg me-3"></i> --}}
+                            <div class="text-center">
                                 <h5 class="modal-title mb-0" id="madrasahSudahLabel">Madrasah Sudah Input Absensi</h5>
                                 <small class="opacity-75">Total: {{ $sudahCount }} Madrasah</small>
                             </div>
@@ -342,9 +342,9 @@
             <div class="modal-dialog modal-dialog-scrollable modal-lg">
                 <div class="modal-content border-0 shadow-lg">
                     <div class="modal-header text-white" style="background: linear-gradient(135deg, #e74a3b, #b02a1a); border-bottom: none;">
-                        <div class="d-flex align-items-center">
-                            <i class="fas fa-exclamation-triangle fa-lg me-3"></i>
-                            <div>
+                       <div class="d-flex align-items-center justify-content-center w-100">
+                            {{-- <i class="fas fa-exclamation-triangle fa-lg me-3"></i> --}}
+                            <div class="text-center">
                                 <h5 class="modal-title mb-0" id="madrasahBelumLabel">Madrasah Belum Input Absensi</h5>
                                 <small class="opacity-75">Total: {{ $belumCount }} Madrasah</small>
                             </div>
