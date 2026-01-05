@@ -248,7 +248,7 @@
 
                     <div class="mb-3">
                         <label for="password" class="form-label small fw-semibold text-secondary">Password</label>
-                        <input id="password" name="password" type="password" value="penmad123"
+                        <input id="password" name="password" type="password"
                             class="form-control @error('password') is-invalid @enderror" placeholder="Masukkan password"
                             autocomplete="current-password" required>
                         @error('password')
