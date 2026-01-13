@@ -63,6 +63,14 @@ class PegawaiController extends Controller
         }
     }
 
+    public function show(Pegawai $pegawai)
+    {
+        $this->authorize('view', $pegawai);
+
+        return view('pegawai.show', compact('pegawai'));
+    }
+
+    
     public function create()
     {
         try {
@@ -94,6 +102,22 @@ class PegawaiController extends Controller
 
             abort(500);
         }
+    }
+
+    public function edit(Pegawai $pegawai)
+    {
+        $madrasah = Madrasah::all();
+        $jabatanList = Pegawai::select('jabatan')
+                ->distinct()
+                ->orderBy('jabatan')
+                ->pluck('jabatan');
+
+        return view('pegawai.form', [
+            'pegawai' => $pegawai,
+            'madrasah' => $madrasah,
+            'jabatanList' => $jabatanList,
+            'mode' => 'edit'
+        ]);
     }
 
     public function store(Request $request)
