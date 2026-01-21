@@ -143,24 +143,78 @@
                 min-width: 40px;
             }
         }
+
     </style>
 @endpush
 
 @section('content')
     <div class="container-fluid p-2">
-        @if ($absensiExisting->isNotEmpty())
-            <span class="badge badge-warning ml-2">
-                Data sudah ada – mode edit
-            </span>
-        @endif
-        <div class="card card-outline card-info shadow-sm">
+
+        <div class="row mb-3">
+            <div class="col-sm-6">
+                <h1 class="fw-bold">Input Absensi</h1>
+            </div>
+            <div class="col-sm-6 text-right">
+                <a href="{{ route('absensi.index') }}"
+                    class="btn btn-secondary btn-sm">
+                    <i class="fas fa-arrow-left"></i> Kembali
+                </a>
+            </div>
+        </div>
+
+        @php
+            $tw = request('tw', ceil(now()->month / 3));
+            $tahun = request('tahun', now()->year);
+        @endphp
+
+        <div class="row mb-2">
+            {{-- INFO PERIODE --}}
+            <div class="col-md-6">
+                <div class="d-flex align-items-center p-2 bg-white border-left border-info shadow-sm rounded h-100">
+                    <div class="mr-3 text-info">
+                        <i class="fas fa-calendar-alt fa-lg"></i>
+                    </div>
+                    <div>
+                        <div class="font-weight-bold" style="font-size: 18px;">Periode Absensi</div>
+                        <div class="text-bold">
+                            TW {{ $tw }} · {{ $tahun }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- INFO MODE --}}
+            <div class="col-md-6">
+                <div
+                    class="d-flex align-items-center p-2 bg-white border-left 
+                    {{ $absensiExisting->isNotEmpty() ? 'border-warning' : 'border-success' }}
+                    shadow-sm rounded h-100">
+
+                    <div class="mr-3 
+                        {{ $absensiExisting->isNotEmpty() ? 'text-warning' : 'text-success' }}">
+                        <i class="fas {{ $absensiExisting->isNotEmpty() ? 'fa-edit' : 'fa-plus-circle' }} fa-lg"></i>
+                    </div>
+
+                    <div>
+                        <div class="font-weight-bold" style="font-size: 18px; ">
+                            {{ $absensiExisting->isNotEmpty() ? 'Mode Edit Data' : 'Mode Input Baru' }}
+                        </div>
+                        <div class="text-bold">
+                            {{ $absensiExisting->isNotEmpty()
+                                ? 'Data absensi sudah ada dan akan diperbarui'
+                                : 'Belum ada data absensi pada periode ini' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card card-outline card-info shadow-sm mt-4">
             <div class="card-header d-flex align-items-center">
                 <h3 class="card-title mb-0">
                     <i class="fas fa-calendar-check mr-1"></i> Input Absensi Pegawai
                 </h3>
-                <span class="badge badge-info ml-2">
-                    TRIWULAN {{ request('tw', ceil(now()->month / 3)) }} - {{ request('tahun', now()->year) }}
-                </span>
             </div>
 
             <form action="{{ route('absensi.store') }}" method="POST">

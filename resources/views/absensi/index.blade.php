@@ -181,14 +181,32 @@
             <h2 class="fw-bold">Data Absensi Pegawai</h2>
             <div>
                 @can('create', App\Models\AbsensiPegawai::class)
-                    <a href="{{ route('absensi.create') }}" class="btn btn-success btn-create-absensi">
+                    <button type="button" class="btn btn-success btn-create-absensi" data-toggle="modal"
+                        data-target="#modalPilihTW">
                         <i class="fas fa-plus"></i> Input Absensi
-                    </a>
+                    </button>
                 @endcan
                 @can('viewAny', App\Models\AbsensiPegawai::class)
                     <a href="{{ route('absensi.export') }}" class="btn btn-success btn-sm"><i class="fas fa-file-export"></i>
                         Export</a>
                 @endcan
+            </div>
+        </div>
+
+        
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="d-flex align-items-center p-2 bg-white border-left border-info shadow-sm rounded h-100">
+                    <div class="mr-3 text-info">
+                        <i class="fas fa-calendar-alt fa-lg"></i>
+                    </div>
+                    <div>
+                        <div class="font-weight-bold" style="font-size: 18px;">Periode Absensi</div>
+                        <div class="text-bold">
+                            TW {{ $selectedTW }} · {{ $selectedYear }}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -303,4 +321,68 @@
         </div>
 
     </div>
+
+    <div class="modal fade" id="modalPilihTW" tabindex="-1" role="dialog" aria-labelledby="modalPilihTWLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <form method="GET" action="{{ route('absensi.create') }}">
+
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title" id="modalPilihTWLabel">
+                        <i class="fas fa-calendar-alt"></i> Pilih Periode Absensi
+                    </h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    @php
+                        $currentYear = now()->year;
+                        $currentTW = ceil(now()->month / 3);
+                    @endphp
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Tahun</label>
+                                <select name="tahun" class="form-control">
+                                    @for ($y = $currentYear; $y >= $currentYear - 5; $y--)
+                                        <option value="{{ $y }}" {{ $y == $currentYear ? 'selected' : '' }}>
+                                            {{ $y }}
+                                        </option>
+                                    @endfor
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Triwulan</label>
+                                <select name="tw" class="form-control">
+                                    @for ($i = 1; $i <= 4; $i++)
+                                        <option value="{{ $i }}" {{ $i == $currentTW ? 'selected' : '' }}>
+                                            TW {{ $i }}
+                                        </option>
+                                    @endfor
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-info btn-block">
+                        <i class="fas fa-arrow-right"></i> Lanjut Input Absensi
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
 @endsection
