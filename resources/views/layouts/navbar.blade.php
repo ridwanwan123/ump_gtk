@@ -8,7 +8,7 @@
         </li>
         <li class="nav-item d-flex align-items-center ml-3">
             <a class="nav-link text-white font-weight-bold title-wrap" href="#">
-                UMP Guru & Tenaga Kependidikan
+                Honorarium GTK Non-PNS
             </a>
             <span class="badge badge-light ml-2 role-badge">
                 {{ auth()->user()->getRoleNames()->first() }}

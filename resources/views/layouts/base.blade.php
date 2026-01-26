@@ -162,7 +162,7 @@
 
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <a href="{{ asset('assets/index3.html') }}" class="brand-link">
-                <span class="brand-text brand-title">Sistem UMP GTK</span>
+                <span class="brand-text brand-title">Sistem Honorarium GTK </br> Non-PNS</span>
             </a>
             @include('layouts.sidebar')
         </aside>
