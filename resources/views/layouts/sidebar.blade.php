@@ -60,6 +60,16 @@
                 </li>
             @endrole
 
+            {{-- PENGATURAN AKUN --}}
+            <li class="nav-header">Akun</li>
+            <li class="nav-item">
+                <a href="{{ route('auth.ubah_password') }}"
+                    class="nav-link {{ request()->routeIs('auth.ubah_password') ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-key"></i>
+                    <p>Ubah Password</p>
+                </a>
+            </li>
+
         </ul>
     </nav>
 </div>

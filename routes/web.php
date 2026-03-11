@@ -94,3 +94,15 @@ Route::prefix('admin')
         Route::get('users', [UserManagementController::class, 'index'])->name('users.index');
         Route::post('users/{user}/role', [UserManagementController::class, 'updateRole'])->name('users.updateRole');
     });
+
+
+
+
+/*
+| Ubah Password (semua user)
+*/
+Route::get('/ubah-password', [UserManagementController::class, 'editPassword'])
+    ->name('auth.ubah_password');
+
+Route::post('/ubah-password', [UserManagementController::class, 'updatePassword'])
+    ->name('auth.ubah_password.update');
