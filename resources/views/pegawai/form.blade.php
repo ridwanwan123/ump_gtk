@@ -35,9 +35,18 @@
                         </div>
                         <div class="card-body">
 
-                            {{-- Nama Pegawai --}}
                             <div class="form-group">
-                                <label>Nama Pegawai</label>
+                                <label>Nama Simpatika</label>
+                                <input type="text" name="nama_simpatika"
+                                    class="form-control @error('nama_simpatika') is-invalid @enderror"
+                                    value="{{ old('nama_simpatika', $pegawai->nama_simpatika) }}">
+                                @error('nama_simpatika')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label>Nama Rekening</label>
                                 <input type="text" name="nama_rekening"
                                     class="form-control @error('nama_rekening') is-invalid @enderror"
                                     value="{{ old('nama_rekening', $pegawai->nama_rekening) }}">
@@ -46,7 +55,6 @@
                                 @enderror
                             </div>
 
-                            {{-- NIK --}}
                             <div class="form-group">
                                 <label>NIK</label>
                                 <input type="text" name="nik" class="form-control @error('nik') is-invalid @enderror"
@@ -56,7 +64,6 @@
                                 @enderror
                             </div>
 
-                            {{-- Tempat & Tanggal Lahir --}}
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label>Tempat Lahir</label>
@@ -78,7 +85,6 @@
                                 </div>
                             </div>
 
-                            {{-- Nama Ibu Kandung --}}
                             <div class="form-group">
                                 <label>Nama Ibu Kandung</label>
                                 <input type="text" name="nama_ibu_kandung"
@@ -89,7 +95,21 @@
                                 @enderror
                             </div>
 
-                            {{-- Pendidikan Terakhir --}}
+                            <div class="form-group">
+                                <label>Agama</label>
+                                <select name="agama" class="form-control @error('agama') is-invalid @enderror">
+                                    <option value="">-- Pilih Agama --</option>
+                                    @foreach (['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu'] as $agama)
+                                        <option value="{{ $agama }}"
+                                            {{ old('agama', $pegawai->agama) == $agama ? 'selected' : '' }}>
+                                            {{ $agama }}</option>
+                                    @endforeach
+                                </select>
+                                @error('agama')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
                             <div class="form-group">
                                 <label>Pendidikan Terakhir</label>
                                 <input type="text" name="pend_terakhir"
@@ -100,10 +120,9 @@
                                 @enderror
                             </div>
 
-                            {{-- Alamat --}}
                             <div class="form-group">
-                                <label>Alamat</label>
-                                <textarea name="alamat_gtk" class="form-control @error('alamat_gtk') is-invalid @enderror" rows="4">{{ old('alamat_gtk', $pegawai->alamat_gtk) }}</textarea>
+                                <label>Alamat GTK</label>
+                                <textarea name="alamat_gtk" class="form-control @error('alamat_gtk') is-invalid @enderror" rows="3">{{ old('alamat_gtk', $pegawai->alamat_gtk) }}</textarea>
                                 @error('alamat_gtk')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -124,30 +143,41 @@
                         <div class="card-body">
 
                             <div class="form-group">
-                                <label>Jabatan</label>
-                                <select name="jabatan" class="form-control form-control-sm">
-                                    <option value="">-- Semua Jabatan --</option>
-                                    @foreach ($jabatanList as $jabatan)
+                                <label>Jabatan UMP</label>
+                                <select name="jabatan_ump" class="form-control @error('jabatan_ump') is-invalid @enderror">
+                                    <option value="">-- Pilih Jabatan UMP --</option>
+                                    @foreach (['GURU', 'TENAGA KEBERSIHAN', 'TENAGA KEAMANAN', 'TENAGA PERPUSTAKAAN'] as $jabatan)
                                         <option value="{{ $jabatan }}"
-                                            {{ old('jabatan', $pegawai->jabatan) == $jabatan ? 'selected' : '' }}>
+                                            {{ old('jabatan_ump', $pegawai->jabatan_ump) == $jabatan ? 'selected' : '' }}>
                                             {{ $jabatan }}
                                         </option>
                                     @endforeach
                                 </select>
-                                @error('jabatan')
+                                @error('jabatan_ump')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <div class="form-group">
-                                <label>PEG ID</label>
-                                <input type="text" name="pegid"
-                                    class="form-control @error('pegid') is-invalid @enderror"
-                                    value="{{ old('pegid', $pegawai->pegid) }}">
-                                @error('pegid')
+                                <label>Jabatan Dinas</label>
+                                <select name="jabatan_dinas"
+                                    class="form-control @error('jabatan_dinas') is-invalid @enderror">
+                                    <option value="">-- Pilih Jabatan Dinas --</option>
+                                    @foreach (['PENDIDIK', 'TENDIK'] as $jabatan)
+                                        <option value="{{ $jabatan }}"
+                                            {{ old('jabatan_dinas', $pegawai->jabatan_dinas) == $jabatan ? 'selected' : '' }}>
+                                            {{ $jabatan }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('jabatan_dinas')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
+
+                            <input type="hidden" name="status_asn" value="{{ old('status_asn', 'NON ASN') }}">
+
+                            <input type="hidden" name="status_pegawai" value="{{ old('status_pegawai', 'AKTIF') }}">
 
                             <div class="form-group">
                                 <label>Madrasah</label>
@@ -165,7 +195,17 @@
                                 @enderror
                             </div>
 
-                            <div class="form-group mb-0">
+                            <div class="form-group">
+                                <label>NPSN Tempat Tugas</label>
+                                <input type="text" name="npsn_tempat_tugas"
+                                    class="form-control @error('npsn_tempat_tugas') is-invalid @enderror"
+                                    value="{{ old('npsn_tempat_tugas', $pegawai->npsn_tempat_tugas) }}">
+                                @error('npsn_tempat_tugas')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="form-group">
                                 <label>NPWP</label>
                                 <input type="text" name="npwp"
                                     class="form-control @error('npwp') is-invalid @enderror"
@@ -175,6 +215,31 @@
                                 @enderror
                             </div>
 
+                            <div class="form-group">
+                                <label>PEG ID</label>
+                                <input type="text" name="pegid"
+                                    class="form-control @error('pegid') is-invalid @enderror"
+                                    value="{{ old('pegid', $pegawai->pegid) }}">
+                                @error('pegid')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label>Dapodik</label>
+                                <select name="dapodik" class="form-control @error('dapodik') is-invalid @enderror">
+                                    <option value="">-- Pilih Dapodik --</option>
+                                    @foreach (['YA', 'TIDAK'] as $dapodik)
+                                        <option value="{{ $dapodik }}"
+                                            {{ old('dapodik', $pegawai->dapodik) == $dapodik ? 'selected' : '' }}>
+                                            {{ $dapodik }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('dapodik')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
                     </div>
 
@@ -195,7 +260,7 @@
                                 @enderror
                             </div>
 
-                            <div class="form-group mb-0">
+                            <div class="form-group">
                                 <label>Email</label>
                                 <input type="email" name="alamat_email"
                                     class="form-control @error('alamat_email') is-invalid @enderror"
@@ -214,8 +279,7 @@
                             <h3 class="card-title"><i class="fas fa-university"></i> Data Bank</h3>
                         </div>
                         <div class="card-body">
-
-                            <div class="form-group mb-0">
+                            <div class="form-group">
                                 <label>No Rekening Bank DKI</label>
                                 <input type="text" name="no_rek_bank_dki"
                                     class="form-control @error('no_rek_bank_dki') is-invalid @enderror"
@@ -224,11 +288,11 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-
                         </div>
                     </div>
 
                 </div>
+
             </div>
 
             {{-- Action Button --}}
@@ -243,6 +307,7 @@
             </div>
 
         </form>
+
     </div>
 
     @push('scripts')

@@ -75,17 +75,16 @@
                         {{-- Jabatan --}}
                         <div class="col-md-5">
                             <label>Jabatan</label>
-                            <select name="jabatan" class="form-control form-control-sm">
+                            <select name="jabatan_ump" class="form-control form-control-sm">
                                 <option value="">-- Semua Jabatan --</option>
-                                @foreach ($jabatanList as $jabatan)
-                                    <option value="{{ $jabatan }}"
-                                        {{ request('jabatan') == $jabatan ? 'selected' : '' }}>
-                                        {{ $jabatan }}
+                                @foreach ($jabatanList as $jabatan_ump)
+                                    <option value="{{ $jabatan_ump }}"
+                                        {{ request('jabatan_ump') == $jabatan_ump ? 'selected' : '' }}>
+                                        {{ $jabatan_ump }}
                                     </option>
                                 @endforeach
                             </select>
                         </div>
-
 
                         {{-- Button Filter --}}
                         <div class="col-md-2 d-flex align-items-end">
@@ -130,8 +129,8 @@
                         <tr>
                             <th>No</th>
                             <th>Madrasah</th>
-                            <th>Nama</th>
-                            <th>Jabatan</th>
+                            <th>Nama Simpatika</th>
+                            <th>Jabatan UMP</th>
                             <th>Nomor HP</th>
                             <th>PEG ID</th>
                             <th>Aksi</th>
@@ -141,9 +140,9 @@
                         @foreach ($pegawais as $i => $pegawai)
                             <tr>
                                 <td class="text-center">{{ $pegawais->firstItem() + $i }}</td>
-                                <td>{{ $pegawai->madrasah->nama_madrasah ?? '-' }}</td>
-                                <td>{{ $pegawai->nama_rekening }}</td>
-                                <td>{{ $pegawai->jabatan }}</td>
+                                <td>{{ $pegawai->madrasah->nama_madrasah }}</td>
+                                <td>{{ $pegawai->nama_simpatika }}</td>
+                                <td>{{ $pegawai->jabatan_ump }}</td>
                                 <td>{{ $pegawai->nomor_hp }}</td>
                                 <td>{{ $pegawai->pegid }}</td>
                                 <td class="text-center">

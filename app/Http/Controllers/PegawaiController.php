@@ -25,8 +25,8 @@ class PegawaiController extends Controller
                 $query->where('id_madrasah', $request->madrasah);
             }
 
-            if ($request->filled('jabatan')) {
-                $query->where('jabatan', $request->jabatan);
+            if ($request->filled('jabatan_ump')) {
+                $query->where('jabatan_ump', $request->jabatan_ump);
             }
 
             if ($request->filled('search')) {
@@ -38,10 +38,10 @@ class PegawaiController extends Controller
                 ->paginate(20)
                 ->withQueryString();
 
-            $jabatanList = Pegawai::select('jabatan')
+            $jabatanList = Pegawai::select('jabatan_ump')
                 ->distinct()
-                ->orderBy('jabatan')
-                ->pluck('jabatan');
+                ->orderBy('jabatan_ump')
+                ->pluck('jabatan_ump');
 
             $madrasahs = Madrasah::orderBy('nama_madrasah')->get();
 
@@ -77,10 +77,12 @@ class PegawaiController extends Controller
             $this->authorize('create', Pegawai::class);
 
             $madrasah = Madrasah::all();
-            $jabatanList = Pegawai::select('jabatan')
-                ->distinct()
-                ->orderBy('jabatan')
-                ->pluck('jabatan');
+            $jabatanUMPList = [
+                'GURU',
+                'TENAGA KEBERSIHAN',
+                'TENAGA KEAMANAN',
+                'TENAGA PERPUSTAKAAN'
+            ];
 
             Log::info('Akses form tambah pegawai', [
                 'user_id' => auth()->id(),
@@ -90,7 +92,7 @@ class PegawaiController extends Controller
             return view('pegawai.form', [
                 'pegawai' => new Pegawai(),
                 'madrasah' => $madrasah,
-                'jabatanList' => $jabatanList,
+                'jabatanUMPList' => $jabatanUMPList,
                 'mode' => 'create'
             ]);
         } catch (Throwable $e) {
@@ -107,15 +109,17 @@ class PegawaiController extends Controller
     public function edit(Pegawai $pegawai)
     {
         $madrasah = Madrasah::all();
-        $jabatanList = Pegawai::select('jabatan')
-                ->distinct()
-                ->orderBy('jabatan')
-                ->pluck('jabatan');
+        $jabatanUMPList = [
+            'GURU',
+            'TENAGA KEBERSIHAN',
+            'TENAGA KEAMANAN',
+            'TENAGA PERPUSTAKAAN'
+        ];
 
         return view('pegawai.form', [
             'pegawai' => $pegawai,
             'madrasah' => $madrasah,
-            'jabatanList' => $jabatanList,
+            'jabatanUMPList' => $jabatanUMPList,
             'mode' => 'edit'
         ]);
     }
@@ -126,20 +130,27 @@ class PegawaiController extends Controller
             $this->authorize('create', Pegawai::class);
 
             $validated = $request->validate([
-                'nama_rekening' => 'required|string|max:255',
-                'nik' => 'required|string|max:20',
-                'tempat_lahir' => 'required|string|max:100',
-                'tanggal_lahir' => 'required|date',
-                'nama_ibu_kandung' => 'required|string|max:255',
-                'pend_terakhir' => 'required|string|max:100',
-                'alamat_gtk' => 'required|string',
-                'jabatan' => 'required|string|max:100',
-                'pegid' => 'nullable|string|max:50',
-                'id_madrasah' => 'required|exists:madrasah,id',
-                'npwp' => 'nullable|string|max:50',
-                'nomor_hp' => 'nullable|string|max:20',
-                'alamat_email' => 'nullable|email',
-                'no_rek_bank_dki' => 'nullable|string|max:50',
+                'nama_simpatika'    => 'nullable|string|max:255',
+                'nama_rekening'     => 'required|string|max:255',
+                'jabatan_ump'       => 'nullable|string|max:100',
+                'jabatan_dinas'     => 'nullable|string|max:100',
+                'status_asn'        => 'nullable|string|max:50',
+                'no_rek_bank_dki'   => 'nullable|string|max:50',
+                'id_madrasah'       => 'required|exists:madrasah,id',
+                'npsn_tempat_tugas' => 'nullable|string|max:20',
+                'nik'               => 'required|string|max:20',
+                'pegid'             => 'nullable|string|max:50',
+                'tempat_lahir'      => 'required|string|max:100',
+                'tanggal_lahir'     => 'required|date',
+                'nama_ibu_kandung'  => 'required|string|max:255',
+                'agama'             => 'nullable|string|max:50',
+                'pend_terakhir'     => 'required|string|max:100',
+                'npwp'              => 'nullable|string|max:50',
+                'nomor_hp'          => 'nullable|string|max:20',
+                'alamat_email'      => 'nullable|email',
+                'alamat_gtk'        => 'required|string',
+                'status_pegawai'    => 'nullable|string|max:50',
+                'dapodik'           => 'nullable|string|max:255',
             ]);
 
             DB::transaction(function () use ($validated) {
@@ -148,19 +159,20 @@ class PegawaiController extends Controller
 
             Log::info('Pegawai berhasil ditambahkan', [
                 'user_id' => auth()->id(),
-                'nama' => $validated['nama_rekening'],
-                'ip' => $request->ip(),
+                'nama'    => $validated['nama_rekening'],
+                'ip'      => $request->ip(),
             ]);
 
             return redirect()->route('pegawai.index')
                 ->with('swal_success', 'Pegawai berhasil ditambahkan');
+
         } catch (ValidationException $e) {
             throw $e;
         } catch (Throwable $e) {
             Log::error('Gagal menambahkan pegawai', [
                 'message' => $e->getMessage(),
                 'user_id' => auth()->id(),
-                'ip' => $request->ip(),
+                'ip'      => $request->ip(),
             ]);
 
             return back()
@@ -175,20 +187,27 @@ class PegawaiController extends Controller
             $this->authorize('update', $pegawai);
 
             $validated = $request->validate([
-                'nama_rekening' => 'required|string|max:255',
-                'nik' => 'required|string|max:20',
-                'tempat_lahir' => 'required|string|max:100',
-                'tanggal_lahir' => 'required|date',
-                'nama_ibu_kandung' => 'required|string|max:255',
-                'pend_terakhir' => 'required|string|max:100',
-                'alamat_gtk' => 'required|string',
-                'jabatan' => 'required|string|max:100',
-                'pegid' => 'nullable|string|max:50',
-                'id_madrasah' => 'required|exists:madrasah,id',
-                'npwp' => 'nullable|string|max:50',
-                'nomor_hp' => 'nullable|string|max:20',
-                'alamat_email' => 'nullable|email',
-                'no_rek_bank_dki' => 'nullable|string|max:50',
+                'nama_simpatika'    => 'nullable|string|max:255',
+                'nama_rekening'     => 'required|string|max:255',
+                'jabatan_ump'       => 'nullable|string|max:100',
+                'jabatan_dinas'     => 'nullable|string|max:100',
+                'status_asn'        => 'nullable|string|max:50',
+                'no_rek_bank_dki'   => 'nullable|string|max:50',
+                'id_madrasah'       => 'required|exists:madrasah,id',
+                'npsn_tempat_tugas' => 'nullable|string|max:20',
+                'nik'               => 'required|string|max:20',
+                'pegid'             => 'nullable|string|max:50',
+                'tempat_lahir'      => 'required|string|max:100',
+                'tanggal_lahir'     => 'required|date',
+                'nama_ibu_kandung'  => 'required|string|max:255',
+                'agama'             => 'nullable|string|max:50',
+                'pend_terakhir'     => 'required|string|max:100',
+                'npwp'              => 'nullable|string|max:50',
+                'nomor_hp'          => 'nullable|string|max:20',
+                'alamat_email'      => 'nullable|email',
+                'alamat_gtk'        => 'required|string',
+                'status_pegawai'    => 'nullable|string|max:50',
+                'dapodik'           => 'nullable|string|max:255',
             ]);
 
             DB::transaction(function () use ($pegawai, $validated) {
@@ -198,12 +217,14 @@ class PegawaiController extends Controller
             Log::info('Data pegawai diperbarui', [
                 'user_id' => auth()->id(),
                 'pegawai_id' => $pegawai->id,
+                'nama' => $validated['nama_rekening'],
                 'ip' => $request->ip(),
             ]);
 
             return redirect()
                 ->route('pegawai.show', $pegawai->id)
                 ->with('swal_success', 'Data pegawai berhasil diperbarui');
+
         } catch (ValidationException $e) {
             throw $e;
         } catch (Throwable $e) {

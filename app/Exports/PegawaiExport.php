@@ -26,55 +26,61 @@ class PegawaiExport implements FromCollection, WithHeadings, WithMapping, Should
     public function headings(): array
     {
         return [
-            'ID',
-            'Nama Pegawai',
+            'Nama Simpatika',
+            'Nama Rekening',
+            'Jabatan UMP',
+            'Jabatan Dinas',
+            'Status ASN',
+            'No Rekening Bank DKI',
+            'Madrasah',
+            'NPSN Tempat Tugas',
             'NIK',
+            'PEG ID',
             'Tempat Lahir',
             'Tanggal Lahir',
             'Nama Ibu Kandung',
+            'Agama',
             'Pendidikan Terakhir',
-            'Alamat',
-            'Jabatan',
-            'PEG ID',
-            'Madrasah',
             'NPWP',
             'Nomor HP',
             'Email',
-            'No Rekening Bank DKI',
+            'Alamat GTK',
+            'Status Pegawai',
+            'Dapodik',
         ];
     }
 
-    /**
-     * Map data agar format sesuai
-     */
     public function map($pegawai): array
     {
         return [
-            $pegawai->id,
+            $pegawai->nama_simpatika,
             $pegawai->nama_rekening,
-            "'" . $pegawai->nik,                  // paksa string
+            $pegawai->jabatan_ump,
+            $pegawai->jabatan_dinas,
+            $pegawai->status_asn,
+            "'" . $pegawai->no_rek_bank_dki,
+            $pegawai->madrasah->nama_madrasah ?? '-',
+            $pegawai->npsn_tempat_tugas,
+            "'" . $pegawai->nik,
+            "'" . $pegawai->pegid,
             $pegawai->tempat_lahir,
             $pegawai->tanggal_lahir,
-            $pegawai->nama_ibu_kandung,
+            $pegawai->nama_ibu_kandung ?? '',
+            $pegawai->agama,
             $pegawai->pend_terakhir,
-            $pegawai->alamat_gtk,
-            $pegawai->jabatan,
-            "'" . $pegawai->pegid,                // paksa string
-            $pegawai->madrasah->nama_madrasah ?? '-',
-            "'" . $pegawai->npwp,                 // paksa string
-            "'" . $pegawai->nomor_hp,             // paksa string
+            "'" . $pegawai->npwp,
+            "'" . $pegawai->nomor_hp,
             $pegawai->alamat_email,
-            "'" . $pegawai->no_rek_bank_dki,     // paksa string
+            $pegawai->alamat_gtk,
+            $pegawai->status_pegawai,
+            $pegawai->dapodik,
         ];
     }
 
-    /**
-     * Format kolom, tetap bisa dipakai untuk tanggal atau angka lain
-     */
     public function columnFormats(): array
     {
         return [
-            'E' => NumberFormat::FORMAT_DATE_DDMMYYYY, // kolom Tanggal Lahir
+            'L' => NumberFormat::FORMAT_DATE_DDMMYYYY, // tanggal lahir
         ];
     }
 }

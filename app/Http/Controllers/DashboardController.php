@@ -46,7 +46,7 @@ class DashboardController extends Controller
             $statistikJabatan = [];
             foreach ($jabatanList as $jabatan) {
                 $statistikJabatan[$jabatan] = (clone $query)
-                    ->where('jabatan', $jabatan)
+                    ->where('jabatan_ump', $jabatan)
                     ->count();
             }
 
