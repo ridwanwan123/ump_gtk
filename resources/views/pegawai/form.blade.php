@@ -146,7 +146,7 @@
                                 <label>Jabatan UMP</label>
                                 <select name="jabatan_ump" class="form-control @error('jabatan_ump') is-invalid @enderror">
                                     <option value="">-- Pilih Jabatan UMP --</option>
-                                    @foreach (['GURU', 'TENAGA KEBERSIHAN', 'TENAGA KEAMANAN', 'TENAGA PERPUSTAKAAN'] as $jabatan)
+                                    @foreach ($jabatanUMPList as $jabatan)
                                         <option value="{{ $jabatan }}"
                                             {{ old('jabatan_ump', $pegawai->jabatan_ump) == $jabatan ? 'selected' : '' }}>
                                             {{ $jabatan }}
@@ -196,7 +196,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label>NPSN Tempat Tugas</label>
+                                <label>NPSN</label>
                                 <input type="text" name="npsn_tempat_tugas"
                                     class="form-control @error('npsn_tempat_tugas') is-invalid @enderror"
                                     value="{{ old('npsn_tempat_tugas', $pegawai->npsn_tempat_tugas) }}">

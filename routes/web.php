@@ -41,45 +41,52 @@ Route::post('/logout', [LoginController::class, 'logout'])
 Route::middleware(['auth', 'set.unit'])->group(function () {
 
     /*
-    | Dashboard (SATU SAJA)
+    | Dashboard
     */
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
     /*
-    | Pegawai (RESTFUL)
-    | Superadmin: semua
-    | Operator: otomatis difilter unit_kerja
+    | Pegawai
     */
-    // Semua orang bisa lihat index & show
+
+    // Semua user login bisa melihat data
+    Route::resource('pegawai', PegawaiController::class)
+        ->only(['index', 'show']);
+
     Route::get('pegawai/export', [PegawaiController::class, 'export'])
         ->name('pegawai.export');
 
-    Route::resource('pegawai', PegawaiController::class)
-        ->only(['index', 'show', 'create']);
-
-    // Hanya superadmin bisa create, store, edit, update, destroy
-    Route::middleware('role:superadmin')->group(function () {
+    // Operator boleh edit/update
+    Route::middleware('role:operator|superadmin')->group(function () {
         Route::resource('pegawai', PegawaiController::class)
-            ->only(['create', 'store', 'edit', 'update', 'destroy']);
+            ->only(['edit', 'update']);
     });
 
+    // Hanya superadmin boleh tambah & hapus
+    Route::middleware('role:superadmin')->group(function () {
+        Route::resource('pegawai', PegawaiController::class)
+            ->only(['create', 'store', 'destroy']);
+    });
+
+
     /*
-    | Absensi Pegawai (RESTFUL)
+    | Absensi Pegawai
     */
-    // Semua orang bisa melihat absensi
+
+    // Semua user bisa lihat absensi
     Route::resource('absensi', AbsensiPegawaiController::class)
         ->only(['index']);
 
-    // Semua role boleh export
     Route::get('absensi/export', [AbsensiPegawaiController::class, 'export'])
         ->name('absensi.export');
 
-    // Hanya operator yang bisa create & update
+    // Operator boleh input absensi
     Route::middleware('role:operator')->group(function () {
         Route::resource('absensi', AbsensiPegawaiController::class)
             ->only(['create', 'store', 'update']);
     });
+
 });
 
 /*
