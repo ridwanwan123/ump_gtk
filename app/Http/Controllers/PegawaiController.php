@@ -142,7 +142,7 @@ class PegawaiController extends Controller
                 'pegid'             => 'nullable|string|max:50',
                 'tempat_lahir'      => 'required|string|max:100',
                 'tanggal_lahir'     => 'required|date',
-                'nama_ibu_kandung'  => 'required|string|max:255',
+                'nama_ibu_kandung'  => 'nullable|string|max:255',
                 'agama'             => 'nullable|string|max:50',
                 'pend_terakhir'     => 'required|string|max:100',
                 'npwp'              => 'nullable|string|max:50',

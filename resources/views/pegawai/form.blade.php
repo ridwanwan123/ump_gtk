@@ -99,7 +99,7 @@
                                 <label>Agama</label>
                                 <select name="agama" class="form-control @error('agama') is-invalid @enderror">
                                     <option value="">-- Pilih Agama --</option>
-                                    @foreach (['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu'] as $agama)
+                                    @foreach (['ISLAM', 'KRISTEN', 'HINDU', 'BUDHA', 'KONGHUCU'] as $agama)
                                         <option value="{{ $agama }}"
                                             {{ old('agama', $pegawai->agama) == $agama ? 'selected' : '' }}>
                                             {{ $agama }}</option>
