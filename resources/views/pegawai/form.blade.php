@@ -39,7 +39,7 @@
                                 <label>Nama Simpatika</label>
                                 <input type="text" name="nama_simpatika"
                                     class="form-control @error('nama_simpatika') is-invalid @enderror"
-                                    value="{{ old('nama_simpatika', $pegawai->nama_simpatika) }}">
+                                    value="{{ old('nama_simpatika', $pegawai->nama_simpatika) }}" readonly>
                                 @error('nama_simpatika')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -49,7 +49,7 @@
                                 <label>Nama Rekening</label>
                                 <input type="text" name="nama_rekening"
                                     class="form-control @error('nama_rekening') is-invalid @enderror"
-                                    value="{{ old('nama_rekening', $pegawai->nama_rekening) }}">
+                                    value="{{ old('nama_rekening', $pegawai->nama_rekening) }}" readonly>
                                 @error('nama_rekening')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror

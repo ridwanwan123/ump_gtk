@@ -106,8 +106,10 @@
                         Pegawai</a>
                 @endcan
                 @can('viewAny', App\Models\Pegawai::class)
-                    <a href="{{ route('pegawai.export') }}" class="btn btn-success btn-sm"><i class="fas fa-file-export"></i>
-                        Export</a>
+                    <a href="{{ route('pegawai.export') }}" class="btn btn-success btn-sm" hidden>
+                        <i class="fas fa-file-export"></i>
+                        Export
+                    </a>
                 @endcan
             </div>
         </div>
