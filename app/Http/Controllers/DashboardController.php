@@ -21,9 +21,14 @@ class DashboardController extends Controller
             $user = auth()->user();
 
             // ===========================
+            // Tentukan Tahun & TW Aktif
+            // ===========================
+            $tahun = now()->year;
+            $tw = (int) ceil(now()->month / 3);
+
+            // ===========================
             // Statistik Pegawai
             // ===========================
-
             $jabatanList = [
                 'Guru',
                 'Kepala Pengelola Asrama',
@@ -35,69 +40,86 @@ class DashboardController extends Controller
                 'Tenaga Perpustakaan',
             ];
 
-            $query = Pegawai::query();
+            $pegawaiQuery = Pegawai::query()
+                ->when(!$user->hasRole('superadmin'), function ($q) use ($user) {
+                    $q->where('id_madrasah', $user->unit_kerja);
+                });
 
-            if (! $user->hasRole('superadmin')) {
-                $query->where('id_madrasah', $user->unit_kerja);
-            }
-
-            $totalPegawai = $query->count();
+            $totalPegawai = (clone $pegawaiQuery)->count();
 
             $statistikJabatan = [];
+
             foreach ($jabatanList as $jabatan) {
-                $statistikJabatan[$jabatan] = (clone $query)
+                $statistikJabatan[$jabatan] = (clone $pegawaiQuery)
                     ->where('jabatan_ump', $jabatan)
                     ->count();
             }
 
             $chartLabels = array_keys($statistikJabatan);
-            $chartData = array_values($statistikJabatan);
+            $chartData   = array_values($statistikJabatan);
 
             // ===========================
-            // Info Absensi Madrasah
+            // Query Madrasah
             // ===========================
 
-            $tahun = now()->year;
-            $tw = (int) ceil(now()->month / 3);
-
-            $bulanTW = match ($tw) {
-                1 => [1, 2, 3],
-                2 => [4, 5, 6],
-                3 => [7, 8, 9],
-                4 => [10, 11, 12],
-            };
-
-            $madrasahBelumAbsensi = Madrasah::whereHas('pegawai')
-                ->whereDoesntHave('pegawai.absensi', function ($q) use ($tahun, $bulanTW) {
-                    $q->where('tahun', $tahun)
-                      ->whereIn('bulan', $bulanTW);
-                })
-                ->when(! $user->hasRole('superadmin'), function ($q) use ($user) {
+            $madrasahQuery = Madrasah::query()
+                ->when(!$user->hasRole('superadmin'), function ($q) use ($user) {
                     $q->where('id', $user->unit_kerja);
+                });
+
+            // ===========================
+            // Madrasah SUDAH Absensi
+            // ===========================
+
+            $madrasahSudahAbsensi = (clone $madrasahQuery)
+                ->whereHas('pegawai.absensi', function ($q) use ($tahun, $tw) {
+                    $q->where('tahun', $tahun)
+                    ->where('tw', $tw);
                 })
-                ->orderBy('nama_madrasah')
                 ->get();
 
-            $madrasahSudah = Madrasah::whereNotIn('id', $madrasahBelumAbsensi->pluck('id'))
-                ->orderBy('type')
-                ->get()
+            // ===========================
+            // Madrasah BELUM Absensi
+            // ===========================
+
+            $madrasahBelumAbsensi = (clone $madrasahQuery)
+                ->whereDoesntHave('pegawai.absensi', function ($q) use ($tahun, $tw) {
+                    $q->where('tahun', $tahun)
+                    ->where('tw', $tw);
+                })
+                ->get();
+
+            // ===========================
+            // Group per Jenjang
+            // ===========================
+
+            $madrasahSudah = $madrasahSudahAbsensi
+                ->sortBy('type')
                 ->groupBy('type');
 
             $madrasahBelum = $madrasahBelumAbsensi
                 ->sortBy('type')
                 ->groupBy('type');
 
-            $totalMadrasah = Madrasah::count();
-            $belumCount = $madrasahBelumAbsensi->count();
-            $sudahCount = $totalMadrasah - $belumCount;
+            // ===========================
+            // Statistik Absensi
+            // ===========================
 
-            $percentBelum = $totalMadrasah
-                ? ($belumCount / $totalMadrasah) * 100
+            $totalMadrasah = $madrasahQuery->count();
+
+            $sudahCount = $madrasahSudahAbsensi->count();
+            $belumCount = $madrasahBelumAbsensi->count();
+
+            $percentSudah = $totalMadrasah
+                ? ($sudahCount / $totalMadrasah) * 100
                 : 0;
 
-            $percentSudah = 100 - $percentBelum;
+            $percentBelum = 100 - $percentSudah;
 
-            // ===== SUKSES =====
+            // ===========================
+            // Log Dashboard
+            // ===========================
+
             Log::info('Akses dashboard', [
                 'user_id' => $user->id,
                 'role' => $user->roles->pluck('name'),
@@ -107,23 +129,34 @@ class DashboardController extends Controller
                 'ip' => request()->ip(),
             ]);
 
+            // ===========================
+            // Return View
+            // ===========================
+
             return view('dashboard.index', [
                 'totalPegawai'          => $totalPegawai,
                 'statistikJabatan'      => $statistikJabatan,
                 'chartLabels'           => $chartLabels,
                 'chartData'             => $chartData,
+
+                'madrasahSudahAbsensi'  => $madrasahSudahAbsensi,
                 'madrasahBelumAbsensi'  => $madrasahBelumAbsensi,
+
                 'madrasahSudah'         => $madrasahSudah,
                 'madrasahBelum'         => $madrasahBelum,
+
                 'tw'                    => $tw,
                 'tahun'                 => $tahun,
+
                 'sudahCount'            => $sudahCount,
                 'belumCount'            => $belumCount,
+
                 'percentSudah'          => $percentSudah,
                 'percentBelum'          => $percentBelum,
             ]);
+
         } catch (Throwable $e) {
-            // ===== ERROR =====
+
             Log::error('Gagal memuat dashboard', [
                 'message' => $e->getMessage(),
                 'user_id' => auth()->id(),
