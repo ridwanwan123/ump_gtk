@@ -45,7 +45,7 @@ class PegawaiPolicy
      */
     public function update(User $user, Pegawai $pegawai): bool
     {
-        return false;
+        return true;
     }
 
     /**

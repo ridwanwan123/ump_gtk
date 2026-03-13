@@ -110,6 +110,21 @@
     "type": "MAN"
   },
   {
+    "nama_madrasah": "MAN 23 JAKARTA",
+    "alamat_madrasah": "Jl... 23",
+    "type": "MAN"
+  },
+  {
+    "nama_madrasah": "MAN 24 JAKARTA",
+    "alamat_madrasah": "Jl. 24",
+    "type": "MAN"
+  },
+  {
+    "nama_madrasah": "MAN 25 JAKARTA",
+    "alamat_madrasah": "Jl. 25",
+    "type": "MAN"
+  },
+  {
     "nama_madrasah": "MTsN 01 JAKARTA",
     "alamat_madrasah": "Jl. Bangka IX B No.26 6",
     "type": "MTSN"
@@ -317,6 +332,16 @@
   {
     "nama_madrasah": "MTsN 42 JAKARTA",
     "alamat_madrasah": "Jl. Rw. Kuning No. 63 1",
+    "type": "MTSN"
+  },
+  {
+    "nama_madrasah": "MTsN 43 JAKARTA",
+    "alamat_madrasah": "Jl. 43",
+    "type": "MTSN"
+  },
+  {
+    "nama_madrasah": "MTsN 44 JAKARTA",
+    "alamat_madrasah": "Jl. 44",
     "type": "MTSN"
   },
   {

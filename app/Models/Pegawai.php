@@ -15,8 +15,27 @@ class Pegawai extends Model
 
     protected $table = 'pegawai'; // sesuai tabel Anda
     protected $fillable = [
-        'nama_rekening','jabatan','alamat_gtk','no_rek_bank_dki','id_madrasah','nik','pegid',
-        'tempat_lahir','tanggal_lahir','nama_ibu_kandung','pend_terakhir','npwp','nomor_hp','alamat_email'
+        'nama_simpatika',
+        'nama_rekening',
+        'jabatan_ump',
+        'jabatan_dinas',
+        'status_asn',
+        'no_rek_bank_dki',
+        'id_madrasah',
+        'npsn_tempat_tugas',
+        'nik',
+        'pegid',
+        'tempat_lahir',
+        'tanggal_lahir',
+        'nama_ibu_kandung',
+        'agama',
+        'pend_terakhir',
+        'npwp',
+        'nomor_hp',
+        'alamat_email',
+        'alamat_gtk',
+        'status_pegawai',
+        'dapodik'
     ];
 
     protected static function booted()

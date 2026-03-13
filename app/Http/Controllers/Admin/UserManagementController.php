@@ -9,6 +9,7 @@ use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Illuminate\Validation\ValidationException;
 use Throwable;
+use Illuminate\Support\Facades\Hash;
 
 class UserManagementController extends Controller
 {
@@ -80,6 +81,93 @@ class UserManagementController extends Controller
 
             return redirect()->back()
                 ->with('swal_error', 'Gagal memperbarui role user. Silakan coba lagi.');
+        }
+    }
+
+    public function editPassword()
+    {
+        try {
+
+            return view('auth.ubah_password');
+
+        } catch (Throwable $e) {
+
+            Log::error('Gagal membuka halaman ubah password', [
+                'user_id' => auth()->id(),
+                'message' => $e->getMessage(),
+                'ip' => request()->ip(),
+            ]);
+
+            abort(500, 'Terjadi kesalahan sistem.');
+        }
+    }
+
+
+    public function updatePassword(Request $request)
+    {
+        try {
+
+            $request->validate([
+                'password_lama' => ['required'],
+                'password_baru' => [
+                    'required',
+                    'string',
+                    'min:8',
+                    'confirmed',
+                    'different:password_lama'
+                ],
+            ]);
+
+            $user = auth()->user();
+
+            /*
+            |--------------------------------
+            | CEK PASSWORD LAMA
+            |--------------------------------
+            */
+            if (!Hash::check($request->password_lama, $user->password)) {
+
+                throw ValidationException::withMessages([
+                    'password_lama' => 'Password lama tidak sesuai.'
+                ]);
+            }
+
+            /*
+            |--------------------------------
+            | UPDATE PASSWORD
+            |--------------------------------
+            */
+            $user->update([
+                'password' => Hash::make($request->password_baru)
+            ]);
+
+            /*
+            |--------------------------------
+            | LOG AKTIVITAS
+            |--------------------------------
+            */
+            Log::info('User berhasil mengubah password', [
+                'user_id' => $user->id,
+                'ip' => $request->ip(),
+            ]);
+
+            return redirect()
+                ->route('auth.ubah_password')
+                ->with('swal_success', 'Password berhasil diperbarui.');
+
+        } catch (ValidationException $e) {
+
+            throw $e;
+
+        } catch (Throwable $e) {
+
+            Log::error('Gagal mengubah password', [
+                'user_id' => auth()->id(),
+                'message' => $e->getMessage(),
+                'ip' => $request->ip(),
+            ]);
+
+            return back()->with('swal_error', 'Terjadi kesalahan saat mengubah password.');
         }
     }
 }

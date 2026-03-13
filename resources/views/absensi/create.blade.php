@@ -143,7 +143,6 @@
                 min-width: 40px;
             }
         }
-
     </style>
 @endpush
 
@@ -155,8 +154,7 @@
                 <h1 class="fw-bold">Input Absensi</h1>
             </div>
             <div class="col-sm-6 text-right">
-                <a href="{{ route('absensi.index') }}"
-                    class="btn btn-secondary btn-sm">
+                <a href="{{ route('absensi.index') }}" class="btn btn-secondary btn-sm">
                     <i class="fas fa-arrow-left"></i> Kembali
                 </a>
             </div>
@@ -190,7 +188,8 @@
                     {{ $absensiExisting->isNotEmpty() ? 'border-warning' : 'border-success' }}
                     shadow-sm rounded h-100">
 
-                    <div class="mr-3 
+                    <div
+                        class="mr-3 
                         {{ $absensiExisting->isNotEmpty() ? 'text-warning' : 'text-success' }}">
                         <i class="fas {{ $absensiExisting->isNotEmpty() ? 'fa-edit' : 'fa-plus-circle' }} fa-lg"></i>
                     </div>
@@ -261,7 +260,7 @@
                                 <tr>
                                     <td class="text-center">{{ $i + 1 }}</td>
                                     <td class="nama-pegawai">{{ $pegawai->nama_rekening }}</td>
-                                    <td class="nama-pegawai">{{ $pegawai->jabatan }}</td>
+                                    <td class="nama-pegawai">{{ $pegawai->jabatan_ump }}</td>
 
                                     @foreach ($bulan as $index => $b)
                                         @php

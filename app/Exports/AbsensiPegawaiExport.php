@@ -23,21 +23,27 @@ class AbsensiPegawaiExport implements
     protected $tw;
 
     protected $pegawaiHeaders = [
-        'ID',
-        'NAMA PEGAWAI',
+        'NAMA SIMPATIKA',
+        'NAMA REKENING',
+        'JABATAN UMP',
+        'JABATAN DINAS',
+        'STATUS ASN',
+        'NO REKENING BANK DKI',
+        'TEMPAT TUGAS',
+        'NPSN TEMPAT TUGAS',
         'NIK',
+        'PEG ID',
         'TEMPAT LAHIR',
         'TANGGAL LAHIR',
         'NAMA IBU KANDUNG',
+        'AGAMA',
         'PENDIDIKAN TERAKHIR',
-        'ALAMAT',
-        'JABATAN',
-        'PEG ID',
-        'MADRASAH',
         'NPWP',
         'NO HP',
         'EMAIL',
-        'NO REKENING BANK DKI',
+        'ALAMAT GTK',
+        'STATUS PEGAWAI',
+        'DAPODIK',
     ];
 
     protected $bulanPerTW = [
@@ -100,21 +106,27 @@ class AbsensiPegawaiExport implements
     public function map($pegawai): array
     {
         $row = [
-            $pegawai->id,
+            $pegawai->nama_simpatika,
             $pegawai->nama_rekening,
+            $pegawai->jabatan_ump,
+            $pegawai->jabatan_dinas,
+            $pegawai->status_asn,
+            "'" . $pegawai->no_rek_bank_dki,
+            $pegawai->madrasah->nama_madrasah ?? '-',
+            $pegawai->npsn_tempat_tugas,
             "'" . $pegawai->nik,
+            "'" . $pegawai->pegid,
             $pegawai->tempat_lahir,
             $pegawai->tanggal_lahir,
             $pegawai->nama_ibu_kandung,
+            $pegawai->agama,
             $pegawai->pend_terakhir,
-            $pegawai->alamat_gtk,
-            $pegawai->jabatan,
-            "'" . $pegawai->pegid,
-            $pegawai->madrasah->nama_madrasah ?? '-',
             "'" . $pegawai->npwp,
             "'" . $pegawai->nomor_hp,
             $pegawai->alamat_email,
-            "'" . $pegawai->no_rek_bank_dki,
+            $pegawai->alamat_gtk,
+            $pegawai->status_pegawai,
+            $pegawai->dapodik,
         ];
 
         $absensiByBulan = $pegawai->absensi->keyBy('bulan');

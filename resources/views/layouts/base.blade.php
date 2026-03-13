@@ -178,7 +178,7 @@
         <footer class="main-footer footer-modern">
             <div class="container-fluid d-flex justify-content-between align-items-center">
                 <div>
-                    <strong>&copy; 2025 Penmad Jakarta.</strong>
+                    <strong>&copy; 2026 Penmad Jakarta.</strong>
                     <span class="d-none d-md-inline">Semua hak cipta dilindungi.</span>
                 </div>
                 <div class="d-flex align-items-center">

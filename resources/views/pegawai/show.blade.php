@@ -38,8 +38,8 @@
                             </div>
                         </div>
                         <div class="col-md-10">
-                            <h4 class="mb-1">{{ $pegawai->nama_rekening }}</h4>
-                            <span class="badge badge-info">{{ $pegawai->jabatan }}</span>
+                            <h4 class="mb-1">{{ $pegawai->nama_simpatika }}</h4>
+                            <span class="badge badge-info">{{ $pegawai->jabatan_ump }}</span>
                             <div class="text-muted mt-1">
                                 <i class="fas fa-school"></i>
                                 {{ $pegawai->madrasah->nama_madrasah ?? '-' }}
@@ -62,8 +62,12 @@
                         <div class="card-body p-0">
                             <table class="table table-striped">
                                 <tr>
+                                    <th width="40%">Nama Rekening</th>
+                                    <td>{{ $pegawai->nama_rekening ?? '-' }}</td>
+                                </tr>
+                                <tr>
                                     <th width="40%">NIK</th>
-                                    <td>{{ $pegawai->nik }}</td>
+                                    <td>{{ $pegawai->nik ?? '-' }}</td>
                                 </tr>
                                 <tr>
                                     <th>Tempat, Tanggal Lahir</th>
@@ -73,16 +77,20 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <th>Agama</th>
+                                    <td>{{ $pegawai->agama ?? '-' }}</td>
+                                </tr>
+                                <tr>
                                     <th>Nama Ibu Kandung</th>
-                                    <td>{{ $pegawai->nama_ibu_kandung }}</td>
+                                    <td>{{ $pegawai->nama_ibu_kandung ?? '-' }}</td>
                                 </tr>
                                 <tr>
                                     <th>Pendidikan Terakhir</th>
-                                    <td>{{ $pegawai->pend_terakhir }}</td>
+                                    <td>{{ $pegawai->pend_terakhir ?? '-' }}</td>
                                 </tr>
                                 <tr>
                                     <th>Alamat</th>
-                                    <td>{{ $pegawai->alamat_gtk }}</td>
+                                    <td>{{ $pegawai->alamat_gtk ?? '-' }}</td>
                                 </tr>
                             </table>
                         </div>
@@ -100,20 +108,48 @@
                         <div class="card-body p-0">
                             <table class="table table-striped">
                                 <tr>
-                                    <th width="40%">Jabatan</th>
-                                    <td>{{ $pegawai->jabatan }}</td>
+                                    <th>Status ASN</th>
+                                    <td>
+                                        @if ($pegawai->status_asn)
+                                            <span class="badge badge-primary">{{ $pegawai->status_asn ?? '-' }}</span>
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Status Pegawai</th>
+                                    <td>
+                                        @if ($pegawai->status_pegawai)
+                                            <span class="badge badge-success">{{ $pegawai->status_pegawai ?? '-' }}</span>
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th width="40%">Jabatan UMP</th>
+                                    <td>{{ $pegawai->jabatan_ump ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Jabatan Dinas</th>
+                                    <td>{{ $pegawai->jabatan_dinas ?? '-' }}</td>
                                 </tr>
                                 <tr>
                                     <th>PEG ID</th>
-                                    <td>{{ $pegawai->pegid }}</td>
+                                    <td>{{ $pegawai->pegid ?? '-' }}</td>
                                 </tr>
                                 <tr>
                                     <th>Madrasah</th>
                                     <td>{{ $pegawai->madrasah->nama_madrasah ?? '-' }}</td>
                                 </tr>
                                 <tr>
+                                    <th>NPSN MADRASAH</th>
+                                    <td>{{ $pegawai->npsn_tempat_tugas ?? '-' }}</td>
+                                </tr>
+                                <tr>
                                     <th>NPWP</th>
-                                    <td>{{ $pegawai->npwp }}</td>
+                                    <td>{{ $pegawai->npwp ?? '-' }}</td>
                                 </tr>
                             </table>
                         </div>
@@ -132,11 +168,11 @@
                             <table class="table table-striped">
                                 <tr>
                                     <th width="40%">No HP</th>
-                                    <td>{{ $pegawai->nomor_hp }}</td>
+                                    <td>{{ $pegawai->nomor_hp ?? '-' }}</td>
                                 </tr>
                                 <tr>
                                     <th>Email</th>
-                                    <td>{{ $pegawai->alamat_email }}</td>
+                                    <td>{{ $pegawai->alamat_email ?? '-' }}</td>
                                 </tr>
                             </table>
                         </div>
@@ -155,7 +191,7 @@
                             <table class="table table-striped">
                                 <tr>
                                     <th width="40%">No Rekening Bank DKI</th>
-                                    <td>{{ $pegawai->no_rek_bank_dki }}</td>
+                                    <td>{{ $pegawai->no_rek_bank_dki ?? '-' }}</td>
                                 </tr>
                             </table>
                         </div>
