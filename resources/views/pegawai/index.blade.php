@@ -106,7 +106,7 @@
                         Pegawai</a>
                 @endcan
                 @can('viewAny', App\Models\Pegawai::class)
-                    <a href="{{ route('pegawai.export') }}" class="btn btn-success btn-sm" hidden>
+                    <a href="{{ route('pegawai.export') }}" class="btn btn-success btn-sm">
                         <i class="fas fa-file-export"></i>
                         Export
                     </a>
@@ -130,11 +130,13 @@
                     <thead class="table-light text-center">
                         <tr>
                             <th>No</th>
-                            <th>Madrasah</th>
+                            <th>Nama Madrasah</th>
                             <th>Nama Simpatika</th>
                             <th>Jabatan UMP</th>
-                            <th>Nomor HP</th>
+                            {{-- <th>Rekening DKI</th> --}}
+                            <th>NIK</th>
                             <th>PEG ID</th>
+                            <th>NPWP</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -142,21 +144,28 @@
                         @foreach ($pegawais as $i => $pegawai)
                             <tr>
                                 <td class="text-center">{{ $pegawais->firstItem() + $i }}</td>
-                                <td>{{ $pegawai->madrasah->nama_madrasah }}</td>
-                                <td>{{ $pegawai->nama_simpatika }}</td>
-                                <td>{{ $pegawai->jabatan_ump }}</td>
-                                <td>{{ $pegawai->nomor_hp }}</td>
-                                <td>{{ $pegawai->pegid }}</td>
+                                <td>{{ $pegawai->madrasah?->nama_madrasah ?? '-' }}</td>
+                                <td>{{ $pegawai->nama_simpatika ?? '-' }}</td>
+                                <td>{{ $pegawai->jabatan_ump ?? '-' }}</td>
+                                {{-- <td>{{ $pegawai->no_rek_bank_dki ?? '-' }}</td> --}}
+                                <td>{{ $pegawai->nik ?? '-' }}</td>
+                                <td>{{ $pegawai->pegid ?? '-' }}</td>
+                                <td>{{ $pegawai->npwp ?? '-' }}</td>
                                 <td class="text-center">
                                     <a href="{{ route('pegawai.show', $pegawai->id) }}"
-                                        class="btn btn-sm btn-info">Detail</a>
+                                        class="btn btn-sm btn-info btn-action" title="Detail">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+
                                     @can('delete', $pegawai)
                                         <form action="{{ route('pegawai.destroy', $pegawai->id) }}" method="POST"
                                             class="d-inline"
                                             onsubmit="return confirm('Apakah anda yakin ingin menghapus pegawai ini?');">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+                                            <button type="submit" class="btn btn-sm btn-danger btn-action" title="Hapus">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
                                         </form>
                                     @endcan
                                 </td>

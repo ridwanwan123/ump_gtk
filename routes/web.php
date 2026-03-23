@@ -50,12 +50,12 @@ Route::middleware(['auth', 'set.unit'])->group(function () {
     | Pegawai
     */
 
+    Route::get('pegawai/export', [PegawaiController::class, 'export'])
+        ->name('pegawai.export');
+
     // Semua user login bisa melihat data
     Route::resource('pegawai', PegawaiController::class)
         ->only(['index', 'show']);
-
-    Route::get('pegawai/export', [PegawaiController::class, 'export'])
-        ->name('pegawai.export');
 
     // Operator boleh edit/update
     Route::middleware('role:operator|superadmin')->group(function () {
