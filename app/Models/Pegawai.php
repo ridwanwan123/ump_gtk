@@ -11,6 +11,9 @@ use App\Models\AbsensiPegawai;
 
 class Pegawai extends Model
 {
+    const AKTIF = 'AKTIF';
+    const NON_AKTIF = 'NON_AKTIF';
+
     use HasFactory;
 
     protected $table = 'pegawai'; // sesuai tabel Anda
@@ -40,17 +43,20 @@ class Pegawai extends Model
 
     protected static function booted()
     {
+        // ✅ Scope Madrasah (existing)
         static::addGlobalScope('madrasah', function (Builder $builder) {
-            // ambil nilai yang diset middleware
-           $mid = app()->has('current_madrasah_id')
+            $mid = app()->has('current_madrasah_id')
                 ? app('current_madrasah_id')
                 : null;
 
-            // jika ada current madrasah id (operator), filter
             if ($mid !== null) {
                 $builder->where('id_madrasah', $mid);
             }
-            // jika null -> superadmin -> tidak ditambahkan where, lihat semua
+        });
+
+        // ✅ Scope Status AKTIF (tambahan baru)
+        static::addGlobalScope('aktif', function (Builder $builder) {
+            $builder->where('status_pegawai', self::AKTIF);
         });
     }
 

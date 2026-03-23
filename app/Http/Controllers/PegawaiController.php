@@ -243,9 +243,13 @@ class PegawaiController extends Controller
         try {
             $this->authorize('delete', $pegawai);
 
-            DB::transaction(fn () => $pegawai->delete());
+            DB::transaction(function () use ($pegawai) {
+                $pegawai->update([
+                    'status_pegawai' => 'NON_AKTIF'
+                ]);
+            });
 
-            Log::info('Pegawai dihapus', [
+            Log::info('Pegawai dinonaktifkan', [
                 'user_id' => auth()->id(),
                 'pegawai_id' => $pegawai->id,
                 'ip' => request()->ip(),
@@ -253,16 +257,16 @@ class PegawaiController extends Controller
 
             return redirect()
                 ->route('pegawai.index')
-                ->with('swal_success', 'Data pegawai berhasil dihapus');
+                ->with('swal_success', 'Pegawai berhasil dinonaktifkan');
         } catch (Throwable $e) {
-            Log::error('Gagal menghapus pegawai', [
+            Log::error('Gagal menonaktifkan pegawai', [
                 'pegawai_id' => $pegawai->id,
                 'message' => $e->getMessage(),
                 'user_id' => auth()->id(),
                 'ip' => request()->ip(),
             ]);
 
-            return back()->with('swal_error', 'Terjadi kesalahan saat menghapus data.');
+            return back()->with('swal_error', 'Terjadi kesalahan saat proses.');
         }
     }
 
