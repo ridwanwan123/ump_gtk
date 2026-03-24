@@ -14,11 +14,14 @@ use Throwable;
 
 class PegawaiController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Pegawai::class, 'pegawai');
+    }
+
     public function index(Request $request)
     {
         try {
-            $this->authorize('viewAny', Pegawai::class);
-
             $query = Pegawai::with('madrasah');
 
             if ($request->filled('madrasah')) {
@@ -65,8 +68,6 @@ class PegawaiController extends Controller
 
     public function show(Pegawai $pegawai)
     {
-        $this->authorize('view', $pegawai);
-
         return view('pegawai.show', compact('pegawai'));
     }
 
@@ -74,8 +75,6 @@ class PegawaiController extends Controller
     public function create()
     {
         try {
-            $this->authorize('create', Pegawai::class);
-
             $madrasah = Madrasah::all();
             $jabatanUMPList = Pegawai::select('jabatan_ump')
                 ->distinct()
@@ -124,8 +123,6 @@ class PegawaiController extends Controller
     public function store(Request $request)
     {
         try {
-            $this->authorize('create', Pegawai::class);
-
             $validated = $request->validate([
                 'nama_simpatika'    => 'nullable|string|max:255',
                 'nama_rekening'     => 'required|string|max:255',
@@ -181,8 +178,6 @@ class PegawaiController extends Controller
     public function update(Request $request, Pegawai $pegawai)
     {
         try {
-            $this->authorize('update', $pegawai);
-
             $validated = $request->validate([
                 'nama_simpatika'    => 'nullable|string|max:255',
                 'nama_rekening'     => 'required|string|max:255',
@@ -241,8 +236,6 @@ class PegawaiController extends Controller
     public function destroy(Pegawai $pegawai)
     {
         try {
-            $this->authorize('delete', $pegawai);
-
             DB::transaction(function () use ($pegawai) {
                 $pegawai->update([
                     'status_pegawai' => 'NON_AKTIF'

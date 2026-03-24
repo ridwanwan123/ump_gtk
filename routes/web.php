@@ -5,13 +5,14 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\AbsensiPegawaiController;
+use App\Http\Controllers\PengusulanPegawaiController;
+use App\Http\Controllers\PenonaktifanPegawaiController;
 use App\Http\Controllers\Admin\UserManagementController;
-// use App\Http\Controllers\Admin\MadrasahController;
 
 /*
-|--------------------------------------------------------------------------|
-| ROOT                                                                      |
-|--------------------------------------------------------------------------|
+|--------------------------------------------------------------------------
+| ROOT
+|--------------------------------------------------------------------------
 */
 Route::get('/', function () {
     return auth()->check()
@@ -20,9 +21,9 @@ Route::get('/', function () {
 });
 
 /*
-|--------------------------------------------------------------------------|
-| AUTH                                                                      |
-|--------------------------------------------------------------------------|
+|--------------------------------------------------------------------------
+| AUTH
+|--------------------------------------------------------------------------
 */
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -34,9 +35,9 @@ Route::post('/logout', [LoginController::class, 'logout'])
     ->middleware('auth');
 
 /*
-|--------------------------------------------------------------------------|
-| MAIN APP (SEMUA USER LOGIN)                                               |
-|--------------------------------------------------------------------------|
+|--------------------------------------------------------------------------
+| MAIN APP (SEMUA USER LOGIN)
+|--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'set.unit'])->group(function () {
 
@@ -47,52 +48,44 @@ Route::middleware(['auth', 'set.unit'])->group(function () {
         ->name('dashboard');
 
     /*
+    |--------------------------------------------------------------------------
     | Pegawai
+    |--------------------------------------------------------------------------
     */
-
     Route::get('pegawai/export', [PegawaiController::class, 'export'])
         ->name('pegawai.export');
 
-    // Semua user login bisa melihat data
-    Route::resource('pegawai', PegawaiController::class)
-        ->only(['index', 'show']);
-
-    // Operator boleh edit/update
-    Route::middleware('role:operator|superadmin')->group(function () {
-        Route::resource('pegawai', PegawaiController::class)
-            ->only(['edit', 'update']);
-    });
-
-    // Hanya superadmin boleh tambah & hapus
-    Route::middleware('role:superadmin')->group(function () {
-        Route::resource('pegawai', PegawaiController::class)
-            ->only(['create', 'store', 'destroy']);
-    });
-
+    Route::resource('pegawai', PegawaiController::class);
 
     /*
+    |--------------------------------------------------------------------------
     | Absensi Pegawai
+    |--------------------------------------------------------------------------
     */
-
-    // Semua user bisa lihat absensi
-    Route::resource('absensi', AbsensiPegawaiController::class)
-        ->only(['index']);
-
     Route::get('absensi/export', [AbsensiPegawaiController::class, 'export'])
         ->name('absensi.export');
 
-    // Operator boleh input absensi
-    Route::middleware('role:operator')->group(function () {
-        Route::resource('absensi', AbsensiPegawaiController::class)
-            ->only(['create', 'store', 'update']);
-    });
+    Route::resource('absensi', AbsensiPegawaiController::class);
 
+    /*
+    |--------------------------------------------------------------------------
+    | Pengusulan Pegawai
+    |--------------------------------------------------------------------------
+    */
+    Route::resource('pengusulan-pegawai', PengusulanPegawaiController::class);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Penonaktifan Pegawai
+    |--------------------------------------------------------------------------
+    */
+    Route::resource('penonaktifan-pegawai', PenonaktifanPegawaiController::class);
 });
 
 /*
-|--------------------------------------------------------------------------|
-| ADMIN AREA (KHUSUS SUPERADMIN)                                           |
-|--------------------------------------------------------------------------|
+|--------------------------------------------------------------------------
+| ADMIN AREA (KHUSUS SUPERADMIN)
+|--------------------------------------------------------------------------
 */
 Route::prefix('admin')
     ->middleware(['auth', 'role:superadmin'])
@@ -102,14 +95,15 @@ Route::prefix('admin')
         Route::post('users/{user}/role', [UserManagementController::class, 'updateRole'])->name('users.updateRole');
     });
 
-
-
-
 /*
-| Ubah Password (semua user)
+|--------------------------------------------------------------------------
+| Ubah Password (SEMUA USER)
+|--------------------------------------------------------------------------
 */
-Route::get('/ubah-password', [UserManagementController::class, 'editPassword'])
-    ->name('auth.ubah_password');
+Route::middleware('auth')->group(function () {
+    Route::get('/ubah-password', [UserManagementController::class, 'editPassword'])
+        ->name('auth.ubah_password');
 
-Route::post('/ubah-password', [UserManagementController::class, 'updatePassword'])
-    ->name('auth.ubah_password.update');
+    Route::post('/ubah-password', [UserManagementController::class, 'updatePassword'])
+        ->name('auth.ubah_password.update');
+});

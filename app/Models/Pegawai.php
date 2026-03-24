@@ -11,8 +11,9 @@ use App\Models\AbsensiPegawai;
 
 class Pegawai extends Model
 {
-    const AKTIF = 'AKTIF';
+    const AKTIF     = 'AKTIF';
     const NON_AKTIF = 'NON_AKTIF';
+    const PENDING   = 'PENDING';
 
     use HasFactory;
 

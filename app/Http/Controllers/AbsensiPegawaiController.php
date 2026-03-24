@@ -12,11 +12,14 @@ use Throwable;
 
 class AbsensiPegawaiController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(AbsensiPegawai::class, 'absensi');
+    }
+
     public function index(Request $request)
     {
         try {
-            $this->authorize('viewAny', AbsensiPegawai::class);
-
             $tahun = $request->tahun ?? now()->year;
             $currentMonth = now()->month;
             $tw = $request->tw ?? ceil($currentMonth / 3);
@@ -110,8 +113,6 @@ class AbsensiPegawaiController extends Controller
     public function create(Request $request)
     {
         try {
-            $this->authorize('viewAny', AbsensiPegawai::class);
-
             $tahun = $request->tahun ?? now()->year;
             $tw = $request->tw ?? ceil(now()->month / 3);
 
@@ -170,8 +171,6 @@ class AbsensiPegawaiController extends Controller
     public function store(Request $request)
     {
         try {
-            $this->authorize('create', AbsensiPegawai::class);
-
             $request->validate([
                 'tahun' => 'required|integer',
                 'tw' => 'required|integer|min:1|max:4',
@@ -230,6 +229,8 @@ class AbsensiPegawaiController extends Controller
     public function export(Request $request)
     {
         try {
+            $this->authorize('viewAny', AbsensiPegawai::class);
+            
             $tahun = $request->tahun ?? now()->year;
             $tw = $request->tw ?? 1;
 

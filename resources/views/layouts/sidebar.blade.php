@@ -25,6 +25,25 @@
                 </a>
             </li>
 
+            {{-- PENGAJUAN PEGAWAI --}}
+            <li class="nav-header">Pengajuan Pegawai</li>
+
+            <li class="nav-item">
+                <a href="{{ route('pengusulan-pegawai.index') }}"
+                    class="nav-link {{ request()->routeIs('pengusulan-pegawai.*') ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-user-plus"></i>
+                    <p>Pengusulan Pegawai</p>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{{ route('penonaktifan-pegawai.index') }}"
+                    class="nav-link {{ request()->routeIs('penonaktifan-pegawai.*') ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-user-slash"></i>
+                    <p>Penonaktifan Pegawai</p>
+                </a>
+            </li>
+
             {{-- DATA UMP --}}
             <li class="nav-header">Data UMP</li>
             <li class="nav-item">
