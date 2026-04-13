@@ -22,23 +22,17 @@
 
         .nav-link {
             color: inherit;
-            /* Warna mengikuti parent */
             text-decoration: none;
-            /* Hilangkan underline */
             cursor: default;
-            /* Hapus icon pointer jika ingin seperti teks */
             background-color: transparent;
-            /* Tidak ada latar */
         }
 
         .nav-link.active {
             font-weight: bold;
-            /* Bisa ditebalkan jika aktif */
         }
 
         .nav-link:hover {
             color: inherit;
-            /* tetap sama warna */
             text-decoration: none;
         }
     </style>
@@ -55,8 +49,8 @@
             <div>
                 <div class="fw-semibold mb-1">Pengajuan Penonaktifan Pegawai</div>
                 <div class="text-muted small">
-                    Data tidak langsung dinonaktifkan, tetapi akan berstatus
-                    <span class="badge bg-secondary">Pending</span>
+                    Pegawai tidak langsung dinonaktifkan, tetapi akan berstatus
+                    <span class="badge bg-warning">Proses Non Aktif</span>
                     dan diproses setelah persetujuan Kanwil.
                 </div>
             </div>
@@ -64,24 +58,26 @@
 
         {{-- TAB --}}
         <ul class="nav nav-tabs mb-3">
+
             <li class="nav-item">
-                <a class="nav-link active" href="#aktif" data-toggle="tab">
-                    Pegawai Aktif
-                    <span class="badge bg-light text-dark">{{ $pegawaiAktif->total() }}</span>
+                <a class="nav-link active" href="#pending" data-toggle="tab">
+                    Pegawai Proses NonAktif
+                    <span class="badge bg-light text-dark">{{ $pegawaiPending->total() }}</span>
                 </a>
             </li>
+
             <li class="nav-item">
-                <a class="nav-link" href="#pending" data-toggle="tab">
-                    Pending
-                    <span class="badge bg-light text-dark">{{ $pegawaiPending->total() }}</span>
+                <a class="nav-link" href="#aktif" data-toggle="tab">
+                    Pegawai Aktif
+                    <span class="badge bg-light text-dark">{{ $pegawaiAktif->total() }}</span>
                 </a>
             </li>
         </ul>
 
         <div class="tab-content">
 
-            {{-- ================= AKTIF ================= --}}
-            <div class="tab-pane fade show active" id="aktif">
+            {{-- ================= PROSES NON AKTIF ================= --}}
+            <div class="tab-pane fade show active" id="pending">
                 <div class="card shadow-sm border-0">
                     <div class="card-body table-responsive">
 
@@ -89,13 +85,82 @@
                             <thead class="table-light text-center">
                                 <tr>
                                     <th>No</th>
-                                    <th>Madrasah</th>
-                                    <th>Nama</th>
-                                    <th>Jabatan</th>
+                                    <th>MADRASAH</th>
+                                    <th>NAMA SIMPATIKA</th>
+                                    <th>JABATAN</th>
+                                    <th>NIK</th>
+                                    <th>PEG ID</th>
+                                    <th>STATUS</th>
+                                    <th>ALASAN</th>
+                                    @role('superadmin')
+                                        <th>AKSI</th>
+                                    @endrole
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($pegawaiPending as $i => $p)
+                                    <tr>
+                                        <td class="text-center">{{ $pegawaiPending->firstItem() + $i }}</td>
+                                        <td>{{ $p->madrasah?->nama_madrasah ?? '-' }}</td>
+                                        <td>{{ $p->nama_simpatika }}</td>
+                                        <td>{{ $p->jabatan_ump }}</td>
+                                        <td>{{ $p->nik }}</td>
+                                        <td>{{ $p->pegid }}</td>
+                                        <td class="text-center">
+                                            <span class="badge bg-secondary">Pengajuan Non Aktif</span>
+                                        </td>
+                                        <td>{{ $p->alasan_mengundurkan_diri ?? '-' }}</td>
+                                        @role('superadmin')
+                                            <td class="text-center">
+
+                                                {{-- SETUJUI --}}
+                                                <form action="{{ route('penonaktifan-pegawai.nonaktif', $p->id) }}"
+                                                    method="POST" class="d-inline">
+                                                    @csrf
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-success btn-action btn-confirm-setujui">
+                                                        <i class="fas fa-check"></i> Setujui
+                                                    </button>
+                                                </form>
+
+                                                {{-- TOLAK --}}
+                                                <form action="{{ route('penonaktifan-pegawai.tolak', $p->id) }}" method="POST"
+                                                    class="d-inline">
+                                                    @csrf
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-outline-danger btn-action btn-confirm-tolak">
+                                                        <i class="fas fa-times"></i> Tolak
+                                                    </button>
+                                                </form>
+
+                                            </td>
+                                        @endrole
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+
+                        {{ $pegawaiPending->links('pagination::bootstrap-5') }}
+                    </div>
+                </div>
+            </div>
+
+            {{-- ================= AKTIF ================= --}}
+            <div class="tab-pane fade " id="aktif">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body table-responsive">
+
+                        <table class="table table-bordered table-hover table-striped">
+                            <thead class="table-light text-center">
+                                <tr>
+                                    <th>No</th>
+                                    <th>MADRASAH</th>
+                                    <th>NAMA SIMPATIKA</th>
+                                    <th>JABATAN</th>
                                     <th>NIK</th>
                                     <th>PEG ID</th>
                                     <th>NPWP</th>
-                                    <th>Aksi</th>
+                                    <th>AKSI</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -110,17 +175,16 @@
                                         <td>{{ $p->npwp }}</td>
                                         <td class="text-center">
 
-                                            <a href="{{ route('pegawai.show', $p->id) }}"
+                                            <a href="{{ route('penonaktifan-pegawai.show', $p->id) }}"
                                                 class="btn btn-sm btn-info btn-action">
                                                 <i class="fas fa-eye"></i>
                                             </a>
 
-                                            <form action="{{ route('pegawai.destroy', $p->id) }}" method="POST"
-                                                class="d-inline"
-                                                onsubmit="return confirm('Ajukan penonaktifan pegawai ini?');">
+                                            <form action="{{ route('penonaktifan-pegawai.proses', $p->id) }}"
+                                                method="POST" class="d-inline form-proses">
                                                 @csrf
-                                                @method('DELETE')
-                                                <button class="btn btn-sm btn-danger btn-action">
+                                                <button type="button"
+                                                    class="btn btn-sm btn-danger btn-action btn-confirm-proses">
                                                     <i class="fas fa-user-slash"></i>
                                                 </button>
                                             </form>
@@ -132,47 +196,6 @@
                         </table>
 
                         {{ $pegawaiAktif->links('pagination::bootstrap-5') }}
-                    </div>
-                </div>
-            </div>
-
-            {{-- ================= PENDING ================= --}}
-            <div class="tab-pane fade" id="pending">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body table-responsive">
-
-                        <table class="table table-bordered table-hover table-striped">
-                            <thead class="table-light text-center">
-                                <tr>
-                                    <th>No</th>
-                                    <th>Madrasah</th>
-                                    <th>Nama</th>
-                                    <th>Jabatan</th>
-                                    <th>NIK</th>
-                                    <th>PEG ID</th>
-                                    <th>NPWP</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($pegawaiPending as $i => $p)
-                                    <tr>
-                                        <td class="text-center">{{ $pegawaiPending->firstItem() + $i }}</td>
-                                        <td>{{ $p->madrasah?->nama_madrasah ?? '-' }}</td>
-                                        <td>{{ $p->nama_simpatika }}</td>
-                                        <td>{{ $p->jabatan_ump }}</td>
-                                        <td>{{ $p->nik }}</td>
-                                        <td>{{ $p->pegid }}</td>
-                                        <td>{{ $p->npwp }}</td>
-                                        <td class="text-center">
-                                            <span class="badge bg-secondary">Pending</span>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-
-                        {{ $pegawaiPending->links('pagination::bootstrap-5') }}
                     </div>
                 </div>
             </div>
@@ -192,5 +215,99 @@
             </script>
         @endif
     @endpush
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // SETUJUI
+            document.querySelectorAll('.btn-confirm-setujui').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    let form = this.closest('form');
+
+                    Swal.fire({
+                        title: 'Setujui Pengajuan?',
+                        text: "Pegawai akan dinonaktifkan.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#198754',
+                        cancelButtonColor: '#6c757d',
+                        confirmButtonText: 'Ya, setujui',
+                        cancelButtonText: 'Batal'
+                    }).then(result => {
+                        if (result.isConfirmed) form.submit();
+                    });
+                });
+            });
+
+            // TOLAK
+            document.querySelectorAll('.btn-confirm-tolak').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    let form = this.closest('form');
+
+                    Swal.fire({
+                        title: 'Tolak Pengajuan?',
+                        text: "Pegawai akan tetap aktif.",
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#dc3545', // warna danger merah
+                        cancelButtonColor: '#adb5bd',
+                        confirmButtonText: 'Ya, tolak',
+                        cancelButtonText: 'Batal'
+                    }).then(result => {
+                        if (result.isConfirmed) form.submit();
+                    });
+                });
+            });
+
+            // ================= PROSES =================
+            document.querySelectorAll('.btn-confirm-proses').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+
+                    let form = this.closest('form');
+
+                    Swal.fire({
+                        title: 'Ajukan Penonaktifan?',
+                        html: `
+                                <p>Pilih alasan penonaktifan:</p>
+                                <select id="alasan" class="swal2-select">
+                                    <option value="">-- Pilih Alasan --</option>
+                                    <option>MENINGGAL DUNIA</option>
+                                    <option>PENSIUN</option>
+                                    <option>DIANGKAT P3K</option>
+                                    <option>DIANGKAT CPNS/PNS</option>
+                                    <option>PINDAH KERJA</option>
+                                    <option>MENGUNDURKAN DIRI</option>
+                                    <option>LAINNYA</option>
+                                </select>
+                            `,
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'Ya, ajukan!',
+                        cancelButtonText: 'Batal',
+                        preConfirm: () => {
+                            let alasan = document.getElementById('alasan').value;
+                            if (!alasan) {
+                                Swal.showValidationMessage('Alasan wajib dipilih');
+                            }
+                            return alasan;
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+
+                            // inject ke form
+                            let input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = 'alasan_mengundurkan_diri';
+                            input.value = result.value;
+
+                            form.appendChild(input);
+                            form.submit();
+                        }
+                    });
+
+                });
+            });
+        });
+    </script>
 
 @endsection

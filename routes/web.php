@@ -79,7 +79,15 @@ Route::middleware(['auth', 'set.unit'])->group(function () {
     | Penonaktifan Pegawai
     |--------------------------------------------------------------------------
     */
+    Route::prefix('penonaktifan-pegawai')->name('penonaktifan-pegawai.')->group(function () {
+        Route::post('{pegawai}/proses', [PenonaktifanPegawaiController::class, 'pengajuan_nonaktif_pegawai'])->name('proses');
+        Route::post('{pegawai}/nonaktif', [PenonaktifanPegawaiController::class, 'terima_nonaktif_pegawai'])->name('nonaktif');
+        Route::post('{pegawai}/tolak', [PenonaktifanPegawaiController::class, 'tolak_nonaktif_pegawai'])->name('tolak');
+    });
+
+    // baru resource di bawah
     Route::resource('penonaktifan-pegawai', PenonaktifanPegawaiController::class);
+    
 });
 
 /*

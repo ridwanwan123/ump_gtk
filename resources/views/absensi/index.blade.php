@@ -35,16 +35,12 @@
             vertical-align: middle !important;
             white-space: nowrap;
         }
-
-        /* Sticky header */
         .table thead th {
             position: sticky;
             top: 0;
             background-color: #f4f6f9;
             z-index: 2;
         }
-
-        /* Nama Pegawai */
         td.nama-pegawai {
             font-weight: 500;
             font-size: 0.8rem;
@@ -53,13 +49,11 @@
             text-overflow: ellipsis;
         }
 
-        /* Header sub kolom (S I TK DL C) */
         th.sub-header {
             font-size: 0.75rem;
             font-weight: 600;
         }
 
-        /* Warna Bulan */
         .bulan-pertama {
             background-color: #ffe5e5 !important;
         }
@@ -72,7 +66,6 @@
             background-color: #e5e5ff !important;
         }
 
-        /* Striping */
         .table tbody tr:nth-child(odd) td {
             background-color: rgba(0, 0, 0, 0.025);
         }
@@ -89,12 +82,10 @@
             background-color: #ccccf9 !important;
         }
 
-        /* Hover highlight */
         .table tbody tr:hover td {
             background-color: rgba(23, 162, 184, 0.1);
         }
 
-        /* Badge TW */
         .badge-triwulan {
             font-size: 0.8rem;
             background-color: #17a2b8;

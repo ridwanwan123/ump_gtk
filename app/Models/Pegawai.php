@@ -11,9 +11,21 @@ use App\Models\AbsensiPegawai;
 
 class Pegawai extends Model
 {
-    const AKTIF     = 'AKTIF';
-    const NON_AKTIF = 'NON_AKTIF';
-    const PENDING   = 'PENDING';
+    const AKTIF                 = 'AKTIF';
+    const PROSES_NON_AKTIF      = 'PROSES NONAKTIF'; //sisi operator
+    const NON_AKTIF             = 'NON AKTIF'; //sisi admin pusat
+    const PROSES_USULAN         = 'PROSES USULAN'; //sisi operator
+    const USULAN                = 'USULAN'; //sisi admin pusat
+
+    const ALASAN = [
+                        'MENINGGAL DUNIA',
+                        'PENSIUN',
+                        'DIANGKAT P3K',
+                        'DIANGKAT CPNS/PNS',
+                        'PINDAH KERJA',
+                        'MENGUNDURKAN DIRI',
+                        'LAINNYA',
+                    ];
 
     use HasFactory;
 
@@ -39,7 +51,8 @@ class Pegawai extends Model
         'alamat_email',
         'alamat_gtk',
         'status_pegawai',
-        'dapodik'
+        'dapodik',
+        'alasan_mengundurkan_diri'
     ];
 
     protected static function booted()

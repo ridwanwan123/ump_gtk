@@ -273,7 +273,7 @@ class PegawaiController extends Controller
                 'ip' => request()->ip(),
             ]);
 
-            return Excel::download(new PegawaiExport, 'pegawai.xlsx');
+            return Excel::download(new PegawaiExport, 'Data Pegawai Aktif.xlsx');
         } catch (Throwable $e) {
             Log::error('Gagal export pegawai', [
                 'message' => $e->getMessage(),

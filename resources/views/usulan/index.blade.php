@@ -1,6 +1,6 @@
 @extends('layouts.base')
 
-@section('title', 'Data Pegawai')
+@section('title', 'Data Usulan Pegawai')
 
 @push('styles')
     <style>
@@ -39,6 +39,12 @@
             float: right;
             text-align: right;
         }
+
+        .alert-custom {
+            background: #fff;
+            border-left: 4px solid #f0ad4e;
+            border-radius: 8px;
+        }
     </style>
 @endpush
 
@@ -46,76 +52,84 @@
     <div class="container-fluid">
 
         {{-- FILTER CARD --}}
-        <div class="card card-info  card-outline mb-3 shadow-sm card-filter">
-            <div class="card-header">
-                <h3 class="card-title"><i class="fas fa-filter mr-1"></i> Filter Data Pegawai</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
+        @role('superadmin')
+            <div class="card card-info  card-outline mb-3 shadow-sm card-filter">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-filter mr-1"></i> Filter Data Pegawai</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body p-3">
+                    <form method="GET" action="">
+                        <div class="row">
+                            {{-- Madrasah --}}
+                            <div class="col-md-5">
+                                <label>Madrasah</label>
+                                <select name="madrasah" class="form-control form-control-sm">
+                                    <option value="">-- Semua Madrasah --</option>
+                                    @foreach ($madrasahs as $madrasah)
+                                        <option value="{{ $madrasah->id }}"
+                                            {{ request('madrasah') == $madrasah->id ? 'selected' : '' }}>
+                                            {{ $madrasah->nama_madrasah }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            {{-- Jabatan --}}
+                            <div class="col-md-5">
+                                <label>Jabatan</label>
+                                <select name="jabatan_ump" class="form-control form-control-sm">
+                                    <option value="">-- Semua Jabatan --</option>
+                                    @foreach ($jabatanList as $jabatan_ump)
+                                        <option value="{{ $jabatan_ump }}"
+                                            {{ request('jabatan_ump') == $jabatan_ump ? 'selected' : '' }}>
+                                            {{ $jabatan_ump }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            {{-- Button Filter --}}
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button type="submit" class="btn btn-info btn-sm btn-block">
+                                    <i class="fas fa-filter"></i> Filter
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-            <div class="card-body p-3">
-                <form method="GET" action="">
-                    <div class="row">
-                        {{-- Madrasah --}}
-                        <div class="col-md-5">
-                            <label>Madrasah</label>
-                            <select name="madrasah" class="form-control form-control-sm">
-                                <option value="">-- Semua Madrasah --</option>
-                                @foreach ($madrasahs as $madrasah)
-                                    <option value="{{ $madrasah->id }}"
-                                        {{ request('madrasah') == $madrasah->id ? 'selected' : '' }}>
-                                        {{ $madrasah->nama_madrasah }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+        @endrole
 
-                        {{-- Jabatan --}}
-                        <div class="col-md-5">
-                            <label>Jabatan</label>
-                            <select name="jabatan_ump" class="form-control form-control-sm">
-                                <option value="">-- Semua Jabatan --</option>
-                                @foreach ($jabatanList as $jabatan_ump)
-                                    <option value="{{ $jabatan_ump }}"
-                                        {{ request('jabatan_ump') == $jabatan_ump ? 'selected' : '' }}>
-                                        {{ $jabatan_ump }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        {{-- Button Filter --}}
-                        <div class="col-md-2 d-flex align-items-end">
-                            <button type="submit" class="btn btn-info btn-sm btn-block">
-                                <i class="fas fa-filter"></i> Filter
-                            </button>
-                        </div>
+        @role('operator')
+            <div class="alert alert-custom shadow-sm mb-3 d-flex align-items-start">
+                <div class="me-2 text-warning">
+                    <i class="fas fa-info-circle mr-1"></i>
+                </div>
+                <div>
+                    <div class="fw-semibold mb-1">Pengajuan Pengusulan Pegawai</div>
+                    <div class="text-muted small">
+                        Pegawai tidak langsung diusulkan, tetapi akan berstatus
+                        <span class="badge bg-primary">Usulan</span>
+                        dan diproses setelah persetujuan Kanwil.
                     </div>
-                </form>
+                </div>
             </div>
-        </div>
+        @endrole
 
         {{-- HEADER & ACTION --}}
         <div class="d-flex justify-content-between mb-3">
-            <h2 class="fw-bold">Data Pegawai</h2>
+            <h2 class="fw-bold">Data Pengusulan Pegawai</h2>
             <div>
-                @can('create', App\Models\Pegawai::class)
-                    <a href="{{ route('pegawai.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> Tambah
-                        Pegawai</a>
-                @endcan
+                <a href="{{ route('pengusulan-pegawai.create') }}" class="btn btn-primary btn-sm"><i
+                        class="fas fa-plus"></i> Pengajuan Usulan Pegawai</a>
+
             </div>
         </div>
-
-        {{-- Search --}}
-        <form method="GET" class="mb-3">
-            <div class="input-group" style="max-width: 450px;">
-                <input type="text" name="search" class="form-control" placeholder="Cari Nama Pegawai..."
-                    value="{{ request('search') }}">
-                <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i> Search</button>
-            </div>
-        </form>
 
         {{-- TABLE --}}
         <div class="card shadow-sm border-0">
@@ -123,53 +137,51 @@
                 <table id="pegawaiTable" class="table table-bordered table-hover table-striped nowrap">
                     <thead class="table-light text-center">
                         <tr>
-                            <th>No</th>
-                            <th>Nama Madrasah</th>
-                            <th>Nama Simpatika</th>
-                            <th>Jabatan UMP</th>
-                            {{-- <th>Rekening DKI</th> --}}
+                            <th>NO</th>
+                            <th>MADRASAH</th>
+                            <th>NAMA SIMPATIKA</th>
+                            <th>JABATAN</th>
                             <th>NIK</th>
                             <th>PEG ID</th>
                             <th>NPWP</th>
-                            <th>Aksi</th>
+                            <th>AKSI</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($pegawais as $i => $pegawai)
+                        @forelse ($pegawaiUsulan as $index => $pegawai)
                             <tr>
-                                <td class="text-center">{{ $pegawais->firstItem() + $i }}</td>
-                                <td>{{ $pegawai->madrasah?->nama_madrasah ?? '-' }}</td>
-                                <td>{{ $pegawai->nama_simpatika ?? '-' }}</td>
-                                <td>{{ $pegawai->jabatan_ump ?? '-' }}</td>
-                                {{-- <td>{{ $pegawai->no_rek_bank_dki ?? '-' }}</td> --}}
+                                <td class="text-center">
+                                    {{ $pegawaiUsulan->firstItem() + $index }}
+                                </td>
+                                <td>{{ $pegawai->madrasah->nama_madrasah ?? '-' }}</td>
+                                <td>{{ $pegawai->nama_rekening }}</td>
+                                <td class="text-center">
+                                    <span class="badge bg-info badge-role">
+                                        {{ $pegawai->jabatan_ump }}
+                                    </span>
+                                </td>
                                 <td>{{ $pegawai->nik ?? '-' }}</td>
                                 <td>{{ $pegawai->pegid ?? '-' }}</td>
                                 <td>{{ $pegawai->npwp ?? '-' }}</td>
                                 <td class="text-center">
-                                    <a href="{{ route('pegawai.show', $pegawai->id) }}"
-                                        class="btn btn-sm btn-info btn-action" title="Detail">
+                                    <a href="{{ route('pengusulan-pegawai.show', $pegawai->id) }}"
+                                        class="btn btn-sm btn-info btn-action">
                                         <i class="fas fa-eye"></i>
                                     </a>
-
-                                    @can('delete', $pegawai)
-                                        <form action="{{ route('pegawai.destroy', $pegawai->id) }}" method="POST"
-                                            class="d-inline"
-                                            onsubmit="return confirm('Apakah anda yakin ingin menghapus pegawai ini?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger btn-action" title="Hapus">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
-                                    @endcan
                                 </td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="8" class="text-center text-muted">
+                                    Tidak ada data pegawai usulan
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
 
                 <div class="mt-3">
-                    {{ $pegawais->links('pagination::bootstrap-5') }}
+                    {{ $pegawaiUsulan->links('pagination::bootstrap-5') }}
                 </div>
             </div>
         </div>
@@ -195,20 +207,3 @@
     @endpush
 
 @endsection
-
-{{-- @section('scripts')
-    <script>
-        $(document).ready(function() {
-            $('#pegawaiTable').DataTable({
-                responsive: true,
-                autoWidth: false,
-                scrollX: true,
-                searching: false, // kita pakai search form custom
-                columnDefs: [{
-                    targets: '_all',
-                    whiteSpace: 'nowrap'
-                }]
-            });
-        });
-    </script>
-@endsection --}}

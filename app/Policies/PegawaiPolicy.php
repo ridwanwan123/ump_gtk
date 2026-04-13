@@ -39,4 +39,15 @@ class PegawaiPolicy
     {
         return false; // superadmin via before()
     }
+
+    public function proses(User $user, Pegawai $pegawai): bool
+    {
+        return $user->hasRole('operator')
+            && $user->unit_kerja === $pegawai->id_madrasah;
+    }
+    public function nonaktif(User $user, Pegawai $pegawai): bool
+    {
+        return $user->hasRole('operator')
+            && $user->unit_kerja === $pegawai->id_madrasah;
+    }
 }

@@ -17,27 +17,52 @@ class PengusulanPegawaiController extends Controller
     public function index(Request $request)
     {
         try {
-            $this->authorize('viewAny', Pegawai::class);
-
-            $query = Pegawai::with('madrasah');
+            /*
+            |--------------------------------------------------------------------------
+            | BASE QUERY (FILTER)
+            |--------------------------------------------------------------------------
+            */
+            $baseQuery = Pegawai::query()->with('madrasah');
 
             if ($request->filled('madrasah')) {
-                $query->where('id_madrasah', $request->madrasah);
+                $baseQuery->where('id_madrasah', $request->madrasah);
             }
 
             if ($request->filled('jabatan_ump')) {
-                $query->where('jabatan_ump', $request->jabatan_ump);
+                $baseQuery->where('jabatan_ump', $request->jabatan_ump);
             }
 
             if ($request->filled('search')) {
-                $query->where('nama_rekening', 'like', "%{$request->search}%");
+                $baseQuery->where('nama_rekening', 'like', "%{$request->search}%");
             }
 
-            $pegawais = $query->orderBy('id_madrasah')
+            /*
+            |--------------------------------------------------------------------------
+            | DATA USULAN (tanpa global scope 'aktif')
+            |--------------------------------------------------------------------------
+            */
+            $pegawaiUsulan = Pegawai::withoutGlobalScope('aktif')
+                ->with('madrasah')
+                ->when($request->filled('madrasah'), fn($q) =>
+                    $q->where('id_madrasah', $request->madrasah)
+                )
+                ->when($request->filled('jabatan_ump'), fn($q) =>
+                    $q->where('jabatan_ump', $request->jabatan_ump)
+                )
+                ->when($request->filled('search'), fn($q) =>
+                    $q->where('nama_rekening', 'like', "%{$request->search}%")
+                )
+                ->where('status_pegawai', 'USULAN')
+                ->orderBy('id_madrasah')
                 ->orderBy('nama_rekening')
-                ->paginate(20)
+                ->paginate(10, ['*'], 'usulan_page')
                 ->withQueryString();
 
+            /*
+            |--------------------------------------------------------------------------
+            | FILTER DATA
+            |--------------------------------------------------------------------------
+            */
             $jabatanList = Pegawai::select('jabatan_ump')
                 ->distinct()
                 ->orderBy('jabatan_ump')
@@ -45,21 +70,144 @@ class PengusulanPegawaiController extends Controller
 
             $madrasahs = Madrasah::orderBy('nama_madrasah')->get();
 
-            // ===== SUKSES =====
-            Log::info('Akses halaman data pegawai', [
+            /*
+            |--------------------------------------------------------------------------
+            | LOG
+            |--------------------------------------------------------------------------
+            */
+
+            Log::info('Akses halaman usulan pegawai', [
                 'user_id' => auth()->id(),
                 'ip' => $request->ip(),
             ]);
 
-            return view('usulan.index', compact('pegawais', 'madrasahs', 'jabatanList'));
+            return view('usulan.index', compact(
+                'pegawaiUsulan',
+                'madrasahs',
+                'jabatanList'
+            ));
+
         } catch (Throwable $e) {
-            Log::error('Gagal membuka halaman pegawai', [
+
+            Log::error('Gagal membuka halaman usulan pegawai', [
                 'message' => $e->getMessage(),
                 'user_id' => auth()->id(),
                 'ip' => $request->ip(),
             ]);
 
             abort(500, 'Terjadi kesalahan sistem.');
+        }
+    }
+
+    public function create()
+    {
+        try {
+            $user = auth()->user();
+            // kasus operator
+        if ($user->unit_kerja) {
+            $madrasah = Madrasah::find($user->unit_kerja); // null-safe
+            $isReadonly = true; // readonly input di Blade
+        } else {
+            // kasus superadmin
+            $madrasah = Madrasah::orderBy('nama_madrasah')->get();
+            $isReadonly = false; // pakai select input
+        }
+
+            $jabatanUMPList = [
+                'GURU',
+                'TENAGA ADMINISTRASI',
+                'TENAGA KEAMANAN',
+                'TENAGA KEBERSIHAN',
+                'TENAGA LABORATORIUM',
+                'TENAGA PENGELOLA ASRAMA',
+                'TENAGA PERPUSTAKAAN',
+            ];
+
+            Log::info('Akses form tambah pegawai', [
+                'user_id' => auth()->id(),
+                'ip' => request()->ip(),
+            ]);
+
+            return view('usulan.usulan', [
+                'pegawai' => new Pegawai(),
+                'madrasah' => $madrasah,
+                'isReadonly' => $isReadonly,
+                'jabatanUMPList' => $jabatanUMPList
+            ]);
+        } catch (Throwable $e) {
+            Log::error('Gagal membuka form tambah pegawai', [
+                'message' => $e->getMessage(),
+                'user_id' => auth()->id(),
+                'ip' => request()->ip(),
+            ]);
+
+            abort(500);
+        }
+    }
+
+    public function show($id)
+    {
+        $pegawai = Pegawai::withoutGlobalScope('aktif')
+            ->with('madrasah')
+            ->findOrFail($id);
+
+        return view('usulan.show', compact('pegawai'));
+    }
+
+    public function store(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'nama_simpatika'    => 'nullable|string|max:255',
+                'nama_rekening'     => 'required|string|max:255',
+                'jabatan_ump'       => 'nullable|string|max:100',
+                'jabatan_dinas'     => 'nullable|string|max:100',
+                'status_asn'        => 'nullable|string|max:50',
+                'no_rek_bank_dki'   => 'nullable|digits:11',
+                'id_madrasah'       => 'required|exists:madrasah,id',
+                'npsn_tempat_tugas' => 'nullable|string|max:20',
+                'nik'               => 'required|digits:16',
+                'pegid'             => 'nullable|digits:14',
+                'tempat_lahir'      => 'required|string|max:100',
+                'tanggal_lahir'     => 'required|date',
+                'nama_ibu_kandung'  => 'nullable|string|max:255',
+                'agama'             => 'nullable|string|max:50',
+                'pend_terakhir'     => 'required|string|max:100',
+                'npwp'              => 'nullable|digits_between:15,16',
+                'nomor_hp'          => 'nullable|string|max:20',
+                'alamat_email'      => 'nullable|email',
+                'alamat_gtk'        => 'required|string',
+                'status_pegawai'    => 'nullable|string|max:50',
+                'dapodik'           => 'nullable|string|max:255',
+            ]);
+
+            DB::transaction(function () use ($validated) {
+                $validated['status_pegawai'] = 'USULAN';
+
+                Pegawai::create($validated);
+            });
+
+            Log::info('Pegawai berhasil ditambahkan', [
+                'user_id' => auth()->id(),
+                'nama'    => $validated['nama_rekening'],
+                'ip'      => $request->ip(),
+            ]);
+
+            return redirect()->route('pengusulan-pegawai.index')
+                ->with('swal_success', 'Pegawai berhasil ditambahkan');
+
+        } catch (ValidationException $e) {
+            throw $e;
+        } catch (Throwable $e) {
+            Log::error('Gagal menambahkan pegawai', [
+                'message' => $e->getMessage(),
+                'user_id' => auth()->id(),
+                'ip'      => $request->ip(),
+            ]);
+
+            return back()
+                ->withInput()
+                ->with('swal_error', 'Terjadi kesalahan saat menambahkan data.');
         }
     }
 }
