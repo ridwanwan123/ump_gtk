@@ -154,7 +154,7 @@ class PengusulanPegawaiController extends Controller
         return view('usulan.show', compact('pegawai'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request) //pengajuan pegawai baru
     {
         try {
             $validated = $request->validate([
@@ -208,6 +208,40 @@ class PengusulanPegawaiController extends Controller
             return back()
                 ->withInput()
                 ->with('swal_error', 'Terjadi kesalahan saat menambahkan data.');
+        }
+    }
+
+    public function terima_pengusulan_pegawai($id)
+    {
+        $pegawai = Pegawai::withoutGlobalScopes()->findOrFail($id);
+
+        try {
+            DB::transaction(function () use ($pegawai) {
+                $pegawai->update([
+                    'status_pegawai' => 'AKTIF' // atau konstanta kalau ada
+                ]);
+            });
+
+            Log::info('Pengajuan pegawai disetujui', [
+                'user_id' => auth()->id(),
+                'pegawai_id' => $pegawai->id,
+                'ip' => request()->ip(),
+            ]);
+
+            return redirect()
+                ->route('pengusulan-pegawai.index')
+                ->with('swal_success', 'Pegawai berhasil disetujui.');
+
+        } catch (Throwable $e) {
+
+            Log::error('Gagal menyetujui pegawai', [
+                'pegawai_id' => $pegawai->id,
+                'message' => $e->getMessage(),
+                'user_id' => auth()->id(),
+                'ip' => request()->ip(),
+            ]);
+
+            return back()->with('swal_error', 'Terjadi kesalahan saat proses.');
         }
     }
 }

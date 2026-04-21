@@ -72,6 +72,10 @@ Route::middleware(['auth', 'set.unit'])->group(function () {
     | Pengusulan Pegawai
     |--------------------------------------------------------------------------
     */
+    Route::prefix('pengusulan-pegawai')->name('pengusulan-pegawai.')->group(function () {
+        Route::post('{pegawai}/terima_pengusulan_pegawai', [PengusulanPegawaiController::class, 'terima_pengusulan_pegawai'])->name('terima_pengusulan_pegawai');
+    });
+
     Route::resource('pengusulan-pegawai', PengusulanPegawaiController::class);
 
     /*
