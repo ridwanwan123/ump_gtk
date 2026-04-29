@@ -120,14 +120,16 @@ class PenonaktifanPegawaiController extends Controller
 
         // VALIDASI
         $request->validate([
-            'alasan_mengundurkan_diri' => 'required|string'
+            'alasan_mengundurkan_diri' => 'required|string',
+            'tgl_nonaktif' => 'required|date'
         ]);
 
         try {
             DB::transaction(function () use ($pegawai, $request) {
                 $pegawai->update([
                     'status_pegawai' => Pegawai::PROSES_NON_AKTIF,
-                    'alasan_mengundurkan_diri' => $request->alasan_mengundurkan_diri
+                    'alasan_mengundurkan_diri' => $request->alasan_mengundurkan_diri,
+                    'tgl_nonaktif' => $request->tgl_nonaktif
                 ]);
             });
 
@@ -135,6 +137,7 @@ class PenonaktifanPegawaiController extends Controller
                 'user_id' => auth()->id(),
                 'pegawai_id' => $pegawai->id,
                 'alasan' => $request->alasan_mengundurkan_diri,
+                'tgl_nonaktif' => $request->tgl_nonaktif,
                 'ip' => request()->ip(),
             ]);
 

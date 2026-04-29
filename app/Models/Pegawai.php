@@ -52,7 +52,8 @@ class Pegawai extends Model
         'alamat_gtk',
         'status_pegawai',
         'dapodik',
-        'alasan_mengundurkan_diri'
+        'alasan_mengundurkan_diri',
+        'tgl_nonaktif'
     ];
 
     protected static function booted()

@@ -97,6 +97,14 @@ class AbsensiPegawaiExport implements
             }
         }
 
+        // TAMBAHAN: header jumlah ketidakhadiran
+        $jumlahHeaders = ['S', 'I', 'TK', 'DL', 'C', 'JML'];
+
+        foreach ($jumlahHeaders as $jh) {
+            $row1[] = '';
+            $row2[] = $jh;
+        }
+
         return [$row1, $row2];
     }
 
@@ -104,44 +112,73 @@ class AbsensiPegawaiExport implements
      * Mapping data per baris
      */
     public function map($pegawai): array
-    {
-        $row = [
-            $pegawai->nama_simpatika,
-            $pegawai->nama_rekening,
-            $pegawai->jabatan_ump,
-            $pegawai->jabatan_dinas,
-            $pegawai->status_asn,
-            "'" . $pegawai->no_rek_bank_dki,
-            $pegawai->madrasah->nama_madrasah ?? '-',
-            $pegawai->npsn_tempat_tugas,
-            "'" . $pegawai->nik,
-            "'" . $pegawai->pegid,
-            $pegawai->tempat_lahir,
-            $pegawai->tanggal_lahir,
-            $pegawai->nama_ibu_kandung,
-            $pegawai->agama,
-            $pegawai->pend_terakhir,
-            "'" . $pegawai->npwp,
-            "'" . $pegawai->nomor_hp,
-            $pegawai->alamat_email,
-            $pegawai->alamat_gtk,
-            $pegawai->status_pegawai,
-            $pegawai->dapodik,
-        ];
+{
+    $row = [
+        $pegawai->nama_simpatika,
+        $pegawai->nama_rekening,
+        $pegawai->jabatan_ump,
+        $pegawai->jabatan_dinas,
+        $pegawai->status_asn,
+        "'" . $pegawai->no_rek_bank_dki,
+        $pegawai->madrasah->nama_madrasah ?? '-',
+        $pegawai->npsn_tempat_tugas,
+        "'" . $pegawai->nik,
+        "'" . $pegawai->pegid,
+        $pegawai->tempat_lahir,
+        $pegawai->tanggal_lahir,
+        $pegawai->nama_ibu_kandung,
+        $pegawai->agama,
+        $pegawai->pend_terakhir,
+        "'" . $pegawai->npwp,
+        "'" . $pegawai->nomor_hp,
+        $pegawai->alamat_email,
+        $pegawai->alamat_gtk,
+        $pegawai->status_pegawai,
+        $pegawai->dapodik,
+    ];
 
-        $absensiByBulan = $pegawai->absensi->keyBy('bulan');
+    $absensiByBulan = $pegawai->absensi->keyBy('bulan');
 
-        foreach ($this->bulanPerTW[$this->tw] as $bulan) {
-            $a = $absensiByBulan[$bulan] ?? null;
-            $row[] = $a->sakit ?? 0;
-            $row[] = $a->izin ?? 0;
-            $row[] = $a->ketidakhadiran ?? 0;
-            $row[] = $a->dinas_luar ?? 0;
-            $row[] = $a->cuti ?? 0;
-        }
+    // ✅ INI YANG KURANG
+    $totalS = 0;
+    $totalI = 0;
+    $totalTK = 0;
+    $totalDL = 0;
+    $totalC = 0;
 
-        return $row;
+    foreach ($this->bulanPerTW[$this->tw] as $bulan) {
+        $a = $absensiByBulan[$bulan] ?? null;
+
+        $s  = $a->sakit ?? 0;
+        $i  = $a->izin ?? 0;
+        $tk = $a->ketidakhadiran ?? 0;
+        $dl = $a->dinas_luar ?? 0;
+        $c  = $a->cuti ?? 0;
+
+        $totalS += $s;
+        $totalI += $i;
+        $totalTK += $tk;
+        $totalDL += $dl;
+        $totalC += $c;
+
+        $row[] = $s;
+        $row[] = $i;
+        $row[] = $tk;
+        $row[] = $dl;
+        $row[] = $c;
     }
+
+    $totalAll = $totalS + $totalI + $totalTK + $totalDL + $totalC;
+
+    $row[] = $totalS;
+    $row[] = $totalI;
+    $row[] = $totalTK;
+    $row[] = $totalDL;
+    $row[] = $totalC;
+    $row[] = $totalAll;
+
+    return $row;
+}
 
     /**
      * Styling & merge cell
@@ -164,13 +201,12 @@ class AbsensiPegawaiExport implements
                     return $letters;
                 };
 
-                // Merge header pegawai (A1:A2 dst)
+                // Merge header pegawai
                 for ($i = 1; $i <= count($this->pegawaiHeaders); $i++) {
                     $col = $numToLetter($i);
                     $sheet->mergeCells("{$col}1:{$col}2");
                 }
 
-                // Header bulan
                 $startCol = count($this->pegawaiHeaders) + 1;
                 $subCount = count($this->subHeaders);
 
@@ -181,6 +217,9 @@ class AbsensiPegawaiExport implements
                     10 => 'OKTOBER', 11 => 'NOVEMBER', 12 => 'DESEMBER',
                 ];
 
+                // ======================
+                // HEADER BULAN
+                // ======================
                 foreach ($this->bulanPerTW[$this->tw] as $i => $bulan) {
                     $start = $startCol + ($i * $subCount);
                     $end   = $start + $subCount - 1;
@@ -200,13 +239,39 @@ class AbsensiPegawaiExport implements
                         ->setVertical(Alignment::VERTICAL_CENTER);
                 }
 
-                // Style header pegawai
-                $lastCol = $numToLetter(
-                    $startCol + (count($this->bulanPerTW[$this->tw]) * $subCount) - 1
-                );
+                // ======================
+                // HEADER JUMLAH
+                // ======================
+                $jumlahColCount = 6;
+
+                $startJumlah = $startCol + (count($this->bulanPerTW[$this->tw]) * $subCount);
+                $endJumlah   = $startJumlah + $jumlahColCount - 1;
+
+                $colStartJumlah = $numToLetter($startJumlah);
+                $colEndJumlah   = $numToLetter($endJumlah);
+
+                $sheet->mergeCells("{$colStartJumlah}1:{$colEndJumlah}1");
+                $sheet->setCellValue("{$colStartJumlah}1", 'JUMLAH KETIDAK HADIRAN');
+
+                $sheet->getStyle("{$colStartJumlah}1:{$colEndJumlah}2")
+                    ->getFont()->setBold(true);
+
+                $sheet->getStyle("{$colStartJumlah}1:{$colEndJumlah}2")
+                    ->getAlignment()
+                    ->setHorizontal(Alignment::HORIZONTAL_CENTER)
+                    ->setVertical(Alignment::VERTICAL_CENTER);
+
+                // ======================
+                // HITUNG LAST COLUMN (FIX)
+                // ======================
+                $lastColIndex = $endJumlah;
+                $lastCol = $numToLetter($lastColIndex);
 
                 $highestRow = $sheet->getHighestRow();
 
+                // ======================
+                // STYLE GLOBAL
+                // ======================
                 $sheet->getStyle("A1:{$lastCol}2")
                     ->getFont()->setBold(true);
 
@@ -215,13 +280,13 @@ class AbsensiPegawaiExport implements
                     ->setHorizontal(Alignment::HORIZONTAL_CENTER)
                     ->setVertical(Alignment::VERTICAL_CENTER);
 
-                // Border header & body
+                // Border semua
                 $sheet->getStyle("A1:{$lastCol}{$highestRow}")
                     ->getBorders()
                     ->getAllBorders()
                     ->setBorderStyle(Border::BORDER_THIN);
 
-                // Center angka absensi
+                // Center angka absensi + jumlah
                 $sheet->getStyle("{$numToLetter($startCol)}3:{$lastCol}{$highestRow}")
                     ->getAlignment()
                     ->setHorizontal(Alignment::HORIZONTAL_CENTER);

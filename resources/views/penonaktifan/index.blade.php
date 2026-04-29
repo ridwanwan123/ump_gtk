@@ -88,10 +88,9 @@
                                     <th>MADRASAH</th>
                                     <th>NAMA SIMPATIKA</th>
                                     <th>JABATAN</th>
-                                    <th>NIK</th>
-                                    <th>PEG ID</th>
                                     <th>STATUS</th>
                                     <th>ALASAN</th>
+                                    <th>TANGGAL NONAKTIF</th>
                                     @role('superadmin')
                                         <th>AKSI</th>
                                     @endrole
@@ -104,12 +103,13 @@
                                         <td>{{ $p->madrasah?->nama_madrasah ?? '-' }}</td>
                                         <td>{{ $p->nama_simpatika }}</td>
                                         <td>{{ $p->jabatan_ump }}</td>
-                                        <td>{{ $p->nik }}</td>
-                                        <td>{{ $p->pegid }}</td>
                                         <td class="text-center">
                                             <span class="badge bg-secondary">Pengajuan Non Aktif</span>
                                         </td>
                                         <td>{{ $p->alasan_mengundurkan_diri ?? '-' }}</td>
+                                        <td>
+                                            {{ $p->tgl_nonaktif ? \Carbon\Carbon::parse($p->tgl_nonaktif)->translatedFormat('d F Y') : '-' }}
+                                        </td>
                                         @role('superadmin')
                                             <td class="text-center">
 
@@ -268,43 +268,79 @@
                     Swal.fire({
                         title: 'Ajukan Penonaktifan?',
                         html: `
-                                <p>Pilih alasan penonaktifan:</p>
-                                <select id="alasan" class="swal2-select">
-                                    <option value="">-- Pilih Alasan --</option>
-                                    <option>MENINGGAL DUNIA</option>
-                                    <option>PENSIUN</option>
-                                    <option>DIANGKAT P3K</option>
-                                    <option>DIANGKAT CPNS/PNS</option>
-                                    <option>PINDAH KERJA</option>
-                                    <option>MENGUNDURKAN DIRI</option>
-                                    <option>LAINNYA</option>
-                                </select>
-                            `,
+                                <div style="text-align:left">
+
+                                    <label style="font-weight:600; font-size:13px; margin-bottom:6px; display:block;">
+                                        Alasan Penonaktifan
+                                    </label>
+
+                                    <select id="alasan" class="form-control" style="margin-bottom:14px; border-radius:6px;">
+                                        <option value="">-- Pilih Alasan --</option>
+                                        <option>MENINGGAL DUNIA</option>
+                                        <option>PENSIUN</option>
+                                        <option>DIANGKAT P3K</option>
+                                        <option>DIANGKAT CPNS/PNS</option>
+                                        <option>PINDAH KERJA</option>
+                                        <option>MENGUNDURKAN DIRI</option>
+                                        <option>LAINNYA</option>
+                                    </select>
+
+                                    <label style="font-weight:600; font-size:13px; margin-bottom:6px; display:block;">
+                                        Tanggal Nonaktif
+                                    </label>
+
+                                    <input type="date"
+                                        id="tgl_nonaktif"
+                                        class="form-control"
+                                        style="border-radius:6px;">
+
+                                </div>
+                                `,
                         icon: 'question',
                         showCancelButton: true,
                         confirmButtonText: 'Ya, ajukan!',
                         cancelButtonText: 'Batal',
                         preConfirm: () => {
                             let alasan = document.getElementById('alasan').value;
+                            let tgl = document.getElementById('tgl_nonaktif').value;
+
                             if (!alasan) {
                                 Swal.showValidationMessage('Alasan wajib dipilih');
+                                return false;
                             }
-                            return alasan;
+
+                            if (!tgl) {
+                                Swal.showValidationMessage(
+                                    'Tanggal nonaktif wajib diisi');
+                                return false;
+                            }
+
+                            return {
+                                alasan: alasan,
+                                tgl_nonaktif: tgl
+                            };
                         }
                     }).then((result) => {
                         if (result.isConfirmed) {
 
-                            // inject ke form
-                            let input = document.createElement('input');
-                            input.type = 'hidden';
-                            input.name = 'alasan_mengundurkan_diri';
-                            input.value = result.value;
+                            // alasan
+                            let inputAlasan = document.createElement('input');
+                            inputAlasan.type = 'hidden';
+                            inputAlasan.name = 'alasan_mengundurkan_diri';
+                            inputAlasan.value = result.value.alasan;
 
-                            form.appendChild(input);
+                            // tanggal
+                            let inputTgl = document.createElement('input');
+                            inputTgl.type = 'hidden';
+                            inputTgl.name = 'tgl_nonaktif';
+                            inputTgl.value = result.value.tgl_nonaktif;
+
+                            form.appendChild(inputAlasan);
+                            form.appendChild(inputTgl);
+
                             form.submit();
                         }
                     });
-
                 });
             });
         });
