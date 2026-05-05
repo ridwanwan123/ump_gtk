@@ -65,6 +65,13 @@
             @role('superadmin')
                 <li class="nav-header">Admin</li>
                 <li class="nav-item">
+                    <a href="{{ route('rekap-honor.index') }}"
+                        class="nav-link {{ request()->routeIs('rekap-honor.*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-user-slash"></i>
+                        <p>Rekap Honor</p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{{ route('admin.users.index') }}"
                         class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-user-cog"></i>

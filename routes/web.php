@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\RekapHonorController;
 use App\Http\Controllers\AbsensiPegawaiController;
 use App\Http\Controllers\PengusulanPegawaiController;
 use App\Http\Controllers\PenonaktifanPegawaiController;
@@ -91,6 +92,8 @@ Route::middleware(['auth', 'set.unit'])->group(function () {
 
     // baru resource di bawah
     Route::resource('penonaktifan-pegawai', PenonaktifanPegawaiController::class);
+    
+    Route::resource('rekap-honor', RekapHonorController::class);
     
 });
 
