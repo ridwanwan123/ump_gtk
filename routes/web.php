@@ -93,6 +93,8 @@ Route::middleware(['auth', 'set.unit'])->group(function () {
     // baru resource di bawah
     Route::resource('penonaktifan-pegawai', PenonaktifanPegawaiController::class);
     
+    Route::get('/rekap-honor-export', [RekapHonorController::class, 'export'])
+    ->name('rekap-honor.export');
     Route::resource('rekap-honor', RekapHonorController::class);
     
 });

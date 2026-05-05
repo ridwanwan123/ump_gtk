@@ -20,6 +20,10 @@
         padding-left: 18px;
         margin-bottom: 0;
     }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
 </style>
 @endpush
 
@@ -135,18 +139,101 @@
         </div>
     </div>
 
+    <a href="{{ route('rekap-honor.export', request()->all()) }}"
+   class="btn btn-success">
+   Export Excel
+</a>
     {{-- TEMPAT HASIL (NANTI) --}}
-    @if(!empty($data))
-        <div class="card">
-            <div class="card-body">
-                <h5>Hasil Rekap (Debug)</h5>
+   @if(!empty($data))
 
-                <pre>
-    {{ print_r($data, true) }}
-                </pre>
-
-            </div>
+    <div class="card shadow-sm border-0 mt-3">
+        <div class="card-header bg-primary text-white">
+            <b>Rekap Honor Pegawai</b>
         </div>
+
+        <div class="card-body table-responsive p-0">
+
+            <table class="table table-bordered table-sm text-nowrap align-middle">
+                <thead class="text-center bg-light">
+
+                    {{-- HEADER LEVEL 1 --}}
+                    <tr>
+                        <th rowspan="2">NAMA</th>
+
+                        <th colspan="6">JUMLAH KETIDAKHADIRAN</th>
+
+                        <th rowspan="2">BANYAK BULAN</th>
+                        <th rowspan="2">% KEHADIRAN</th>
+                        <th rowspan="2">HONOR / BULAN</th>
+                        <th rowspan="2">JUMLAH KOTOR</th>
+
+                        <th colspan="3">% & POTONGAN</th>
+
+                        <th rowspan="2">TOTAL POTONGAN</th>
+                        <th rowspan="2">SETELAH POTONGAN</th>
+                        <th rowspan="2">PPH</th>
+                        <th rowspan="2">BERSIH</th>
+                    </tr>
+
+                    {{-- HEADER LEVEL 2 --}}
+                    <tr>
+                        <th>S</th>
+                        <th>I</th>
+                        <th>TK</th>
+                        <th>DL</th>
+                        <th>C</th>
+                        <th>JML</th>
+
+                        <th>0%</th>
+                        <th>2.5%</th>
+                        <th>5%</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+                    @foreach($data as $row)
+                        <tr class="text-center">
+
+                            {{-- IDENTITAS --}}
+                            <td class="text-start">{{ $row['nama'] }}</td>
+
+                            {{-- ABSENSI --}}
+                            <td>{{ $row['total_s'] }}</td>
+                            <td>{{ $row['total_i'] }}</td>
+                            <td>{{ $row['total_tk'] }}</td>
+                            <td>{{ $row['total_dl'] }}</td>
+                            <td>{{ $row['total_c'] }}</td>
+                            <td>
+                                {{ $row['total_s'] + $row['total_i'] + $row['total_tk'] + $row['total_dl'] + $row['total_c'] }}
+                            </td>
+
+                            {{-- BASIC --}}
+                            <td>{{ $row['banyak_bulan'] }}</td>
+                            <td>{{ $row['persen_kehadiran'] }}%</td>
+                            <td>{{ number_format($row['jumlah_honor_per_bulan'], 0, ',', '.') }}</td>
+                            <td>{{ number_format($row['jumlah_kotor'], 0, ',', '.') }}</td>
+
+                            {{-- POTONGAN --}}
+                            <td>0</td>
+                            <td>{{ number_format($row['potongan_i'], 0, ',', '.') }}</td>
+                            <td>{{ number_format($row['potongan_tk'], 0, ',', '.') }}</td>
+
+                            {{-- FINAL --}}
+                            <td>{{ number_format($row['total_potongan'], 0, ',', '.') }}</td>
+                            <td>{{ number_format($row['setelah_potongan'], 0, ',', '.') }}</td>
+                            <td>{{ number_format($row['pph'], 0, ',', '.') }}</td>
+                            <td><b>{{ number_format($row['jumlah_bersih'], 0, ',', '.') }}</b></td>
+
+                        </tr>
+                    @endforeach
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
     @endif
 
 </div>

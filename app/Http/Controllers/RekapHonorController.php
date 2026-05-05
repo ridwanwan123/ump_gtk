@@ -6,6 +6,8 @@ use App\Models\Pegawai;
 use App\Models\Madrasah;
 use Illuminate\Http\Request;
 use App\Services\RekapHonorService;
+use App\Exports\RekapHonorExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class RekapHonorController extends Controller
 {
@@ -19,7 +21,11 @@ class RekapHonorController extends Controller
         // 🔥 HANYA JALAN KALAU FILTER DIISI
         if ($request->has(['bulan', 'tahun', 'honor'])) {
 
-            $query = Pegawai::with('madrasah');
+            $query = Pegawai::with('madrasah')
+                    ->join('madrasah', 'pegawai.id_madrasah', '=', 'madrasah.id')
+                    ->orderBy('madrasah.nama_madrasah', 'asc')
+                    ->orderBy('pegawai.nama_rekening', 'asc')
+                    ->select('pegawai.*');
 
             // Filter madrasah
             if ($request->madrasah) {
@@ -48,5 +54,17 @@ class RekapHonorController extends Controller
             'jabatanList',
             'data'
         ));
+    }
+
+    public function export(Request $request)
+    {
+        return Excel::download(
+            new RekapHonorExport(
+                $request->bulan,
+                $request->tahun,
+                $request->honor
+            ),
+            'rekap-honor.xlsx'
+        );
     }
 }
