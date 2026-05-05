@@ -67,7 +67,7 @@
                 <li class="nav-item">
                     <a href="{{ route('rekap-honor.index') }}"
                         class="nav-link {{ request()->routeIs('rekap-honor.*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-user-slash"></i>
+                        <i class="nav-icon fas fa-money-bill-wave"></i>
                         <p>Rekap Honor</p>
                     </a>
                 </li>
