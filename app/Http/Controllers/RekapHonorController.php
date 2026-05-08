@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pegawai;
 use App\Models\Madrasah;
+use App\Models\AbsensiPegawai;
 use Illuminate\Http\Request;
 use App\Services\RekapHonorService;
 use App\Exports\RekapHonorExport;
@@ -14,25 +15,43 @@ class RekapHonorController extends Controller
     public function index(Request $request, RekapHonorService $service)
     {
         $madrasahs = Madrasah::all();
-        $jabatanList = Pegawai::select('jabatan_ump')->distinct()->pluck('jabatan_ump');
+
+        $jabatanList = Pegawai::select('jabatan_ump')
+            ->distinct()
+            ->pluck('jabatan_ump');
+
+        $tahunList = AbsensiPegawai::select('tahun')
+            ->distinct()
+            ->orderBy('tahun', 'desc')
+            ->pluck('tahun');
+
+        $bulanList = AbsensiPegawai::select('bulan')
+            ->distinct()
+            ->orderBy('bulan')
+            ->pluck('bulan');
+
+        if ($request->tahun) {
+            $bulanList = AbsensiPegawai::where('tahun', $request->tahun)
+                ->select('bulan')
+                ->distinct()
+                ->orderBy('bulan')
+                ->pluck('bulan');
+        }
 
         $data = [];
 
-        // 🔥 HANYA JALAN KALAU FILTER DIISI
         if ($request->has(['bulan', 'tahun', 'honor'])) {
 
             $query = Pegawai::with('madrasah')
-                    ->join('madrasah', 'pegawai.id_madrasah', '=', 'madrasah.id')
-                    ->orderBy('madrasah.nama_madrasah', 'asc')
-                    ->orderBy('pegawai.nama_rekening', 'asc')
-                    ->select('pegawai.*');
+                ->join('madrasah', 'pegawai.id_madrasah', '=', 'madrasah.id')
+                ->orderBy('madrasah.nama_madrasah', 'asc')
+                ->orderBy('pegawai.nama_rekening', 'asc')
+                ->select('pegawai.*');
 
-            // Filter madrasah
             if ($request->madrasah) {
                 $query->where('id_madrasah', $request->madrasah);
             }
 
-            // Filter jabatan
             if ($request->jabatan_ump) {
                 $query->where('jabatan_ump', $request->jabatan_ump);
             }
@@ -52,7 +71,9 @@ class RekapHonorController extends Controller
         return view('rekap-honor.index', compact(
             'madrasahs',
             'jabatanList',
-            'data'
+            'data',
+            'tahunList',
+            'bulanList'
         ));
     }
 

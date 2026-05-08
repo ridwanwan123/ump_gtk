@@ -20,8 +20,8 @@
         }
 
         /* =========================
-                                                                                               PAGE
-                                                                            ========================= */
+                                                                                                                                                                               PAGE
+                                                                                                                                                            ========================= */
 
         .page-title {
             font-size: 28px;
@@ -36,8 +36,8 @@
         }
 
         /* =========================
-                                                                                               CARD
-                                                                                            ========================= */
+                                                                                                                                                                               CARD
+                                                                                                                                                                            ========================= */
 
         .modern-card {
             border: 0;
@@ -66,8 +66,8 @@
         }
 
         /* =========================
-                                                                                               INFO BOX
-                                                                                            ========================= */
+                                                                                                                                                                               INFO BOX
+                                                                                                                                                                            ========================= */
 
         .info-box-modern {
             background: linear-gradient(135deg, #eff6ff, #f8fafc);
@@ -94,8 +94,8 @@
         }
 
         /* =========================
-                                                                                               FORM
-                                                                                            ========================= */
+                                                                                                                                                                               FORM
+                                                                                                                                                                            ========================= */
 
         .form-label-modern {
             font-weight: 600;
@@ -147,8 +147,8 @@
         }
 
         /* =======================
-                                                                       STAT CARD
-                                                                    ======================= */
+                                                                                                                                                       STAT CARD
+                                                                                                                                                    ======================= */
         .stat-card {
             background: #ffffff;
             border-radius: 14px;
@@ -175,8 +175,8 @@
         }
 
         /* =========================
-                                                                                               TABLE
-                                                                                            ========================= */
+                                                                                                                                                                               TABLE
+                                                                                                                                                                            ========================= */
 
         .table-wrapper {
             border-radius: 20px;
@@ -265,34 +265,33 @@
         .table-responsive {
             overflow-x: auto;
         }
+
+        /* container chip */
+        .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+            margin-right: 0;
+        }
     </style>
 @endpush
 
 @section('content')
 
     <div class="container-fluid">
-
         {{-- PAGE HEADER --}}
         <div class="mb-4">
-
             <div class="page-title">
                 Rekap Honor Pegawai
             </div>
-
             <div class="page-subtitle">
                 Monitoring honorarium, kehadiran, dan potongan pegawai
             </div>
-
         </div>
 
         {{-- INFO --}}
         <div class="info-box-modern">
-
             <h5>
                 <i class="fas fa-circle-info mr-1"></i>
                 Informasi Perhitungan
             </h5>
-
             <ul>
                 <li>Honor dihitung berdasarkan jumlah bulan yang dipilih.</li>
                 <li>Sakit (S) tidak dikenakan potongan.</li>
@@ -300,123 +299,107 @@
                 <li>Tanpa Keterangan (TK) dipotong 5% dari honor bulanan.</li>
                 <li>Jumlah bersih dihitung otomatis setelah potongan.</li>
             </ul>
-
         </div>
 
         {{-- FILTER --}}
         <div class="modern-card mb-4">
-
             <div class="modern-card-header">
-
                 <h4>
                     <i class="fas fa-filter mr-2"></i>
                     Filter Rekap Honor
                 </h4>
-
             </div>
 
             <div class="modern-card-body">
-
                 <form method="GET">
-
                     <div class="row">
-
                         {{-- TAHUN --}}
                         <div class="col-md-3 mb-3">
-
                             <label class="form-label-modern">
                                 Tahun
                             </label>
 
-                            <input type="number" name="tahun" class="form-control"
-                                value="{{ request('tahun', date('Y')) }}">
+                            <select name="tahun" class="form-control">
+                                <option value="">Pilih Tahun</option>
 
+                                @foreach ($tahunList as $tahun)
+                                    <option value="{{ $tahun }}"
+                                        {{ (string) request('tahun') === (string) $tahun ? 'selected' : '' }}>
+                                        {{ $tahun }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
 
                         {{-- BULAN --}}
                         <div class="col-md-5 mb-3">
-
                             <label class="form-label-modern">
                                 Pilih Bulan
                             </label>
 
-                            <select name="bulan[]" class="form-control select2" multiple required>
+                            @php
+                                $bulanNama = [
+                                    1 => 'Januari',
+                                    2 => 'Februari',
+                                    3 => 'Maret',
+                                    4 => 'April',
+                                    5 => 'Mei',
+                                    6 => 'Juni',
+                                    7 => 'Juli',
+                                    8 => 'Agustus',
+                                    9 => 'September',
+                                    10 => 'Oktober',
+                                    11 => 'November',
+                                    12 => 'Desember',
+                                ];
+                            @endphp
 
-                                @foreach ([
-            1 => 'Januari',
-            2 => 'Februari',
-            3 => 'Maret',
-            4 => 'April',
-            5 => 'Mei',
-            6 => 'Juni',
-            7 => 'Juli',
-            8 => 'Agustus',
-            9 => 'September',
-            10 => 'Oktober',
-            11 => 'November',
-            12 => 'Desember',
-        ] as $key => $val)
-                                    <option value="{{ $key }}"
-                                        {{ collect(request('bulan'))->contains($key) ? 'selected' : '' }}>
-                                        {{ $val }}
+                            <select name="bulan[]" class="form-control select2-bulan" multiple required>
+
+                                @foreach ($bulanList ?? [] as $bulan)
+                                    <option value="{{ $bulan }}"
+                                        {{ collect(request('bulan'))->contains($bulan) ? 'selected' : '' }}>
+                                        {{ $bulanNama[$bulan] }}
                                     </option>
                                 @endforeach
-
                             </select>
-
                         </div>
 
                         {{-- HONOR --}}
                         <div class="col-md-4 mb-3">
-
                             <label class="form-label-modern">
                                 Honor per Bulan
                             </label>
 
                             <input type="number" name="honor" class="form-control" placeholder="Contoh: 3900000"
                                 value="{{ request('honor') }}" required>
-
                         </div>
-
                     </div>
 
                     <div class="row">
-
                         {{-- MADRASAH --}}
                         <div class="col-md-4 mb-3">
-
                             <label class="form-label-modern">
                                 Madrasah
                             </label>
-
                             <select name="madrasah" class="form-control">
-
                                 <option value="">Semua Madrasah</option>
-
                                 @foreach ($madrasahs as $m)
                                     <option value="{{ $m->id }}"
                                         {{ request('madrasah') == $m->id ? 'selected' : '' }}>
-
                                         {{ $m->nama_madrasah }}
-
                                     </option>
                                 @endforeach
-
                             </select>
-
                         </div>
 
                         {{-- JABATAN --}}
                         <div class="col-md-4 mb-3">
-
                             <label class="form-label-modern">
                                 Jabatan
                             </label>
-
                             <select name="jabatan_ump" class="form-control">
-
                                 <option value="">Semua Jabatan</option>
-
                                 @foreach ($jabatanList as $j)
                                     <option value="{{ $j }}"
                                         {{ request('jabatan_ump') == $j ? 'selected' : '' }}>
@@ -425,53 +408,35 @@
 
                                     </option>
                                 @endforeach
-
                             </select>
-
                         </div>
 
                         {{-- BUTTON --}}
                         <div class="col-md-4 d-flex align-items-end mb-3">
-
                             <button type="submit" class="btn btn-modern btn-primary-modern w-100">
-
                                 <i class="fas fa-chart-line mr-2"></i>
                                 Tampilkan Rekap
-
                             </button>
-
                         </div>
-
                     </div>
-
                 </form>
-
             </div>
-
         </div>
 
         @if (!empty($data))
             <div class="modern-card mb-3">
-
                 <div class="modern-card-body d-flex justify-content-between align-items-center">
-
                     <div>
                         <b>Data siap diexport</b><br>
                         <small class="text-muted">
                             {{ count($data) }} pegawai ditemukan
                         </small>
                     </div>
-
                     <a href="{{ route('rekap-honor.export', request()->all()) }}"
                         class="btn btn-success-modern btn-modern">
-
-                        <i class="fas fa-file-excel mr-2"></i>
-                        Export Excel
-
+                        <i class="fas fa-file-excel mr-2"></i> Export Excel
                     </a>
-
                 </div>
-
             </div>
         @endif
 
@@ -533,41 +498,29 @@
                         </div>
                     </div>
                 </div>
-
             </div>
 
             {{-- TABLE --}}
             <div class="table-wrapper">
-
                 <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
-
                     <div>
-
                         <h5 class="mb-0 font-weight-bold">
                             Rekap Honor Pegawai
                         </h5>
-
                         <small class="text-muted">
                             Data honorarium dan ketidakhadiran pegawai
                         </small>
-
                     </div>
-
                     <span class="badge badge-success-soft badge-soft">
                         {{ count($data) }} Pegawai
                     </span>
-
                 </div>
 
                 <div class="table-responsive">
-
                     <table class="table table-modern table-bordered text-nowrap align-middle">
-
                         <thead class="text-center">
-
                             {{-- HEADER 1 --}}
                             <tr>
-
                                 <th rowspan="2" style="vertical-align: middle;">NAMA PEGAWAI</th>
 
                                 {{-- BULAN --}}
@@ -758,3 +711,67 @@
     </div>
 
 @endsection
+
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+
+            $('.select2-bulan').select2({
+                placeholder: "Pilih Bulan",
+                width: '100%',
+                closeOnSelect: false,
+                templateSelection: function(data) {
+                    return data.text;
+                }
+            });
+
+            const warnaBulan = {
+                1: '#0d6efd', // Jan - biru
+                2: '#6610f2', // Feb - ungu
+                3: '#20c997', // Mar - hijau tosca
+                4: '#fd7e14', // Apr - orange
+                5: '#dc3545', // Mei - merah
+                6: '#198754', // Jun - hijau
+                7: '#0dcaf0', // Jul - cyan
+                8: '#6f42c1', // Agu - purple
+                9: '#ffc107', // Sep - kuning
+                10: '#fd7e14', // Okt
+                11: '#0d6efd', // Nov
+                12: '#dc3545' // Des
+            };
+
+            function setChipColor() {
+
+                $('.select2-bulan').select2('data').forEach(function(item) {
+
+                    let val = item.id;
+
+                    $('.select2-selection__choice').each(function() {
+
+                        let title = $(this).attr('title'); // ini lebih stabil
+
+                        let option = $('.select2-bulan option[value="' + val + '"]');
+
+                        if (option.text().trim() === title.trim()) {
+
+                            if (warnaBulan[val]) {
+                                $(this).css({
+                                    'background-color': warnaBulan[val],
+                                    'border': 'none'
+                                });
+                            }
+                        }
+                    });
+                });
+            }
+
+            // jalan saat berubah
+            $('.select2-bulan').on('change', function() {
+                setTimeout(setChipColor, 50);
+            });
+
+            // jalan pertama kali
+            setTimeout(setChipColor, 100);
+        });
+    </script>
+@endpush
