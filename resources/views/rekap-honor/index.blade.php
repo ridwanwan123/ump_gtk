@@ -20,8 +20,8 @@
         }
 
         /* =========================
-                                                                                           PAGE
-                                                                        ========================= */
+                                                                                               PAGE
+                                                                            ========================= */
 
         .page-title {
             font-size: 28px;
@@ -36,8 +36,8 @@
         }
 
         /* =========================
-                                                                                           CARD
-                                                                                        ========================= */
+                                                                                               CARD
+                                                                                            ========================= */
 
         .modern-card {
             border: 0;
@@ -66,8 +66,8 @@
         }
 
         /* =========================
-                                                                                           INFO BOX
-                                                                                        ========================= */
+                                                                                               INFO BOX
+                                                                                            ========================= */
 
         .info-box-modern {
             background: linear-gradient(135deg, #eff6ff, #f8fafc);
@@ -94,8 +94,8 @@
         }
 
         /* =========================
-                                                                                           FORM
-                                                                                        ========================= */
+                                                                                               FORM
+                                                                                            ========================= */
 
         .form-label-modern {
             font-weight: 600;
@@ -147,8 +147,8 @@
         }
 
         /* =======================
-                                                                   STAT CARD
-                                                                ======================= */
+                                                                       STAT CARD
+                                                                    ======================= */
         .stat-card {
             background: #ffffff;
             border-radius: 14px;
@@ -175,8 +175,8 @@
         }
 
         /* =========================
-                                                                                           TABLE
-                                                                                        ========================= */
+                                                                                               TABLE
+                                                                                            ========================= */
 
         .table-wrapper {
             border-radius: 20px;
@@ -450,16 +450,27 @@
 
         </div>
 
-        {{-- EXPORT --}}
-        @if (request()->has('bulan') && request('tahun') && request('honor') && !empty($data))
-            <div class="mb-3">
+        @if (!empty($data))
+            <div class="modern-card mb-3">
 
-                <a href="{{ route('rekap-honor.export', request()->all()) }}" class="btn btn-success-modern btn-modern">
+                <div class="modern-card-body d-flex justify-content-between align-items-center">
 
-                    <i class="fas fa-file-excel mr-2"></i>
-                    Export Excel
+                    <div>
+                        <b>Data siap diexport</b><br>
+                        <small class="text-muted">
+                            {{ count($data) }} pegawai ditemukan
+                        </small>
+                    </div>
 
-                </a>
+                    <a href="{{ route('rekap-honor.export', request()->all()) }}"
+                        class="btn btn-success-modern btn-modern">
+
+                        <i class="fas fa-file-excel mr-2"></i>
+                        Export Excel
+
+                    </a>
+
+                </div>
 
             </div>
         @endif

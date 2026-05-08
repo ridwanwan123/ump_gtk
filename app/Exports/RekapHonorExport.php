@@ -35,7 +35,14 @@ class RekapHonorExport implements FromArray, ShouldAutoSize, WithStyles, WithEve
     {
         $service = new RekapHonorService();
 
-        $pegawaiList = Pegawai::orderBy('nama_rekening')->get();
+        $query = Pegawai::query()
+                ->with('madrasah')
+                ->leftJoin('madrasah', 'pegawai.id_madrasah', '=', 'madrasah.id')
+                ->select('pegawai.*')
+                ->orderBy('madrasah.nama_madrasah', 'asc')
+                ->orderBy('pegawai.nama_rekening', 'asc');
+
+            $pegawaiList = $query->get();
 
         $rows = [];
 
