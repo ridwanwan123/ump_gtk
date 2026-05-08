@@ -20,8 +20,8 @@
         }
 
         /* =========================
-                                                           PAGE
-                                        ========================= */
+                                                                                           PAGE
+                                                                        ========================= */
 
         .page-title {
             font-size: 28px;
@@ -36,8 +36,8 @@
         }
 
         /* =========================
-                                                           CARD
-                                                        ========================= */
+                                                                                           CARD
+                                                                                        ========================= */
 
         .modern-card {
             border: 0;
@@ -66,8 +66,8 @@
         }
 
         /* =========================
-                                                           INFO BOX
-                                                        ========================= */
+                                                                                           INFO BOX
+                                                                                        ========================= */
 
         .info-box-modern {
             background: linear-gradient(135deg, #eff6ff, #f8fafc);
@@ -94,8 +94,8 @@
         }
 
         /* =========================
-                                                           FORM
-                                                        ========================= */
+                                                                                           FORM
+                                                                                        ========================= */
 
         .form-label-modern {
             font-weight: 600;
@@ -146,35 +146,37 @@
             box-shadow: 0 8px 20px rgba(22, 163, 74, .25);
         }
 
+        /* =======================
+                                                                   STAT CARD
+                                                                ======================= */
+        .stat-card {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+            transition: 0.25s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
         /* =========================
-                                                           SUMMARY
-                                                        ========================= */
-
-        .summary-card {
-            background: white;
-            border-radius: 18px;
-            padding: 20px;
-            box-shadow:
-                0 10px 30px rgba(15, 23, 42, .06),
-                0 2px 6px rgba(15, 23, 42, .04);
-            height: 100%;
-        }
-
-        .summary-label {
-            color: var(--gray);
-            font-size: 13px;
-            margin-bottom: 6px;
-        }
-
-        .summary-value {
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--dark);
-        }
-
-        /* =========================
-                                                           TABLE
-                                                        ========================= */
+                                                                                           TABLE
+                                                                                        ========================= */
 
         .table-wrapper {
             border-radius: 20px;
@@ -465,55 +467,60 @@
         {{-- HASIL --}}
         @if (!empty($data))
 
-            {{-- SUMMARY --}}
             <div class="row mb-4">
 
-                <div class="col-md-4 mb-3">
-
-                    <div class="summary-card">
-
-                        <div class="summary-label">
-                            Total Pegawai
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon bg-primary">
+                            <i class="fas fa-users"></i>
                         </div>
-
-                        <div class="summary-value">
-                            {{ count($data) }}
+                        <div>
+                            <small>Total Pegawai</small>
+                            <h4>{{ count($data) }}</h4>
                         </div>
-
                     </div>
-
                 </div>
 
-                <div class="col-md-4 mb-3">
-
-                    <div class="summary-card">
-
-                        <div class="summary-label">
-                            Total Bulan Dipilih
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon bg-info">
+                            <i class="fas fa-money-bill-wave"></i>
                         </div>
-
-                        <div class="summary-value">
-                            {{ count(request('bulan', [])) }}
+                        <div>
+                            <small>Total Kotor</small>
+                            <h4>Rp {{ number_format(collect($data)->sum('jumlah_kotor'), 0, ',', '.') }}</h4>
                         </div>
-
                     </div>
-
                 </div>
 
-                <div class="col-md-4 mb-3">
+                @php
+                    $totalKotor = collect($data)->sum('jumlah_kotor');
+                    $totalBersih = collect($data)->sum('jumlah_bersih');
+                    $totalPotongan = $totalKotor - $totalBersih;
+                @endphp
 
-                    <div class="summary-card">
-
-                        <div class="summary-label">
-                            Honor per Bulan
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon bg-danger">
+                            <i class="fas fa-cut"></i>
                         </div>
-
-                        <div class="summary-value">
-                            Rp {{ number_format(request('honor'), 0, ',', '.') }}
+                        <div>
+                            <small>Potongan</small>
+                            <h4>Rp {{ number_format($totalPotongan, 0, ',', '.') }}</h4>
                         </div>
-
                     </div>
+                </div>
 
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon bg-success">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div>
+                            <small>Total Bersih</small>
+                            <h4>Rp {{ number_format(collect($data)->sum('jumlah_bersih'), 0, ',', '.') }}</h4>
+                        </div>
+                    </div>
                 </div>
 
             </div>
