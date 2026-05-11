@@ -392,7 +392,7 @@
 
                     <div class="modal-footer">
 
-                        <button type="submit" class="btn btn-info btn-block">
+                        <button type="submit" class="btn btn-success btn-block">
                             <i class="fas fa-arrow-right"></i> Lanjut Input Absensi
                         </button>
 

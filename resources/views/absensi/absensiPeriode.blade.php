@@ -449,23 +449,35 @@
                         <tbody>
 
                             @foreach ($periods as $period)
-                                <tr>
+                                @php
+                                    $bulanMap = [
+                                        1 => 'Jan - Mar',
+                                        2 => 'Apr - Jun',
+                                        3 => 'Jul - Sep',
+                                        4 => 'Okt - Des',
+                                    ];
 
+                                    $twNumber = (int) str_replace('TW ', '', $period->triwulan);
+                                @endphp
+
+                                <tr>
                                     <td>
                                         {{ $loop->iteration }}
                                     </td>
-
                                     <td>
                                         <strong>{{ $period->tahun }}</strong>
                                     </td>
-
                                     <td>
                                         <span class="period-badge">
                                             <i class="fas fa-calendar-alt"></i>
+
                                             {{ $period->triwulan }}
+
+                                            <small class="text-muted ml-1">
+                                                ({{ $bulanMap[$twNumber] ?? '-' }})
+                                            </small>
                                         </span>
                                     </td>
-
                                     <td>
                                         @if ($period->is_active)
                                             <span class="status-active">
@@ -477,7 +489,6 @@
                                             </span>
                                         @endif
                                     </td>
-
                                     <td>
                                         <form action="{{ route('attendance-period.toggle', $period->id) }}" method="POST">
                                             @csrf
@@ -490,7 +501,6 @@
                                             </label>
                                         </form>
                                     </td>
-
                                 </tr>
                             @endforeach
 

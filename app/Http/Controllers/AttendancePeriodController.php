@@ -59,8 +59,22 @@ class AttendancePeriodController extends Controller
     {
         $period = AttendancePeriod::findOrFail($id);
 
-        $period->is_active = !$period->is_active;
-        $period->save();
+        // jika mau aktifkan
+        if (!$period->is_active) {
+
+            // matikan semua periode lain
+            AttendancePeriod::where('is_active', true)
+                ->update(['is_active' => false]);
+
+            // aktifkan ini
+            $period->is_active = true;
+            $period->save();
+
+        } else {
+            // kalau dimatikan, cukup nonaktifkan
+            $period->is_active = false;
+            $period->save();
+        }
 
         return back()->with('success', 'Status periode berhasil diperbarui.');
     }
