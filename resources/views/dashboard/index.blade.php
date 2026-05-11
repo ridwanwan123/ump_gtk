@@ -319,7 +319,7 @@
                                 <small class="opacity-75">Total: {{ $sudahCount }} Madrasah</small>
                             </div>
                         </div>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        <button type="button" class="btn-close btn-close-white" data-dismiss="modal"
                             aria-label="Close"></button>
                     </div>
                     <div class="modal-body p-3" style="background: #f8f9fa;">

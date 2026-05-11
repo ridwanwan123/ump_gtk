@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pegawai;
 use App\Models\Madrasah;
+use App\Models\AttendancePeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Throwable;
@@ -20,11 +21,14 @@ class DashboardController extends Controller
         try {
             $user = auth()->user();
 
-            // ===========================
-            // Tentukan Tahun & TW Aktif
-            // ===========================
-            $tahun = now()->year;
-            $tw = (int) ceil(now()->month / 3);
+            $activePeriod = \App\Models\AttendancePeriod::where('is_active', true)->first();
+
+            if (!$activePeriod) {
+                abort(404, 'Tidak ada periode aktif.');
+            }
+
+            $tahun = $activePeriod->tahun;
+            $tw = (int) str_replace('TW ', '', $activePeriod->triwulan);
 
             // ===========================
             // Statistik Pegawai
