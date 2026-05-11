@@ -3,7 +3,6 @@
 namespace App\Exports;
 
 use App\Models\Pegawai;
-use App\Services\RekapHonorService;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithMapping;
@@ -62,6 +61,9 @@ class AbsensiPegawaiExport implements
         $this->tw = $tw;
     }
 
+    /**
+     * Ambil data pegawai + absensi
+     */
     public function collection()
     {
         return Pegawai::whereHas('absensi', function ($q) {
@@ -80,12 +82,14 @@ class AbsensiPegawaiExport implements
             ->get();
     }
 
+    /**
+     * Heading Excel (2 baris)
+     */
     public function headings(): array
     {
         $row1 = $this->pegawaiHeaders;
         $row2 = array_fill(0, count($this->pegawaiHeaders), '');
 
-        // ABSENSI BULAN
         foreach ($this->bulanPerTW[$this->tw] as $bulan) {
             foreach ($this->subHeaders as $sh) {
                 $row1[] = '';
@@ -93,37 +97,12 @@ class AbsensiPegawaiExport implements
             }
         }
 
-        // TOTAL ABSENSI
-        $jumlahHeaders = ['S', 'I', 'TK', 'DL', 'C', 'JML'];
-
-        foreach ($jumlahHeaders as $jh) {
-            $row1[] = '';
-            $row2[] = $jh;
-        }
-
-        // REKAP HONOR HEADER
-        $rekapHeaders = [
-            'BANYAK BULAN',
-            '% KEHADIRAN',
-            'HONOR / BULAN',
-            'JUMLAH KOTOR',
-            'POTONGAN S',
-            'POTONGAN I',
-            'POTONGAN TK',
-            'TOTAL POTONGAN',
-            'SETELAH POTONGAN',
-            'PPH',
-            'JUMLAH BERSIH'
-        ];
-
-        foreach ($rekapHeaders as $h) {
-            $row1[] = '';
-            $row2[] = $h;
-        }
-
         return [$row1, $row2];
     }
 
+    /**
+     * Mapping data per baris
+     */
     public function map($pegawai): array
     {
         $row = [
@@ -152,72 +131,21 @@ class AbsensiPegawaiExport implements
 
         $absensiByBulan = $pegawai->absensi->keyBy('bulan');
 
-        $totalS = 0;
-        $totalI = 0;
-        $totalTK = 0;
-        $totalDL = 0;
-        $totalC = 0;
-
         foreach ($this->bulanPerTW[$this->tw] as $bulan) {
             $a = $absensiByBulan[$bulan] ?? null;
-
-            $s  = $a->sakit ?? 0;
-            $i  = $a->izin ?? 0;
-            $tk = $a->ketidakhadiran ?? 0;
-            $dl = $a->dinas_luar ?? 0;
-            $c  = $a->cuti ?? 0;
-
-            $totalS += $s;
-            $totalI += $i;
-            $totalTK += $tk;
-            $totalDL += $dl;
-            $totalC += $c;
-
-            $row[] = $s;
-            $row[] = $i;
-            $row[] = $tk;
-            $row[] = $dl;
-            $row[] = $c;
+            $row[] = $a->sakit ?? 0;
+            $row[] = $a->izin ?? 0;
+            $row[] = $a->ketidakhadiran ?? 0;
+            $row[] = $a->dinas_luar ?? 0;
+            $row[] = $a->cuti ?? 0;
         }
-
-        $totalAll = $totalS + $totalI + $totalTK + $totalDL + $totalC;
-
-        $row[] = $totalS;
-        $row[] = $totalI;
-        $row[] = $totalTK;
-        $row[] = $totalDL;
-        $row[] = $totalC;
-        $row[] = $totalAll;
-
-        // =========================
-        // REKAP HONOR SERVICE
-        // =========================
-        $service = new RekapHonorService();
-
-        $rekap = $service->hitung(
-            $pegawai,
-            $this->bulanPerTW[$this->tw],
-            $this->tahun,
-            3900000 // bisa nanti dari input
-        );
-
-        $row[] = $rekap['banyak_bulan'];
-        $row[] = $rekap['persen_kehadiran'];
-        $row[] = $rekap['jumlah_honor_per_bulan'];
-        $row[] = $rekap['jumlah_kotor'];
-
-        $row[] = $rekap['potongan_s'];
-        $row[] = $rekap['potongan_i'];
-        $row[] = $rekap['potongan_tk'];
-
-        $row[] = $rekap['total_potongan'];
-        $row[] = $rekap['setelah_potongan'];
-        $row[] = $rekap['pph'];
-        $row[] = $rekap['jumlah_bersih'];
 
         return $row;
     }
 
+    /**
+     * Styling & merge cell
+     */
     public function registerEvents(): array
     {
         return [
@@ -225,6 +153,7 @@ class AbsensiPegawaiExport implements
 
                 $sheet = $event->sheet->getDelegate();
 
+                // helper number → column letter
                 $numToLetter = function ($num) {
                     $letters = '';
                     while ($num > 0) {
@@ -235,62 +164,67 @@ class AbsensiPegawaiExport implements
                     return $letters;
                 };
 
-                // ======================
-                // PEGAWAI HEADER MERGE
-                // ======================
+                // Merge header pegawai (A1:A2 dst)
                 for ($i = 1; $i <= count($this->pegawaiHeaders); $i++) {
                     $col = $numToLetter($i);
                     $sheet->mergeCells("{$col}1:{$col}2");
                 }
 
+                // Header bulan
                 $startCol = count($this->pegawaiHeaders) + 1;
                 $subCount = count($this->subHeaders);
 
-                // ======================
-                // BULAN HEADER
-                // ======================
+                $bulanNama = [
+                    1 => 'JANUARI', 2 => 'FEBRUARI', 3 => 'MARET',
+                    4 => 'APRIL', 5 => 'MEI', 6 => 'JUNI',
+                    7 => 'JULI', 8 => 'AGUSTUS', 9 => 'SEPTEMBER',
+                    10 => 'OKTOBER', 11 => 'NOVEMBER', 12 => 'DESEMBER',
+                ];
+
                 foreach ($this->bulanPerTW[$this->tw] as $i => $bulan) {
                     $start = $startCol + ($i * $subCount);
-                    $end = $start + $subCount - 1;
+                    $end   = $start + $subCount - 1;
 
                     $colStart = $numToLetter($start);
-                    $colEnd = $numToLetter($end);
+                    $colEnd   = $numToLetter($end);
 
                     $sheet->mergeCells("{$colStart}1:{$colEnd}1");
+                    $sheet->setCellValue("{$colStart}1", $bulanNama[$bulan]);
+
+                    $sheet->getStyle("{$colStart}1:{$colEnd}2")
+                        ->getFont()->setBold(true);
+
+                    $sheet->getStyle("{$colStart}1:{$colEnd}2")
+                        ->getAlignment()
+                        ->setHorizontal(Alignment::HORIZONTAL_CENTER)
+                        ->setVertical(Alignment::VERTICAL_CENTER);
                 }
 
-                // ======================
-                // TOTAL ABSENSI
-                // ======================
-                $jumlahColCount = 6;
+                // Style header pegawai
+                $lastCol = $numToLetter(
+                    $startCol + (count($this->bulanPerTW[$this->tw]) * $subCount) - 1
+                );
 
-                $startJumlah = $startCol + (count($this->bulanPerTW[$this->tw]) * $subCount);
-                $endJumlah = $startJumlah + $jumlahColCount - 1;
+                $highestRow = $sheet->getHighestRow();
 
-                // ======================
-                // REKAP OFFSET
-                // ======================
-                $startRekap = $endJumlah + 1;
-                $endRekap = $startRekap + 10;
-
-                $colStartRekap = $numToLetter($startRekap);
-                $colEndRekap = $numToLetter($endRekap);
-
-                $sheet->mergeCells("{$colStartRekap}1:{$colEndRekap}1");
-                $sheet->setCellValue("{$colStartRekap}1", 'REKAP HONOR');
-
-                // STYLE
-                $sheet->getStyle("A1:{$colEndRekap}2")
+                $sheet->getStyle("A1:{$lastCol}2")
                     ->getFont()->setBold(true);
 
-                $sheet->getStyle("A1:{$colEndRekap}2")
+                $sheet->getStyle("A1:{$lastCol}2")
                     ->getAlignment()
-                    ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+                    ->setHorizontal(Alignment::HORIZONTAL_CENTER)
+                    ->setVertical(Alignment::VERTICAL_CENTER);
 
-                $sheet->getStyle("A1:{$colEndRekap}" . $sheet->getHighestRow())
+                // Border header & body
+                $sheet->getStyle("A1:{$lastCol}{$highestRow}")
                     ->getBorders()
                     ->getAllBorders()
                     ->setBorderStyle(Border::BORDER_THIN);
+
+                // Center angka absensi
+                $sheet->getStyle("{$numToLetter($startCol)}3:{$lastCol}{$highestRow}")
+                    ->getAlignment()
+                    ->setHorizontal(Alignment::HORIZONTAL_CENTER);
             }
         ];
     }

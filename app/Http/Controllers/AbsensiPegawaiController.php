@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\AbsensiPegawai;
+use App\Models\AttendancePeriod;
 use App\Models\Pegawai;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
@@ -20,9 +21,17 @@ class AbsensiPegawaiController extends Controller
     public function index(Request $request)
     {
         try {
-            $tahun = $request->tahun ?? now()->year;
-            $currentMonth = now()->month;
-            $tw = $request->tw ?? ceil($currentMonth / 3);
+            $activePeriod = AttendancePeriod::where('is_active', true)->first();
+
+            if (!$activePeriod) {
+                abort(404, 'Belum ada periode aktif.');
+            }
+
+            $tahun = $request->tahun ?? $activePeriod->tahun;
+
+            $twAktif = (int) str_replace('TW ', '', $activePeriod->triwulan);
+
+            $tw = $request->tw ?? $twAktif;
 
             $bulanAngka = [
                 1 => [1, 2, 3],
@@ -230,11 +239,17 @@ class AbsensiPegawaiController extends Controller
     {
         try {
             $this->authorize('viewAny', AbsensiPegawai::class);
-            
-            $tahun = $request->tahun ?? now()->year;
-            $tw = $request->tw ?? 1;
 
-            // ===== SUKSES =====
+            $activePeriod = \App\Models\AttendancePeriod::where('is_active', true)->first();
+
+            if (!$activePeriod) {
+                return back()->with('swal_error', 'Tidak ada periode aktif.');
+            }
+
+            $tahun = $request->tahun ?? $activePeriod->tahun;
+
+            $tw = $request->tw ?? (int) str_replace('TW ', '', $activePeriod->triwulan);
+
             Log::info('Export absensi pegawai', [
                 'user_id' => auth()->id(),
                 'tahun' => $tahun,
@@ -246,8 +261,9 @@ class AbsensiPegawaiController extends Controller
                 new \App\Exports\AbsensiPegawaiExport($tahun, $tw),
                 "absensi_pegawai_TW{$tw}_{$tahun}.xlsx"
             );
+
         } catch (Throwable $e) {
-            // ===== ERROR =====
+
             Log::error('Gagal export absensi pegawai', [
                 'message' => $e->getMessage(),
                 'user_id' => auth()->id(),

@@ -9,6 +9,7 @@ use App\Http\Controllers\AbsensiPegawaiController;
 use App\Http\Controllers\PengusulanPegawaiController;
 use App\Http\Controllers\PenonaktifanPegawaiController;
 use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\AttendancePeriodController;
 
 /*
 |--------------------------------------------------------------------------
@@ -96,6 +97,12 @@ Route::middleware(['auth', 'set.unit'])->group(function () {
     Route::get('/rekap-honor-export', [RekapHonorController::class, 'export'])
     ->name('rekap-honor.export');
     Route::resource('rekap-honor', RekapHonorController::class);
+
+
+    Route::patch('/attendance-period/{id}/toggle', [AttendancePeriodController::class, 'toggle'])
+    ->name('attendance-period.toggle');
+    
+    Route::resource('attendance-period', AttendancePeriodController::class);
     
 });
 

@@ -63,7 +63,16 @@
 
             {{-- ADMIN ONLY --}}
             @role('superadmin')
-                <li class="nav-header">Admin</li>
+                <li class="nav-header">Absensi</li>
+                <li class="nav-item">
+                    <a href="{{ route('attendance-period.index') }}"
+                        class="nav-link {{ request()->routeIs('attendance-period.*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-calendar-alt"></i>
+                        <p>
+                            Periode Absensi
+                        </p>
+                    </a>
+                </li>
                 <li class="nav-item">
                     <a href="{{ route('rekap-honor.index') }}"
                         class="nav-link {{ request()->routeIs('rekap-honor.*') ? 'active' : '' }}">
@@ -71,6 +80,8 @@
                         <p>Rekap Honor</p>
                     </a>
                 </li>
+
+                <li class="nav-header">Management</li>
                 <li class="nav-item">
                     <a href="{{ route('admin.users.index') }}"
                         class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">

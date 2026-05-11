@@ -35,12 +35,14 @@
             vertical-align: middle !important;
             white-space: nowrap;
         }
+
         .table thead th {
             position: sticky;
             top: 0;
             background-color: #f4f6f9;
             z-index: 2;
         }
+
         td.nama-pegawai {
             font-weight: 500;
             font-size: 0.8rem;
@@ -123,24 +125,24 @@
             </div>
             <div class="card-body p-2">
                 <form method="GET" action="{{ route('absensi.index') }}">
+
                     @php
-                        $currentYear = now()->year;
-                        $currentMonth = now()->month;
-                        $defaultTW = ceil($currentMonth / 3); // otomatis TW sesuai bulan
-                        $selectedYear = request('tahun', $currentYear);
+                        $activePeriod = \App\Models\AttendancePeriod::where('is_active', true)->first();
+
+                        $defaultYear = $activePeriod->tahun ?? now()->year;
+                        $defaultTW = $activePeriod ? (int) str_replace('TW ', '', $activePeriod->triwulan) : 1;
+
+                        $selectedYear = request('tahun', $defaultYear);
                         $selectedTW = request('tw', $defaultTW);
                     @endphp
 
                     <div class="form-row align-items-end">
+
                         {{-- Tahun --}}
                         <div class="form-group col-md-5">
                             <label for="tahun">Tahun</label>
                             <select name="tahun" id="tahun" class="form-control form-control-sm">
-                                @for ($y = $currentYear; $y >= $currentYear - 5; $y--)
-                                    <option value="{{ $y }}" {{ $selectedYear == $y ? 'selected' : '' }}>
-                                        {{ $y }}
-                                    </option>
-                                @endfor
+                                <option value="2026" {{ $selectedYear == 2026 ? 'selected' : '' }}> 2026 </option>
                             </select>
                         </div>
 
@@ -156,12 +158,13 @@
                             </select>
                         </div>
 
-                        {{-- Tombol Filter --}}
+                        {{-- Button --}}
                         <div class="form-group col-md-2">
                             <button type="submit" class="btn btn-info btn-sm btn-block">
                                 <i class="fas fa-filter"></i> Filter
                             </button>
                         </div>
+
                     </div>
                 </form>
             </div>
@@ -184,17 +187,28 @@
             </div>
         </div>
 
-        
+
         <div class="row mb-4">
             <div class="col-md-6">
                 <div class="d-flex align-items-center p-2 bg-white border-left border-info shadow-sm rounded h-100">
                     <div class="mr-3 text-info">
                         <i class="fas fa-calendar-alt fa-lg"></i>
                     </div>
+                    @php
+                        $activePeriod = \App\Models\AttendancePeriod::where('is_active', true)->first();
+                    @endphp
+
                     <div>
-                        <div class="font-weight-bold" style="font-size: 18px;">Periode Absensi</div>
+                        <div class="font-weight-bold" style="font-size: 18px;">
+                            Periode Absensi
+                        </div>
+
                         <div class="text-bold">
-                            TW {{ $selectedTW }} · {{ $selectedYear }}
+                            @if ($activePeriod)
+                                {{ $activePeriod->triwulan }} · {{ $activePeriod->tahun }}
+                            @else
+                                <span class="text-danger">Belum ada periode aktif</span>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -313,60 +327,75 @@
 
     </div>
 
-    <div class="modal fade" id="modalPilihTW" tabindex="-1" role="dialog" aria-labelledby="modalPilihTWLabel" aria-hidden="true">
+    <div class="modal fade" id="modalPilihTW" tabindex="-1" role="dialog" aria-labelledby="modalPilihTWLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content">
+            <div class="modal-content">
 
-            <form method="GET" action="{{ route('absensi.create') }}">
+                <form method="GET" action="{{ route('absensi.create') }}">
 
-                <div class="modal-header bg-info text-white">
-                    <h5 class="modal-title" id="modalPilihTWLabel">
-                        <i class="fas fa-calendar-alt"></i> Pilih Periode Absensi
-                    </h5>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <div class="modal-body">
-                    @php
-                        $currentYear = now()->year;
-                        $currentTW = ceil(now()->month / 3);
-                    @endphp
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Tahun</label>
-                                <select name="tahun" class="form-control">
-                                    @for ($y = $currentYear; $y >= $currentYear - 5; $y--)
-                                        <option value="{{ $y }}" {{ $y == $currentYear ? 'selected' : '' }}>
-                                            {{ $y }}
-                                        </option>
-                                    @endfor
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Triwulan</label>
-                                <select name="tw" class="form-control">
-                                    @for ($i = 1; $i <= 4; $i++)
-                                        <option value="{{ $i }}" {{ $i == $currentTW ? 'selected' : '' }}>
-                                            TW {{ $i }}
-                                        </option>
-                                    @endfor
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-info btn-block">
-                        <i class="fas fa-arrow-right"></i> Lanjut Input Absensi
+                    <div class="modal-header bg-info text-white">
+                        <h5 class="modal-title" id="modalPilihTWLabel">
+                            <i class="fas fa-calendar-alt"></i> Pilih Periode Absensi
+                        </h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
                         </button>
+                    </div>
+
+                    <div class="modal-body">
+
+                        @php
+                            $activePeriod = \App\Models\AttendancePeriod::where('is_active', true)->first();
+                        @endphp
+
+                        @if (!$activePeriod)
+                            <div class="alert alert-warning">
+                                <strong>Perhatian!</strong><br>
+                                Belum ada periode absensi yang aktif. Silakan hubungi administrator untuk mengatur periode.
+                            </div>
+                        @else
+                            {{-- INFO PERIODE AKTIF --}}
+                            <div class="text-center p-3 mb-3 border rounded bg-light">
+
+                                <h6 class="text-muted mb-2">
+                                    Periode Aktif
+                                </h6>
+
+                                <h4 class="text-info font-weight-bold mb-0">
+                                    {{ $activePeriod->triwulan }} - {{ $activePeriod->tahun }}
+                                </h4>
+
+                            </div>
+
+                            {{-- INFO RULE SYSTEM --}}
+                            <div class="alert alert-info small">
+
+                                <i class="fas fa-info-circle mr-1"></i>
+
+                                <strong>Catatan Sistem:</strong><br>
+
+                                Pengisian absensi hanya dapat dilakukan berdasarkan <b>periode aktif</b> yang telah
+                                ditentukan oleh <b>Kanwil</b>.
+                                Sistem ini tidak lagi menggunakan pemilihan triwulan manual untuk mencegah pengisian di luar
+                                periode yang sedang berjalan.
+
+                            </div>
+
+                            {{-- HIDDEN INPUT --}}
+                            <input type="hidden" name="tahun" value="{{ $activePeriod->tahun }}">
+                            <input type="hidden" name="tw"
+                                value="{{ (int) str_replace('TW ', '', $activePeriod->triwulan) }}">
+                        @endif
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button type="submit" class="btn btn-info btn-block">
+                            <i class="fas fa-arrow-right"></i> Lanjut Input Absensi
+                        </button>
+
                     </div>
 
                 </form>
