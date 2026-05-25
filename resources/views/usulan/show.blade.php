@@ -14,13 +14,15 @@
                         <i class="fas fa-arrow-left"></i> Kembali
                     </a>
 
-                    <form action="{{ route('pengusulan-pegawai.terima_pengusulan_pegawai', $pegawai->id) }}" method="POST"
-                        class="d-inline">
-                        @csrf
-                        <button type="submit" class="btn btn-success btn-sm ml-2">
-                            <i class="fas fa-check"></i> Setujui Pegawai
-                        </button>
-                    </form>
+                    @role('superadmin')
+                        <form action="{{ route('pengusulan-pegawai.terima_pengusulan_pegawai', $pegawai->id) }}" method="POST"
+                            class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-success btn-sm ml-2">
+                                <i class="fas fa-check"></i> Setujui Pegawai
+                            </button>
+                        </form>
+                    @endrole
                 </div>
             </div>
         </div>
