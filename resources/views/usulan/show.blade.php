@@ -93,8 +93,25 @@
                                     <td>{{ $pegawai->pend_terakhir ?? '-' }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Alamat</th>
+                                    <th>Alamat Domisili</th>
                                     <td>{{ $pegawai->alamat_gtk ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Alamat Sesuai KTP</th>
+                                    <td>{{ $pegawai->alamat_sesuai_ktp ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Link Drive Foto KTP</th>
+                                    <td>
+                                        @if ($pegawai->link_drive_foto_ktp)
+                                            <a href="{{ $pegawai->link_drive_foto_ktp }}" target="_blank"
+                                                class="btn btn-sm btn-primary">
+                                                <i class="fas fa-external-link-alt"></i> Lihat Berkas
+                                            </a>
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
                                 </tr>
                             </table>
                         </div>

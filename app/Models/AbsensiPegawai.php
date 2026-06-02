@@ -23,6 +23,7 @@ class AbsensiPegawai extends Model
         'ketidakhadiran',
         'dinas_luar',
         'cuti',
+        'banyaknya_bulan'
     ];
 
     public function pegawai()

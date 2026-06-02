@@ -55,9 +55,16 @@
             </li>
             <li class="nav-item">
                 <a href="{{ route('absensi.index') }}"
-                    class="nav-link {{ request()->routeIs('absensi.*') ? 'active' : '' }}">
+                    class="nav-link {{ request()->routeIs('absensi.index', 'absensi.create', 'absensi.edit') ? 'active' : '' }}">
                     <i class="nav-icon fas fa-calendar-check"></i>
                     <p>Absensi Pegawai</p>
+                </a>
+            </li>
+            <li class="nav-item" hidden>
+                <a href="{{ route('absensi.banyak_bulan') }}"
+                    class="nav-link {{ request()->routeIs('absensi.banyak_bulan') ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-calendar-check"></i>
+                    <p>Banyak Bulan</p>
                 </a>
             </li>
 

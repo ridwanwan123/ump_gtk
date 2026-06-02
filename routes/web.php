@@ -67,6 +67,9 @@ Route::middleware(['auth', 'set.unit'])->group(function () {
     Route::get('absensi/export', [AbsensiPegawaiController::class, 'export'])
         ->name('absensi.export');
 
+    Route::get('banyak_bulan', [AbsensiPegawaiController::class, 'banyak_bulan'])
+        ->name('absensi.banyak_bulan');
+
     Route::resource('absensi', AbsensiPegawaiController::class);
 
     /*

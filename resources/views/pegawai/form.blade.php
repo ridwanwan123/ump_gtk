@@ -121,13 +121,30 @@
                             </div>
 
                             <div class="form-group">
-                                <label>Alamat GTK</label>
+                                <label>Alamat Domisili</label>
                                 <textarea name="alamat_gtk" class="form-control @error('alamat_gtk') is-invalid @enderror" rows="3">{{ old('alamat_gtk', $pegawai->alamat_gtk) }}</textarea>
                                 @error('alamat_gtk')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
 
+                            <div class="form-group">
+                                <label>Alamat Sesuai KTP</label>
+                                <textarea name="alamat_sesuai_ktp" class="form-control @error('alamat_sesuai_ktp') is-invalid @enderror" rows="3">{{ old('alamat_sesuai_ktp', $pegawai->alamat_sesuai_ktp) }}</textarea>
+                                @error('alamat_sesuai_ktp')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label>Link Drive Foto KTP</label>
+                                <input type="text" name="link_drive_foto_ktp"
+                                    class="form-control @error('link_drive_foto_ktp') is-invalid @enderror"
+                                    value="{{ old('link_drive_foto_ktp', $pegawai->link_drive_foto_ktp) }}">
+                                @error('link_drive_foto_ktp')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -181,7 +198,8 @@
 
                             <div class="form-group">
                                 <label>Madrasah</label>
-                                <select name="id_madrasah" class="form-control @error('id_madrasah') is-invalid @enderror">
+                                <select name="id_madrasah"
+                                    class="form-control @error('id_madrasah') is-invalid @enderror">
                                     <option value="">-- Pilih Madrasah --</option>
                                     @foreach ($madrasah as $m)
                                         <option value="{{ $m->id }}"

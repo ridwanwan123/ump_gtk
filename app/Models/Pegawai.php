@@ -50,6 +50,8 @@ class Pegawai extends Model
         'nomor_hp',
         'alamat_email',
         'alamat_gtk',
+        'alamat_sesuai_ktp',
+        'link_drive_foto_ktp',
         'status_pegawai',
         'dapodik',
         'alasan_mengundurkan_diri',

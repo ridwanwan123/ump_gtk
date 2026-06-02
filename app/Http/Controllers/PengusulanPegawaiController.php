@@ -177,6 +177,8 @@ class PengusulanPegawaiController extends Controller
                 'nomor_hp'          => 'nullable|string|max:20',
                 'alamat_email'      => 'nullable|email',
                 'alamat_gtk'        => 'required|string',
+                'alamat_sesuai_ktp' => 'nullable|string',
+                'link_drive_foto_ktp' => 'nullable|url|max:255',
                 'status_pegawai'    => 'nullable|string|max:50',
                 'dapodik'           => 'nullable|string|max:255',
             ]);
