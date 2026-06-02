@@ -35,7 +35,7 @@
                                 <label>Nama Simpatika</label>
                                 <input type="text" name="nama_simpatika"
                                     class="form-control @error('nama_simpatika') is-invalid @enderror"
-                                    value="{{ old('nama_simpatika', $pegawai->nama_simpatika) }}">
+                                    value="{{ old('nama_simpatika', $pegawai->nama_simpatika) }}" required>
                                 @error('nama_simpatika')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -45,7 +45,7 @@
                                 <label>Nama Rekening</label>
                                 <input type="text" name="nama_rekening"
                                     class="form-control @error('nama_rekening') is-invalid @enderror"
-                                    value="{{ old('nama_rekening', $pegawai->nama_rekening) }}">
+                                    value="{{ old('nama_rekening', $pegawai->nama_rekening) }}" required>
                                 @error('nama_rekening')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -55,7 +55,7 @@
                                 <label>NIK</label>
                                 <input type="text" id="nik" name="nik"
                                     class="form-control @error('nik') is-invalid @enderror"
-                                    value="{{ old('nik', $pegawai->nik) }}">
+                                    value="{{ old('nik', $pegawai->nik) }}" required>
 
                                 <small id="nikError" class="text-danger d-none">
                                     NIK harus 16 digit angka
@@ -71,7 +71,7 @@
                                     <label>Tempat Lahir</label>
                                     <input type="text" name="tempat_lahir"
                                         class="form-control @error('tempat_lahir') is-invalid @enderror"
-                                        value="{{ old('tempat_lahir', $pegawai->tempat_lahir) }}">
+                                        value="{{ old('tempat_lahir', $pegawai->tempat_lahir) }}" required>
                                     @error('tempat_lahir')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -80,7 +80,7 @@
                                     <label>Tanggal Lahir</label>
                                     <input type="date" name="tanggal_lahir"
                                         class="form-control @error('tanggal_lahir') is-invalid @enderror"
-                                        value="{{ old('tanggal_lahir', $pegawai->tanggal_lahir) }}">
+                                        value="{{ old('tanggal_lahir', $pegawai->tanggal_lahir) }}" required>
                                     @error('tanggal_lahir')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -91,7 +91,7 @@
                                 <label>Nama Ibu Kandung</label>
                                 <input type="text" name="nama_ibu_kandung"
                                     class="form-control @error('nama_ibu_kandung') is-invalid @enderror"
-                                    value="{{ old('nama_ibu_kandung', $pegawai->nama_ibu_kandung) }}">
+                                    value="{{ old('nama_ibu_kandung', $pegawai->nama_ibu_kandung) }}" required>
                                 @error('nama_ibu_kandung')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -99,7 +99,7 @@
 
                             <div class="form-group">
                                 <label>Agama</label>
-                                <select name="agama" class="form-control @error('agama') is-invalid @enderror">
+                                <select name="agama" class="form-control @error('agama') is-invalid @enderror" required>
                                     <option value="">-- Pilih Agama --</option>
                                     @foreach (['ISLAM', 'KRISTEN', 'HINDU', 'BUDHA', 'KONGHUCU'] as $agama)
                                         <option value="{{ $agama }}"
@@ -116,7 +116,7 @@
                                 <label>Pendidikan Terakhir</label>
                                 <input type="text" name="pend_terakhir"
                                     class="form-control @error('pend_terakhir') is-invalid @enderror"
-                                    value="{{ old('pend_terakhir', $pegawai->pend_terakhir) }}">
+                                    value="{{ old('pend_terakhir', $pegawai->pend_terakhir) }}" required>
                                 @error('pend_terakhir')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -124,7 +124,7 @@
 
                             <div class="form-group">
                                 <label>Alamat Domisili</label>
-                                <textarea name="alamat_gtk" class="form-control @error('alamat_gtk') is-invalid @enderror" rows="3">{{ old('alamat_gtk', $pegawai->alamat_gtk) }}</textarea>
+                                <textarea name="alamat_gtk" class="form-control @error('alamat_gtk') is-invalid @enderror" rows="3" required>{{ old('alamat_gtk', $pegawai->alamat_gtk) }}</textarea>
                                 @error('alamat_gtk')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -132,7 +132,8 @@
 
                             <div class="form-group">
                                 <label>Alamat Sesuai KTP</label>
-                                <textarea name="alamat_sesuai_ktp" class="form-control @error('alamat_sesuai_ktp') is-invalid @enderror" rows="3">{{ old('alamat_sesuai_ktp', $pegawai->alamat_sesuai_ktp) }}</textarea>
+                                <textarea name="alamat_sesuai_ktp" class="form-control @error('alamat_sesuai_ktp') is-invalid @enderror" rows="3"
+                                    required>{{ old('alamat_sesuai_ktp', $pegawai->alamat_sesuai_ktp) }}</textarea>
                                 @error('alamat_sesuai_ktp')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -142,7 +143,7 @@
                                 <label>Link Drive Foto KTP</label>
                                 <input type="text" name="link_drive_foto_ktp"
                                     class="form-control @error('link_drive_foto_ktp') is-invalid @enderror"
-                                    value="{{ old('link_drive_foto_ktp', $pegawai->link_drive_foto_ktp) }}">
+                                    value="{{ old('link_drive_foto_ktp', $pegawai->link_drive_foto_ktp) }}" required>
 
                                 <small class="form-text text-muted">
                                     Mohon masukkan <strong>link langsung ke file foto KTP</strong> yang telah dibagikan
@@ -173,7 +174,8 @@
 
                             <div class="form-group">
                                 <label>Jabatan UMP</label>
-                                <select name="jabatan_ump" class="form-control @error('jabatan_ump') is-invalid @enderror">
+                                <select name="jabatan_ump" class="form-control @error('jabatan_ump') is-invalid @enderror"
+                                    required>
                                     <option value="">-- Pilih Jabatan UMP --</option>
                                     @foreach ($jabatanUMPList as $jabatan)
                                         <option value="{{ $jabatan }}"
@@ -190,7 +192,7 @@
                             <div class="form-group">
                                 <label>Jabatan Dinas</label>
                                 <select name="jabatan_dinas"
-                                    class="form-control @error('jabatan_dinas') is-invalid @enderror">
+                                    class="form-control @error('jabatan_dinas') is-invalid @enderror" required>
                                     <option value="">-- Pilih Jabatan Dinas --</option>
                                     @foreach (['PENDIDIK', 'TENDIK'] as $jabatan)
                                         <option value="{{ $jabatan }}"
@@ -219,7 +221,7 @@
                                 @else
                                     {{-- Superadmin → pilih bebas --}}
                                     <select name="id_madrasah"
-                                        class="form-control @error('id_madrasah') is-invalid @enderror">
+                                        class="form-control @error('id_madrasah') is-invalid @enderror" required>
                                         <option value="">-- Pilih Madrasah --</option>
                                         @foreach ($madrasah as $m)
                                             <option value="{{ $m->id }}"
@@ -237,7 +239,7 @@
                             <div class="form-group">
                                 <label>NPSN</label>
                                 <input type="number" name="npsn_tempat_tugas"
-                                    class="form-control @error('npsn_tempat_tugas') is-invalid @enderror"
+                                    class="form-control @error('npsn_tempat_tugas') is-invalid @enderror" required
                                     value="{{ old('npsn_tempat_tugas', $pegawai->npsn_tempat_tugas) }}">
                                 @error('npsn_tempat_tugas')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -295,7 +297,7 @@
                                 <label>No HP</label>
                                 <input type="text" name="nomor_hp"
                                     class="form-control @error('nomor_hp') is-invalid @enderror"
-                                    value="{{ old('nomor_hp', $pegawai->nomor_hp) }}">
+                                    value="{{ old('nomor_hp', $pegawai->nomor_hp) }}" required>
                                 @error('nomor_hp')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -305,7 +307,7 @@
                                 <label>Email</label>
                                 <input type="email" name="alamat_email"
                                     class="form-control @error('alamat_email') is-invalid @enderror"
-                                    value="{{ old('alamat_email', $pegawai->alamat_email) }}">
+                                    value="{{ old('alamat_email', $pegawai->alamat_email) }}" required>
                                 @error('alamat_email')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
