@@ -141,6 +141,15 @@
                                 <input type="text" name="link_drive_foto_ktp"
                                     class="form-control @error('link_drive_foto_ktp') is-invalid @enderror"
                                     value="{{ old('link_drive_foto_ktp', $pegawai->link_drive_foto_ktp) }}">
+
+                                <small class="form-text text-muted">
+                                    Mohon masukkan <strong>link langsung ke file foto KTP</strong> yang telah dibagikan
+                                    (share) di Google Drive.
+                                    Pastikan link mengarah langsung ke dokumen/foto KTP yang dimaksud, <strong>bukan ke
+                                        folder Drive</strong>,
+                                    serta dapat diakses oleh pihak yang berwenang untuk keperluan verifikasi data.
+                                </small>
+
                                 @error('link_drive_foto_ktp')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
