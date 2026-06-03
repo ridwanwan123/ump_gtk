@@ -18,10 +18,12 @@ class PegawaiExport implements FromCollection, WithHeadings, WithMapping, Should
      */
     public function collection()
     {
-        // return Pegawai::withoutGlobalScope('aktif') // agar bisa export semua pegawai
-        //     ->with('madrasah')
-        //     ->get();
-        return Pegawai::with('madrasah')->get();
+        return Pegawai::with('madrasah')
+            ->join('madrasah', 'pegawai.id_madrasah', '=', 'madrasah.id')
+            ->select('pegawai.*')
+            ->orderBy('madrasah.nama_madrasah', 'asc')
+            ->orderBy('pegawai.nama_rekening', 'asc')
+            ->get();
     }
 
     /**
