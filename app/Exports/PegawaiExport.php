@@ -48,9 +48,11 @@ class PegawaiExport implements FromCollection, WithHeadings, WithMapping, Should
             'NPWP',
             'Nomor HP',
             'Email',
-            'Alamat GTK',
+            'Alamat Domisili',
+            'Alamat Sesuai KTP',
             'Status Pegawai',
             'Dapodik',
+            'Link KTP'
         ];
     }
 
@@ -81,8 +83,10 @@ class PegawaiExport implements FromCollection, WithHeadings, WithMapping, Should
             $pegawai->nomor_hp ? "'".$pegawai->nomor_hp : '',
             $pegawai->alamat_email ?? '',
             $pegawai->alamat_gtk ?? '',
+            $pegawai->alamat_sesuai_ktp ?? '',
             $pegawai->status_pegawai ?? '',
             $pegawai->dapodik ?? '',
+            $pegawai->link_drive_foto_ktp ?? '',
         ];
     }
 
