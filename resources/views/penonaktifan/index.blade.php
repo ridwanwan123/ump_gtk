@@ -4,6 +4,39 @@
 
 @push('styles')
     <style>
+        .custom-nav-tab .nav-link {
+            border-radius: 10px !important;
+            color: #475569;
+            font-weight: 600;
+            transition: 0.2s;
+            padding: 10px 14px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+        }
+
+        .custom-nav-tab .nav-link i {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .custom-nav-tab .nav-link:hover {
+            background: #e0f2fe;
+            color: #0f172a;
+            transform: translateY(-1px);
+        }
+
+        .custom-nav-tab .nav-link.active {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white !important;
+            border: none;
+            box-shadow: 0 8px 18px rgba(37, 99, 235, 0.25);
+        }
+
+        .custom-nav-tab .nav-link.active .badge {
+            background: white !important;
+            color: #1d4ed8 !important;
+        }
+
         .table td,
         .table th {
             vertical-align: middle;
@@ -57,22 +90,51 @@
         </div>
 
         {{-- TAB --}}
-        <ul class="nav nav-tabs mb-3">
+        <div class="card shadow-sm border-0 mb-3" style="border-radius: 12px;">
+            <div class="card-body p-2">
 
-            <li class="nav-item">
-                <a class="nav-link active" href="#pending" data-toggle="tab">
-                    Pegawai Proses NonAktif
-                    <span class="badge bg-light text-dark">{{ $pegawaiPending->total() }}</span>
-                </a>
-            </li>
+                <ul class="nav nav-pills nav-fill custom-nav-tab">
 
-            <li class="nav-item">
-                <a class="nav-link" href="#aktif" data-toggle="tab">
-                    Pegawai Aktif
-                    <span class="badge bg-light text-dark">{{ $pegawaiAktif->total() }}</span>
-                </a>
-            </li>
-        </ul>
+                    {{-- PENDING --}}
+                    <li class="nav-item">
+                        <a class="nav-link active d-flex align-items-center justify-content-between" href="#pending"
+                            data-toggle="tab">
+
+                            {{-- LEFT: ICON + TEXT --}}
+                            <div class="d-flex align-items-center" style="gap:10px;">
+                                <i class="fas fa-user-clock"></i>
+                                <span>Proses NonAktif</span>
+                            </div>
+
+                            {{-- RIGHT: BADGE --}}
+                            <span class="badge bg-light text-dark px-3 py-1">
+                                {{ $pegawaiPending->total() }}
+                            </span>
+
+                        </a>
+                    </li>
+
+                    {{-- AKTIF --}}
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center justify-content-between" href="#aktif"
+                            data-toggle="tab">
+
+                            <div class="d-flex align-items-center" style="gap:10px;">
+                                <i class="fas fa-user-check"></i>
+                                <span>Pegawai Aktif</span>
+                            </div>
+
+                            <span class="badge bg-light text-dark px-3 py-1">
+                                {{ $pegawaiAktif->total() }}
+                            </span>
+
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+        </div>
 
         <div class="tab-content">
 
