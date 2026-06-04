@@ -20,8 +20,8 @@
         }
 
         /* =========================
-                                                                                                                                                                               PAGE
-                                                                                                                                                            ========================= */
+                                                                                                                                                                                           PAGE
+                                                                                                                                                                        ========================= */
 
         .page-title {
             font-size: 28px;
@@ -36,8 +36,8 @@
         }
 
         /* =========================
-                                                                                                                                                                               CARD
-                                                                                                                                                                            ========================= */
+                                                                                                                                                                                           CARD
+                                                                                                                                                                                        ========================= */
 
         .modern-card {
             border: 0;
@@ -66,8 +66,8 @@
         }
 
         /* =========================
-                                                                                                                                                                               INFO BOX
-                                                                                                                                                                            ========================= */
+                                                                                                                                                                                           INFO BOX
+                                                                                                                                                                                        ========================= */
 
         .info-box-modern {
             background: linear-gradient(135deg, #eff6ff, #f8fafc);
@@ -94,8 +94,8 @@
         }
 
         /* =========================
-                                                                                                                                                                               FORM
-                                                                                                                                                                            ========================= */
+                                                                                                                                                                                           FORM
+                                                                                                                                                                                        ========================= */
 
         .form-label-modern {
             font-weight: 600;
@@ -147,8 +147,8 @@
         }
 
         /* =======================
-                                                                                                                                                       STAT CARD
-                                                                                                                                                    ======================= */
+                                                                                                                                                                   STAT CARD
+                                                                                                                                                                ======================= */
         .stat-card {
             background: #ffffff;
             border-radius: 14px;
@@ -175,8 +175,8 @@
         }
 
         /* =========================
-                                                                                                                                                                               TABLE
-                                                                                                                                                                            ========================= */
+                                                                                                                                                                                           TABLE
+                                                                                                                                                                                        ========================= */
 
         .table-wrapper {
             border-radius: 20px;
@@ -500,6 +500,27 @@
                 </div>
             </div>
 
+            @if (!empty($missingMadrasah))
+                <div class="info-box-modern" style="border-left: 6px solid #dc2626;">
+                    <h5 style="color:#dc2626;">
+                        ⚠ Hak Pembayaran Belum Lengkap
+                    </h5>
+
+                    <p class="mb-2">
+                        Beberapa madrasah belum mengisi hak pembayaran:
+                    </p>
+
+                    <ul class="mb-2">
+                        @foreach ($missingMadrasah as $m)
+                            <li><b>{{ $m }}</b></li>
+                        @endforeach
+                    </ul>
+
+                    <small class="text-muted">
+                        Data tetap ditampilkan menggunakan fallback bulan dipilih.
+                    </small>
+                </div>
+            @endif
             {{-- TABLE --}}
             <div class="table-wrapper">
                 <div class="p-3 border-bottom d-flex justify-content-between align-items-center">

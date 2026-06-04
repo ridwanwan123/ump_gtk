@@ -60,11 +60,11 @@
                     <p>Absensi Pegawai</p>
                 </a>
             </li>
-            <li class="nav-item" hidden>
-                <a href="{{ route('absensi.banyak_bulan') }}"
-                    class="nav-link {{ request()->routeIs('absensi.banyak_bulan') ? 'active' : '' }}">
+            <li class="nav-item">
+                <a href="{{ route('hak-pembayaran.index') }}"
+                    class="nav-link {{ request()->routeIs('hak-pembayaran.*') ? 'active' : '' }}">
                     <i class="nav-icon fas fa-calendar-check"></i>
-                    <p>Banyak Bulan</p>
+                    <p>Hak Pembayaran</p>
                 </a>
             </li>
 

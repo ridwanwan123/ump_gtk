@@ -3,12 +3,50 @@
 namespace App\Services;
 
 use App\Models\AbsensiPegawai;
+use App\Models\HakPembayaranPegawai;
 
 class RekapHonorService
 {
     public function hitung($pegawai, $bulanDipilih, $tahun, $honorPerBulan)
     {
-        $absensi = AbsensiPegawai::where('pegawai_id', $pegawai->id)
+        /*
+        |--------------------------------------------------------------------------
+        | Bulan yang berhak dibayar
+        |--------------------------------------------------------------------------
+        */
+
+        $bulanDibayar = HakPembayaranPegawai::query()
+            ->where('pegawai_id', $pegawai->id)
+            ->where('tahun', $tahun)
+            ->whereIn('bulan', $bulanDipilih)
+            ->where('status_bayar', 1)
+            ->pluck('bulan')
+            ->toArray();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Fallback untuk data lama
+        |--------------------------------------------------------------------------
+        | Jika belum ada data hak pembayaran sama sekali,
+        | anggap semua bulan yang dipilih dibayar.
+        */
+
+        // if (empty($bulanDibayar)) {
+        //     $isMissingHakPembayaran = true;
+
+        //     $missingMadrasah[$pegawai->madrasah->nama_madrasah] = true;
+
+        //     $bulanDibayar = $bulanDipilih; // fallback biar tetap jalan
+        // }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Ambil absensi
+        |--------------------------------------------------------------------------
+        */
+
+        $absensi = AbsensiPegawai::query()
+            ->where('pegawai_id', $pegawai->id)
             ->where('tahun', $tahun)
             ->whereIn('bulan', $bulanDipilih)
             ->get()
@@ -38,16 +76,32 @@ class RekapHonorService
                 'tk' => $tk,
                 'dl' => $dl,
                 'c' => $c,
+                'dibayar' => in_array($bulan, $bulanDibayar),
             ];
 
-            $totalS += $s;
-            $totalI += $i;
-            $totalTK += $tk;
-            $totalDL += $dl;
-            $totalC += $c;
+            /*
+            |--------------------------------------------------------------------------
+            | Hanya bulan yang dibayar yang dihitung ke rekap honor
+            |--------------------------------------------------------------------------
+            */
+
+            if (in_array($bulan, $bulanDibayar)) {
+
+                $totalS += $s;
+                $totalI += $i;
+                $totalTK += $tk;
+                $totalDL += $dl;
+                $totalC += $c;
+            }
         }
 
-        $banyakBulan = count($bulanDipilih);
+        /*
+        |--------------------------------------------------------------------------
+        | Perhitungan honor
+        |--------------------------------------------------------------------------
+        */
+
+        $banyakBulan = count($bulanDibayar);
 
         $jumlahKotor = $honorPerBulan * $banyakBulan;
 
@@ -75,10 +129,11 @@ class RekapHonorService
 
             'nama' => $pegawai->nama_rekening,
 
-            // DETAIL PER BULAN
             'detail_bulan' => $detailBulan,
 
+            'bulan_dibayar' => $bulanDibayar,
             'banyak_bulan' => $banyakBulan,
+
             'persen_kehadiran' => round($persenKehadiran, 2),
 
             'total_s' => $totalS,
@@ -98,6 +153,7 @@ class RekapHonorService
 
             'setelah_potongan' => $setelahPotongan,
             'pph' => $pph,
+
             'jumlah_bersih' => $jumlahBersih,
         ];
     }

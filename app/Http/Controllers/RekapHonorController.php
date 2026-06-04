@@ -68,13 +68,13 @@ class RekapHonorController extends Controller
             }
         }
 
-        return view('rekap-honor.index', compact(
-            'madrasahs',
-            'jabatanList',
-            'data',
-            'tahunList',
-            'bulanList'
-        ));
+        return view('rekap-honor.index', [
+            'madrasahs' => $madrasahs,
+            'jabatanList' => $jabatanList,
+            'data' => $data,
+            'tahunList' => $tahunList,
+            'bulanList' => $bulanList,
+        ]);
     }
 
     public function export(Request $request)

@@ -10,6 +10,7 @@ use App\Http\Controllers\PengusulanPegawaiController;
 use App\Http\Controllers\PenonaktifanPegawaiController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\AttendancePeriodController;
+use App\Http\Controllers\HakPembayaranPegawaiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,9 +68,6 @@ Route::middleware(['auth', 'set.unit'])->group(function () {
     Route::get('absensi/export', [AbsensiPegawaiController::class, 'export'])
         ->name('absensi.export');
 
-    Route::get('banyak_bulan', [AbsensiPegawaiController::class, 'banyak_bulan'])
-        ->name('absensi.banyak_bulan');
-
     Route::resource('absensi', AbsensiPegawaiController::class);
 
     /*
@@ -93,7 +91,7 @@ Route::middleware(['auth', 'set.unit'])->group(function () {
         Route::post('{pegawai}/nonaktif', [PenonaktifanPegawaiController::class, 'terima_nonaktif_pegawai'])->name('nonaktif');
         Route::post('{pegawai}/tolak', [PenonaktifanPegawaiController::class, 'tolak_nonaktif_pegawai'])->name('tolak');
     });
-
+    
     // baru resource di bawah
     Route::resource('penonaktifan-pegawai', PenonaktifanPegawaiController::class);
     
@@ -107,6 +105,13 @@ Route::middleware(['auth', 'set.unit'])->group(function () {
     
     Route::resource('attendance-period', AttendancePeriodController::class);
     
+    /*
+    |--------------------------------------------------------------------------
+    | Hak Pembayaran Pegawai
+    |--------------------------------------------------------------------------
+    */
+    Route::resource('hak-pembayaran', HakPembayaranPegawaiController::class);
+
 });
 
 /*
