@@ -20,8 +20,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                           PAGE
-                                                                                                                                                                                        ========================= */
+                                                                                                                                                                                                               PAGE
+                                                                                                                                                                                            ========================= */
 
         .page-title {
             font-size: 28px;
@@ -36,8 +36,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                           CARD
-                                                                                                                                                                                                        ========================= */
+                                                                                                                                                                                                               CARD
+                                                                                                                                                                                                            ========================= */
 
         .modern-card {
             border: 0;
@@ -66,8 +66,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                           INFO BOX
-                                                                                                                                                                                                        ========================= */
+                                                                                                                                                                                                               INFO BOX
+                                                                                                                                                                                                            ========================= */
 
         .info-box-modern {
             background: linear-gradient(135deg, #eff6ff, #f8fafc);
@@ -94,8 +94,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                           FORM
-                                                                                                                                                                                                        ========================= */
+                                                                                                                                                                                                               FORM
+                                                                                                                                                                                                            ========================= */
 
         .form-label-modern {
             font-weight: 600;
@@ -147,8 +147,8 @@
         }
 
         /* =======================
-                                                                                                                                                                                   STAT CARD
-                                                                                                                                                                                ======================= */
+                                                                                                                                                                                       STAT CARD
+                                                                                                                                                                                    ======================= */
         .stat-card {
             background: #ffffff;
             border-radius: 14px;
@@ -175,8 +175,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                           TABLE
-                                                                                                                                                                                                        ========================= */
+                                                                                                                                                                                                               TABLE
+                                                                                                                                                                                                            ========================= */
 
         .table-wrapper {
             border-radius: 20px;
@@ -525,227 +525,228 @@
                         Data tetap ditampilkan menggunakan fallback bulan dipilih.
                     </small>
                 </div>
-            @endif
-            {{-- TABLE --}}
-            <div class="table-wrapper">
-                <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
-                    <div>
-                        <h5 class="mb-0 font-weight-bold">
-                            Rekap Honor Pegawai
-                        </h5>
-                        <small class="text-muted">
-                            Data honorarium dan ketidakhadiran pegawai
-                        </small>
+            @else
+                {{-- TABLE --}}
+                <div class="table-wrapper">
+                    <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-0 font-weight-bold">
+                                Rekap Honor Pegawai
+                            </h5>
+                            <small class="text-muted">
+                                Data honorarium dan ketidakhadiran pegawai
+                            </small>
+                        </div>
+                        <span class="badge badge-success-soft badge-soft">
+                            {{ count($data) }} Pegawai
+                        </span>
                     </div>
-                    <span class="badge badge-success-soft badge-soft">
-                        {{ count($data) }} Pegawai
-                    </span>
-                </div>
 
-                <div class="table-responsive">
-                    <table class="table table-modern table-bordered text-nowrap align-middle">
-                        <thead class="text-center">
-                            {{-- HEADER 1 --}}
-                            <tr>
-                                <th rowspan="2" style="vertical-align: middle;">NAMA PEGAWAI</th>
+                    <div class="table-responsive">
+                        <table class="table table-modern table-bordered text-nowrap align-middle">
+                            <thead class="text-center">
+                                {{-- HEADER 1 --}}
+                                <tr>
+                                    <th rowspan="2" style="vertical-align: middle;">NAMA PEGAWAI</th>
 
-                                {{-- BULAN --}}
-                                @foreach (request('bulan', []) as $bulan)
-                                    <th colspan="5">
+                                    {{-- BULAN --}}
+                                    @foreach (request('bulan', []) as $bulan)
+                                        <th colspan="5">
 
-                                        {{ strtoupper(\Carbon\Carbon::create()->month($bulan)->translatedFormat('F')) }}
+                                            {{ strtoupper(\Carbon\Carbon::create()->month($bulan)->translatedFormat('F')) }}
 
-                                    </th>
-                                @endforeach
+                                        </th>
+                                    @endforeach
 
-                                <th colspan="6">JUMLAH KETIDAK HADIRAN</th>
+                                    <th colspan="6">JUMLAH KETIDAK HADIRAN</th>
 
-                                <th rowspan="2" style="vertical-align: middle;">BANYAK BULAN</th>
-                                <th rowspan="2" style="vertical-align: middle;">% KEHADIRAN</th>
-                                <th rowspan="2" style="vertical-align: middle;">HONOR / BULAN</th>
-                                <th rowspan="2" style="vertical-align: middle;">JUMLAH KOTOR</th>
+                                    <th rowspan="2" style="vertical-align: middle;">BANYAK BULAN</th>
+                                    <th rowspan="2" style="vertical-align: middle;">% KEHADIRAN</th>
+                                    <th rowspan="2" style="vertical-align: middle;">HONOR / BULAN</th>
+                                    <th rowspan="2" style="vertical-align: middle;">JUMLAH KOTOR</th>
 
-                                <th colspan="3">% & POTONGAN</th>
+                                    <th colspan="3">% & POTONGAN</th>
 
-                                <th rowspan="2" style="vertical-align: middle;">TOTAL POTONGAN</th>
-                                <th rowspan="2" style="vertical-align: middle;">SETELAH POTONGAN</th>
-                                <th rowspan="2" style="vertical-align: middle;">PPH</th>
-                                <th rowspan="2" style="vertical-align: middle;">BERSIH</th>
+                                    <th rowspan="2" style="vertical-align: middle;">TOTAL POTONGAN</th>
+                                    <th rowspan="2" style="vertical-align: middle;">SETELAH POTONGAN</th>
+                                    <th rowspan="2" style="vertical-align: middle;">PPH</th>
+                                    <th rowspan="2" style="vertical-align: middle;">BERSIH</th>
 
-                            </tr>
+                                </tr>
 
-                            {{-- HEADER 2 --}}
-                            <tr>
+                                {{-- HEADER 2 --}}
+                                <tr>
 
-                                {{-- SUB BULAN --}}
-                                @foreach (request('bulan', []) as $bulan)
+                                    {{-- SUB BULAN --}}
+                                    @foreach (request('bulan', []) as $bulan)
+                                        <th>S</th>
+                                        <th>I</th>
+                                        <th>TK</th>
+                                        <th>DL</th>
+                                        <th>C</th>
+                                    @endforeach
+
+                                    {{-- TOTAL --}}
                                     <th>S</th>
                                     <th>I</th>
                                     <th>TK</th>
                                     <th>DL</th>
                                     <th>C</th>
-                                @endforeach
-
-                                {{-- TOTAL --}}
-                                <th>S</th>
-                                <th>I</th>
-                                <th>TK</th>
-                                <th>DL</th>
-                                <th>C</th>
-                                <th>JML</th>
-
-                                {{-- POTONGAN --}}
-                                <th>0%</th>
-                                <th>2.5%</th>
-                                <th>5%</th>
-
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            @foreach ($data as $row)
-                                <tr class="text-center">
-
-                                    {{-- NAMA --}}
-                                    <td class="text-start">
-
-                                        {{ $row['nama'] }}
-
-                                    </td>
-
-                                    {{-- DETAIL PER BULAN --}}
-                                    @foreach (request('bulan', []) as $bulan)
-                                        @php
-                                            $d = $row['detail_bulan'][$bulan] ?? [
-                                                's' => 0,
-                                                'i' => 0,
-                                                'tk' => 0,
-                                                'dl' => 0,
-                                                'c' => 0,
-                                            ];
-                                        @endphp
-
-                                        <td>{{ $d['s'] }}</td>
-                                        <td>{{ $d['i'] }}</td>
-                                        <td>{{ $d['tk'] }}</td>
-                                        <td>{{ $d['dl'] }}</td>
-                                        <td>{{ $d['c'] }}</td>
-                                    @endforeach
-
-                                    {{-- TOTAL --}}
-                                    <td>{{ $row['total_s'] }}</td>
-                                    <td>{{ $row['total_i'] }}</td>
-                                    <td>{{ $row['total_tk'] }}</td>
-                                    <td>{{ $row['total_dl'] }}</td>
-                                    <td>{{ $row['total_c'] }}</td>
-
-                                    <td>
-
-                                        @php
-                                            $totalAbsen =
-                                                $row['total_s'] +
-                                                $row['total_i'] +
-                                                $row['total_tk'] +
-                                                $row['total_dl'] +
-                                                $row['total_c'];
-                                        @endphp
-
-                                        {{ $totalAbsen }}
-
-                                    </td>
-
-                                    {{-- BASIC --}}
-                                    <td>
-
-                                        {{ $row['banyak_bulan'] }}
-
-                                    </td>
-
-                                    {{-- KEHADIRAN --}}
-                                    <td>
-
-                                        @if ($row['persen_kehadiran'] >= 90)
-                                            <span class="badge badge-success-soft badge-soft">
-                                                {{ $row['persen_kehadiran'] }}%
-                                            </span>
-                                        @else
-                                            <span class="badge badge-danger-soft badge-soft">
-                                                {{ $row['persen_kehadiran'] }}%
-                                            </span>
-                                        @endif
-
-                                    </td>
-
-                                    {{-- HONOR --}}
-                                    <td class="money">
-
-                                        Rp {{ number_format($row['jumlah_honor_per_bulan'], 0, ',', '.') }}
-
-                                    </td>
-
-                                    {{-- KOTOR --}}
-                                    <td class="money">
-
-                                        Rp {{ number_format($row['jumlah_kotor'], 0, ',', '.') }}
-
-                                    </td>
+                                    <th>JML</th>
 
                                     {{-- POTONGAN --}}
-                                    <td>
-
-                                        Rp {{ number_format($row['potongan_s'], 0, ',', '.') }}
-
-                                    </td>
-
-                                    <td>
-
-                                        Rp {{ number_format($row['potongan_i'], 0, ',', '.') }}
-
-                                    </td>
-
-                                    <td>
-
-                                        Rp {{ number_format($row['potongan_tk'], 0, ',', '.') }}
-
-                                    </td>
-
-                                    {{-- FINAL --}}
-                                    <td class="money">
-
-                                        Rp {{ number_format($row['total_potongan'], 0, ',', '.') }}
-
-                                    </td>
-
-                                    <td class="money">
-
-                                        Rp {{ number_format($row['setelah_potongan'], 0, ',', '.') }}
-
-                                    </td>
-
-                                    <td>
-
-                                        Rp {{ number_format($row['pph'], 0, ',', '.') }}
-
-                                    </td>
-
-                                    <td class="grand-total">
-
-                                        Rp {{ number_format($row['jumlah_bersih'], 0, ',', '.') }}
-
-                                    </td>
+                                    <th>0%</th>
+                                    <th>2.5%</th>
+                                    <th>5%</th>
 
                                 </tr>
-                            @endforeach
 
-                        </tbody>
+                            </thead>
 
-                    </table>
+                            <tbody>
+
+                                @foreach ($data as $row)
+                                    <tr class="text-center">
+
+                                        {{-- NAMA --}}
+                                        <td class="text-start">
+
+                                            {{ $row['nama'] }}
+
+                                        </td>
+
+                                        {{-- DETAIL PER BULAN --}}
+                                        @foreach (request('bulan', []) as $bulan)
+                                            @php
+                                                $d = $row['detail_bulan'][$bulan] ?? [
+                                                    's' => 0,
+                                                    'i' => 0,
+                                                    'tk' => 0,
+                                                    'dl' => 0,
+                                                    'c' => 0,
+                                                ];
+                                            @endphp
+
+                                            <td>{{ $d['s'] }}</td>
+                                            <td>{{ $d['i'] }}</td>
+                                            <td>{{ $d['tk'] }}</td>
+                                            <td>{{ $d['dl'] }}</td>
+                                            <td>{{ $d['c'] }}</td>
+                                        @endforeach
+
+                                        {{-- TOTAL --}}
+                                        <td>{{ $row['total_s'] }}</td>
+                                        <td>{{ $row['total_i'] }}</td>
+                                        <td>{{ $row['total_tk'] }}</td>
+                                        <td>{{ $row['total_dl'] }}</td>
+                                        <td>{{ $row['total_c'] }}</td>
+
+                                        <td>
+
+                                            @php
+                                                $totalAbsen =
+                                                    $row['total_s'] +
+                                                    $row['total_i'] +
+                                                    $row['total_tk'] +
+                                                    $row['total_dl'] +
+                                                    $row['total_c'];
+                                            @endphp
+
+                                            {{ $totalAbsen }}
+
+                                        </td>
+
+                                        {{-- BASIC --}}
+                                        <td>
+
+                                            {{ $row['banyak_bulan'] }}
+
+                                        </td>
+
+                                        {{-- KEHADIRAN --}}
+                                        <td>
+
+                                            @if ($row['persen_kehadiran'] >= 90)
+                                                <span class="badge badge-success-soft badge-soft">
+                                                    {{ $row['persen_kehadiran'] }}%
+                                                </span>
+                                            @else
+                                                <span class="badge badge-danger-soft badge-soft">
+                                                    {{ $row['persen_kehadiran'] }}%
+                                                </span>
+                                            @endif
+
+                                        </td>
+
+                                        {{-- HONOR --}}
+                                        <td class="money">
+
+                                            Rp {{ number_format($row['jumlah_honor_per_bulan'], 0, ',', '.') }}
+
+                                        </td>
+
+                                        {{-- KOTOR --}}
+                                        <td class="money">
+
+                                            Rp {{ number_format($row['jumlah_kotor'], 0, ',', '.') }}
+
+                                        </td>
+
+                                        {{-- POTONGAN --}}
+                                        <td>
+
+                                            Rp {{ number_format($row['potongan_s'], 0, ',', '.') }}
+
+                                        </td>
+
+                                        <td>
+
+                                            Rp {{ number_format($row['potongan_i'], 0, ',', '.') }}
+
+                                        </td>
+
+                                        <td>
+
+                                            Rp {{ number_format($row['potongan_tk'], 0, ',', '.') }}
+
+                                        </td>
+
+                                        {{-- FINAL --}}
+                                        <td class="money">
+
+                                            Rp {{ number_format($row['total_potongan'], 0, ',', '.') }}
+
+                                        </td>
+
+                                        <td class="money">
+
+                                            Rp {{ number_format($row['setelah_potongan'], 0, ',', '.') }}
+
+                                        </td>
+
+                                        <td>
+
+                                            Rp {{ number_format($row['pph'], 0, ',', '.') }}
+
+                                        </td>
+
+                                        <td class="grand-total">
+
+                                            Rp {{ number_format($row['jumlah_bersih'], 0, ',', '.') }}
+
+                                        </td>
+
+                                    </tr>
+                                @endforeach
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
 
                 </div>
-
-            </div>
+            @endif
 
         @endif
 

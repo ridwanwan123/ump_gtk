@@ -301,11 +301,290 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-lg-6 col-md-8">
+                        <div class="card border-0 shadow-lg status-wrapper"
+                            style="background: linear-gradient(135deg, #f8f9fa, #e9ecef); border-radius: 15px;">
+
+                            <div class="card-body p-4">
+
+                                {{-- HEADER --}}
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <div>
+                                        <h4 class="fw-bold mb-1 text-dark">Status Input Hak Pembayaran</h4>
+                                        <small class="text-muted">
+                                            Monitoring pengisian hak pembayaran madrasah
+                                        </small>
+                                    </div>
+
+                                    <i class="fas fa-money-bill-wave fa-2x text-success opacity-75"></i>
+                                </div>
+
+                                {{-- SUB CARD --}}
+                                <div class="row g-3">
+
+                                    {{-- SUDAH --}}
+                                    <div class="col-md-6">
+                                        <div
+                                            class="status-subcard success d-flex flex-column justify-content-center align-items-center text-center p-3">
+                                            <div class="status-icon">
+                                                <i class="fas fa-check"></i>
+                                            </div>
+
+                                            <h1 class="status-number">{{ $sudahHakCount }}</h1>
+                                            <span class="status-title">Sudah Input</span>
+                                            <small class="mt-2">Hak pembayaran lengkap</small>
+
+                                            <button class="btn btn-light btn-sm w-100 mt-3 fw-bold" data-toggle="modal"
+                                                data-target="#madrasahSudahHakModal">
+                                                Lihat Detail <i class="fas fa-arrow-right ms-1"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {{-- BELUM --}}
+                                    <div class="col-md-6">
+                                        <div
+                                            class="status-subcard danger d-flex flex-column justify-content-center align-items-center text-center p-3">
+
+                                            <div class="status-icon">
+                                                <i class="fas fa-times"></i>
+                                            </div>
+
+                                            <h1 class="status-number">{{ $belumHakCount }}</h1>
+                                            <span class="status-title">Belum Input</span>
+                                            <small class="mt-2">Belum mengisi hak pembayaran</small>
+
+                                            @if ($belumHakCount > 0)
+                                                <button class="btn btn-light btn-sm w-100 mt-3 fw-bold" data-toggle="modal"
+                                                    data-target="#madrasahBelumHakModal">
+                                                    Lihat Detail <i class="fas fa-arrow-right ms-1"></i>
+                                                </button>
+                                            @else
+                                                <button class="btn btn-light btn-sm w-100 mt-3 fw-bold" disabled>
+                                                    Semua Sudah Input
+                                                </button>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
             @endif
         </div>
 
-        {{-- Modal Sudah --}}
+        {{-- Modal Hak Sudah --}}
+        <div class="modal fade" id="madrasahSudahHakModal" tabindex="-1" aria-labelledby="madrasahSudahHakLabel"
+            aria-hidden="true">
+
+            <div class="modal-dialog modal-dialog-scrollable modal-lg">
+
+                <div class="modal-content border-0 shadow-lg">
+
+                    <div class="modal-header text-white"
+                        style="background: linear-gradient(135deg, #1cc88a, #13855c); border-bottom: none;">
+
+                        <div class="d-flex align-items-center justify-content-center w-100">
+                            <div class="text-center">
+                                <h5 class="modal-title mb-0" id="madrasahSudahHakLabel">
+                                    Madrasah Sudah Input Hak Pembayaran
+                                </h5>
+
+                                <small class="opacity-75">
+                                    Total: {{ $sudahHakCount }} Madrasah
+                                </small>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn-close btn-close-white" data-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body p-3" style="background: #f8f9fa;">
+
+                        <div class="row g-3">
+
+                            @foreach (['MIN', 'MTSN', 'MAN'] as $type)
+                                <div class="col-md-4">
+
+                                    <div class="card border-0 shadow-sm"
+                                        style="border-radius: 10px; background: #ffffff;">
+
+                                        <div class="card-header bg-success text-white text-center fw-bold"
+                                            style="border-radius: 10px 10px 0 0;">
+
+                                            <i class="fas fa-school me-2 mr-2"></i>
+
+                                            {{ $type }}
+
+                                            <span class="badge bg-light text-dark ms-2">
+                                                {{ count($madrasahSudahHakGroup[$type] ?? []) }}
+                                            </span>
+
+                                        </div>
+
+                                        <div class="card-body p-2">
+
+                                            @if (!empty($madrasahSudahHakGroup[$type]))
+                                                <ul class="list-group list-group-flush">
+
+                                                    @foreach ($madrasahSudahHakGroup[$type] as $m)
+                                                        <li
+                                                            class="list-group-item d-flex justify-content-between align-items-center border-0 px-1 py-1 modal-list-item">
+
+                                                            <span class="fw-semibold small">
+                                                                {{ $m->nama_madrasah }}
+                                                            </span>
+
+                                                            <span class="badge bg-success small">
+                                                                Sudah
+                                                            </span>
+
+                                                        </li>
+                                                    @endforeach
+
+                                                </ul>
+                                            @else
+                                                <div class="text-center text-muted py-3">
+                                                    <i class="fas fa-info-circle fa-lg mb-2"></i>
+                                                    <p class="small">Tidak ada data</p>
+                                                </div>
+                                            @endif
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            @endforeach
+
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer border-0" style="background: #f8f9fa;">
+                        <button type="button" class="btn btn-success fw-bold" data-dismiss="modal"
+                            style="border-radius: 8px;">
+                            <i class="fas fa-times me-1"></i>Tutup
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {{-- Modal Hak Belum --}}
+        <div class="modal fade" id="madrasahBelumHakModal" tabindex="-1" role="dialog"
+            aria-labelledby="madrasahBelumHakLabel" aria-hidden="true">
+
+            <div class="modal-dialog modal-dialog-scrollable modal-lg">
+
+                <div class="modal-content border-0 shadow-lg">
+
+                    <div class="modal-header text-white"
+                        style="background: linear-gradient(135deg, #e74a3b, #b02a1a); border-bottom: none;">
+
+                        <div class="d-flex align-items-center justify-content-center w-100">
+
+                            <div class="text-center">
+                                <h5 class="modal-title mb-0" id="madrasahBelumHakLabel">
+                                    Madrasah Belum Input Hak Pembayaran
+                                </h5>
+
+                                <small class="opacity-75">
+                                    Total: {{ $belumHakCount }} Madrasah
+                                </small>
+                            </div>
+
+                        </div>
+
+                        <button type="button" class="btn-close btn-close-white" data-dismiss="modal"
+                            aria-label="Close"></button>
+
+                    </div>
+
+                    <div class="modal-body p-3" style="background: #f8f9fa;">
+
+                        <div class="row g-3">
+
+                            @foreach (['MIN', 'MTSN', 'MAN'] as $type)
+                                <div class="col-md-4">
+
+                                    <div class="card border-0 shadow-sm"
+                                        style="border-radius: 10px; background: #ffffff;">
+
+                                        <div class="card-header bg-danger text-white text-center fw-bold"
+                                            style="border-radius: 10px 10px 0 0;">
+
+                                            <i class="fas fa-school me-2 mr-2"></i>
+
+                                            {{ $type }}
+
+                                            <span class="badge bg-light text-dark ms-2">
+                                                {{ count($madrasahBelumHakGroup[$type] ?? []) }}
+                                            </span>
+
+                                        </div>
+
+                                        <div class="card-body p-2">
+
+                                            @if (!empty($madrasahBelumHakGroup[$type]))
+                                                <ul class="list-group list-group-flush">
+
+                                                    @foreach ($madrasahBelumHakGroup[$type] as $m)
+                                                        <li
+                                                            class="list-group-item d-flex justify-content-between align-items-center border-0 px-1 py-1 modal-list-item">
+
+                                                            <span class="fw-semibold small">
+                                                                {{ $m->nama_madrasah }}
+                                                            </span>
+
+                                                            <span class="badge bg-danger small">
+                                                                Belum
+                                                            </span>
+
+                                                        </li>
+                                                    @endforeach
+
+                                                </ul>
+                                            @else
+                                                <div class="text-center text-muted py-3">
+                                                    <i class="fas fa-check-circle fa-lg mb-2 text-success"></i>
+                                                    <p class="small">Semua sudah input!</p>
+                                                </div>
+                                            @endif
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            @endforeach
+
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer border-0" style="background: #f8f9fa;">
+                        <button type="button" class="btn btn-danger fw-bold" data-dismiss="modal"
+                            style="border-radius: 8px;">
+                            <i class="fas fa-times me-1"></i>Tutup
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {{-- Modal Absensi Sudah --}}
         <div class="modal fade" id="madrasahSudahModal" tabindex="-1" aria-labelledby="madrasahSudahLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable modal-lg">
@@ -326,7 +605,8 @@
                         <div class="row g-3">
                             @foreach (['MIN', 'MTSN', 'MAN'] as $type)
                                 <div class="col-md-4">
-                                    <div class="card border-0 shadow-sm" style="border-radius: 10px; background: #ffffff;">
+                                    <div class="card border-0 shadow-sm"
+                                        style="border-radius: 10px; background: #ffffff;">
                                         <div class="card-header bg-success text-white text-center fw-bold"
                                             style="border-radius: 10px 10px 0 0;">
                                             <i class="fas fa-school me-2 mr-2"></i>{{ $type }} <span
@@ -369,7 +649,7 @@
             </div>
         </div>
 
-        {{-- Modal Belum --}}
+        {{-- Modal Absensi Belum --}}
         <div class="modal fade" id="madrasahBelumModal" tabindex="-1" role="dialog"
             aria-labelledby="madrasahBelumLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable modal-lg">

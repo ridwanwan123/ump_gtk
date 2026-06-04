@@ -120,6 +120,37 @@ class DashboardController extends Controller
 
             $percentBelum = 100 - $percentSudah;
 
+
+            // ===========================
+            // Madrasah SUDAH isi Hak Pembayaran
+            // ===========================
+            $madrasahSudahHak = (clone $madrasahQuery)
+                ->whereHas('pegawai.hakPembayaranPegawai', function ($q) use ($tahun) {
+                    $q->where('tahun', $tahun);
+                })
+                ->get();
+
+            // ===========================
+            // Madrasah BELUM isi Hak Pembayaran
+            // ===========================
+            $madrasahBelumHak = (clone $madrasahQuery)
+                ->whereDoesntHave('pegawai.hakPembayaranPegawai', function ($q) use ($tahun) {
+                    $q->where('tahun', $tahun);
+                })
+                ->get();
+
+            // ===========================
+            // Group per type
+            // ===========================
+            $madrasahSudahHakGroup = $madrasahSudahHak->sortBy('type')->groupBy('type');
+            $madrasahBelumHakGroup = $madrasahBelumHak->sortBy('type')->groupBy('type');
+
+            // ===========================
+            // Count
+            // ===========================
+            $sudahHakCount = $madrasahSudahHak->count();
+            $belumHakCount = $madrasahBelumHak->count();
+
             // ===========================
             // Log Dashboard
             // ===========================
@@ -148,6 +179,14 @@ class DashboardController extends Controller
 
                 'madrasahSudah'         => $madrasahSudah,
                 'madrasahBelum'         => $madrasahBelum,
+
+                'madrasahSudahHak' => $madrasahSudahHak,
+                'madrasahBelumHak' => $madrasahBelumHak,
+                'madrasahSudahHakGroup' => $madrasahSudahHakGroup,
+                'madrasahBelumHakGroup' => $madrasahBelumHakGroup,
+
+                'sudahHakCount' => $sudahHakCount,
+                'belumHakCount' => $belumHakCount,
 
                 'tw'                    => $tw,
                 'tahun'                 => $tahun,
