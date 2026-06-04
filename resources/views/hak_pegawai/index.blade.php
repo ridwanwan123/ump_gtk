@@ -217,11 +217,11 @@
 
                 <table class="table table-modern text-center mb-0">
 
-                    <thead>
+                    <thead class="text-uppercase">
 
                         <tr>
                             <th width="60">No</th>
-                            <th class="text-left">Pegawai</th>
+                            <th class="text-left">NAMA PEGAWAI</th>
 
                             @foreach ($bulan as $b)
                                 <th>
@@ -339,10 +339,10 @@
                         <div class="table-responsive">
                             <table class="table table-bordered text-center align-middle">
 
-                                <thead>
+                                <thead class="text-uppercase">
                                     <tr>
                                         <th>#</th>
-                                        <th>👤 Pegawai</th>
+                                        <th>NAMA PEGAWAI</th>
 
                                         @foreach ($bulan as $b)
                                             <th>
