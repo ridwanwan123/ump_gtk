@@ -33,25 +33,34 @@ class HakPembayaranPegawaiController extends Controller
         $query = Pegawai::with('madrasah');
 
         if (auth()->user()->hasRole('operator')) {
+
             $madrasahIdUser = auth()->user()->unit_kerja;
+
             if (!$madrasahIdUser) {
                 abort(403, 'Operator belum memiliki madrasah.');
             }
 
             $query->where('id_madrasah', $madrasahIdUser);
 
+            // ❗ OPERATOR: FULL DATA (untuk modal)
+            $pegawai = $query
+                ->orderBy('id_madrasah')
+                ->orderBy('nama_rekening')
+                ->get();
+
         } else {
 
-            if ($madrasahId) {
-                $query->where('id_madrasah', $madrasahId);
+            if ($request->madrasah) {
+                $query->where('id_madrasah', $request->madrasah);
             }
-        }
 
-        $pegawai = $query
-            ->orderBy('id_madrasah')
-            ->orderBy('nama_rekening')
-            ->paginate(25)
-            ->withQueryString();
+            // ❗ SUPERADMIN: PAGINATE
+            $pegawai = $query
+                ->orderBy('id_madrasah')
+                ->orderBy('nama_rekening')
+                ->paginate(25)
+                ->withQueryString();
+        }
 
         // =========================
         // HAK PEMBAYARAN MAP
