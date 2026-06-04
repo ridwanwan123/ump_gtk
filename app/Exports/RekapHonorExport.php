@@ -45,7 +45,12 @@ class RekapHonorExport implements FromArray, ShouldAutoSize, WithStyles, WithEve
 
         $rows = [];
 
-        // HEADER (tetap sama)
+        /*
+        |--------------------------
+        | HEADER 1
+        |--------------------------
+        */
+
         $header1 = [
             'NAMA SIMPATIKA','NAMA REKENING','JABATAN UMP','JABATAN DINAS',
             'STATUS ASN','NO REKENING BANK DKI','TEMPAT TUGAS','NPSN TEMPAT TUGAS',
@@ -82,6 +87,12 @@ class RekapHonorExport implements FromArray, ShouldAutoSize, WithStyles, WithEve
             'BERSIH',
         ]);
 
+        /*
+        |--------------------------
+        | HEADER 2
+        |--------------------------
+        */
+
         $header2 = array_fill(0, 21, '');
 
         foreach ($this->bulan as $b) {
@@ -100,9 +111,11 @@ class RekapHonorExport implements FromArray, ShouldAutoSize, WithStyles, WithEve
         $rows[] = $header1;
         $rows[] = $header2;
 
-        // =========================
-        // DATA
-        // =========================
+        /*
+        |--------------------------
+        | DATA
+        |--------------------------
+        */
 
         foreach ($pegawaiList as $pegawai) {
 
@@ -138,9 +151,11 @@ class RekapHonorExport implements FromArray, ShouldAutoSize, WithStyles, WithEve
             $data[] = $pegawai->status_pegawai ?? '';
             $data[] = $pegawai->dapodik ?? '';
 
-            // =========================
-            // DETAIL BULAN (AMAN)
-            // =========================
+            /*
+            |--------------------------
+            | DETAIL BULAN
+            |--------------------------
+            */
 
             foreach ($this->bulan as $bulan) {
 
@@ -159,9 +174,11 @@ class RekapHonorExport implements FromArray, ShouldAutoSize, WithStyles, WithEve
                 $data[] = $d['c'];
             }
 
-            // =========================
-            // TOTAL (SUDAH FIX LOGIC BARU)
-            // =========================
+            /*
+            |--------------------------
+            | TOTAL
+            |--------------------------
+            */
 
             $data[] = $row['total_s'];
             $data[] = $row['total_i'];
@@ -169,15 +186,14 @@ class RekapHonorExport implements FromArray, ShouldAutoSize, WithStyles, WithEve
             $data[] = $row['total_dl'];
             $data[] = $row['total_c'];
 
-            $data[] = $row['total_s']
-                    + $row['total_i']
-                    + $row['total_tk']
-                    + $row['total_dl']
-                    + $row['total_c'];
+            $data[] =
+                $row['total_s'] +
+                $row['total_i'] +
+                $row['total_tk'] +
+                $row['total_dl'] +
+                $row['total_c'];
 
-            // ✔️ INI YANG SUDAH BENAR DARI HAK BAYAR
             $data[] = $row['banyak_bulan'];
-
             $data[] = $row['persen_kehadiran'] . '%';
             $data[] = $row['jumlah_honor_per_bulan'];
             $data[] = $row['jumlah_kotor'];
@@ -208,7 +224,6 @@ class RekapHonorExport implements FromArray, ShouldAutoSize, WithStyles, WithEve
     public function registerEvents(): array
     {
         return [
-
             AfterSheet::class => function (AfterSheet $event) {
 
                 $sheet = $event->sheet->getDelegate();
@@ -216,142 +231,44 @@ class RekapHonorExport implements FromArray, ShouldAutoSize, WithStyles, WithEve
                 $highestColumn = $sheet->getHighestColumn();
                 $highestRow = $sheet->getHighestRow();
 
-                /*
-                =========================
-                STYLE HEADER
-                =========================
-                */
-
+                // HEADER STYLE
                 $sheet->getStyle("A1:{$highestColumn}2")
                     ->applyFromArray([
-
-                        'font' => [
-                            'bold' => true,
-                        ],
-
+                        'font' => ['bold' => true],
                         'alignment' => [
                             'horizontal' => Alignment::HORIZONTAL_CENTER,
                             'vertical' => Alignment::VERTICAL_CENTER,
                             'wrapText' => true,
                         ],
-
                         'fill' => [
                             'fillType' => Fill::FILL_SOLID,
                             'startColor' => ['rgb' => 'EFF6FF']
                         ],
-
                         'borders' => [
                             'allBorders' => [
                                 'borderStyle' => Border::BORDER_THIN,
                             ],
                         ],
-
                     ]);
 
-                /*
-                =========================
-                BORDER FULL
-                =========================
-                */
-
+                // BORDER ALL
                 $sheet->getStyle("A1:{$highestColumn}{$highestRow}")
                     ->applyFromArray([
-
                         'borders' => [
                             'allBorders' => [
                                 'borderStyle' => Border::BORDER_THIN,
                                 'color' => ['rgb' => 'CBD5E1']
                             ]
                         ]
-
                     ]);
 
-                /*
-                =========================
-                MERGE BULAN
-                =========================
-                */
-
-                $col = 22;
-
-                foreach ($this->bulan as $b) {
-
-                    $start = $this->columnLetter($col);
-                    $end = $this->columnLetter($col + 4);
-
-                    $sheet->mergeCells("{$start}1:{$end}1");
-
-                    $col += 5;
-                }
-
-                /*
-                =========================
-                MERGE KETIDAKHADIRAN
-                =========================
-                */
-
-                $startTotal = $this->columnLetter($col);
-                $endTotal = $this->columnLetter($col + 5);
-
-                $sheet->mergeCells("{$startTotal}1:{$endTotal}1");
-
-                /*
-                =========================
-                MERGE IDENTITAS (2 ROW)
-                =========================
-                */
-
-                for ($i = 1; $i <= 21; $i++) {
-
-                    $colLetter = $this->columnLetter($i);
-
-                    $sheet->mergeCells("{$colLetter}1:{$colLetter}2");
-                }
-
-                /*
-                =========================
-                FREEZE PANE
-                =========================
-                */
-
+                // FREEZE HEADER
                 $sheet->freezePane('A3');
 
-                /*
-                =========================
-                PAGE SETUP
-                =========================
-                */
-
+                // LANDSCAPE
                 $sheet->getPageSetup()
                     ->setOrientation(PageSetup::ORIENTATION_LANDSCAPE);
-
-                $sheet->getPageSetup()
-                        ->setFitToWidth(0)
-                        ->setFitToHeight(0);
-
-                /*
-                =========================
-                ROW HEIGHT
-                =========================
-                */
-
-                $sheet->getRowDimension(1)->setRowHeight(28);
-                $sheet->getRowDimension(2)->setRowHeight(24);
             }
-
         ];
-    }
-
-    private function columnLetter($c)
-    {
-        $letter = '';
-
-        while ($c > 0) {
-            $temp = ($c - 1) % 26;
-            $letter = chr($temp + 65) . $letter;
-            $c = intval(($c - $temp - 1) / 26);
-        }
-
-        return $letter;
     }
 }

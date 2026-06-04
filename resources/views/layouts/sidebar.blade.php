@@ -53,6 +53,7 @@
                     <p>Data Pegawai</p>
                 </a>
             </li>
+            <li class="nav-header">Absensi</li>
             <li class="nav-item">
                 <a href="{{ route('absensi.index') }}"
                     class="nav-link {{ request()->routeIs('absensi.index', 'absensi.create', 'absensi.edit') ? 'active' : '' }}">
@@ -63,12 +64,10 @@
             <li class="nav-item">
                 <a href="{{ route('hak-pembayaran.index') }}"
                     class="nav-link {{ request()->routeIs('hak-pembayaran.*') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-calendar-check"></i>
+                    <i class="nav-icon fas fa-layer-group"></i>
                     <p>Hak Pembayaran</p>
                 </a>
             </li>
-
-            {{-- ADMIN ONLY --}}
             @role('superadmin')
                 <li class="nav-header">Absensi</li>
                 <li class="nav-item">

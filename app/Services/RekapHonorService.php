@@ -10,39 +10,30 @@ class RekapHonorService
     public function hitung($pegawai, $bulanDipilih, $tahun, $honorPerBulan)
     {
         /*
-        |--------------------------------------------------------------------------
-        | Bulan yang berhak dibayar
-        |--------------------------------------------------------------------------
+        |------------------------------------------------------------------
+        | Hak pembayaran
+        |------------------------------------------------------------------
         */
 
-        $bulanDibayar = HakPembayaranPegawai::query()
+        $jumlahHak = HakPembayaranPegawai::query()
             ->where('pegawai_id', $pegawai->id)
             ->where('tahun', $tahun)
             ->whereIn('bulan', $bulanDipilih)
-            ->where('status_bayar', 1)
+            ->where('jumlah_hak', 1)
             ->pluck('bulan')
             ->toArray();
 
-        /*
-        |--------------------------------------------------------------------------
-        | Fallback untuk data lama
-        |--------------------------------------------------------------------------
-        | Jika belum ada data hak pembayaran sama sekali,
-        | anggap semua bulan yang dipilih dibayar.
-        */
+        $isMissingHakPembayaran = false;
 
-        // if (empty($bulanDibayar)) {
-        //     $isMissingHakPembayaran = true;
-
-        //     $missingMadrasah[$pegawai->madrasah->nama_madrasah] = true;
-
-        //     $bulanDibayar = $bulanDipilih; // fallback biar tetap jalan
-        // }
+        if (empty($jumlahHak)) {
+            $isMissingHakPembayaran = true;
+            $jumlahHak = []; // ✅ INI YANG AMAN
+        }
 
         /*
-        |--------------------------------------------------------------------------
-        | Ambil absensi
-        |--------------------------------------------------------------------------
+        |------------------------------------------------------------------
+        | Absensi
+        |------------------------------------------------------------------
         */
 
         $absensi = AbsensiPegawai::query()
@@ -76,17 +67,10 @@ class RekapHonorService
                 'tk' => $tk,
                 'dl' => $dl,
                 'c' => $c,
-                'dibayar' => in_array($bulan, $bulanDibayar),
+                'dibayar' => in_array($bulan, $jumlahHak),
             ];
 
-            /*
-            |--------------------------------------------------------------------------
-            | Hanya bulan yang dibayar yang dihitung ke rekap honor
-            |--------------------------------------------------------------------------
-            */
-
-            if (in_array($bulan, $bulanDibayar)) {
-
+            if (in_array($bulan, $jumlahHak)) {
                 $totalS += $s;
                 $totalI += $i;
                 $totalTK += $tk;
@@ -96,12 +80,12 @@ class RekapHonorService
         }
 
         /*
-        |--------------------------------------------------------------------------
-        | Perhitungan honor
-        |--------------------------------------------------------------------------
+        |------------------------------------------------------------------
+        | Hitung honor
+        |------------------------------------------------------------------
         */
 
-        $banyakBulan = count($bulanDibayar);
+        $banyakBulan = count($jumlahHak);
 
         $jumlahKotor = $honorPerBulan * $banyakBulan;
 
@@ -126,12 +110,11 @@ class RekapHonorService
         $jumlahBersih = $setelahPotongan - $pph;
 
         return [
-
             'nama' => $pegawai->nama_rekening,
 
             'detail_bulan' => $detailBulan,
 
-            'bulan_dibayar' => $bulanDibayar,
+            'bulan_dibayar' => $jumlahHak,
             'banyak_bulan' => $banyakBulan,
 
             'persen_kehadiran' => round($persenKehadiran, 2),
@@ -150,11 +133,13 @@ class RekapHonorService
             'potongan_tk' => $potonganTK,
 
             'total_potongan' => $totalPotongan,
-
             'setelah_potongan' => $setelahPotongan,
-            'pph' => $pph,
 
+            'pph' => $pph,
             'jumlah_bersih' => $jumlahBersih,
+
+            // ⭐ INI PENTING: STATUS PER PEGAWAI
+            'is_missing_hak_pembayaran' => $isMissingHakPembayaran,
         ];
     }
 }

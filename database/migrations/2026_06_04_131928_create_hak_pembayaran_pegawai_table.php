@@ -16,7 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('pegawai_id');
             $table->integer('bulan');
             $table->integer('tahun');
-            $table->string('status_bayar');
+            $table->integer('tw');
+            $table->string('jumlah_hak');
             $table->timestamps();
 
             $table->foreign('pegawai_id')->references('id')->on('pegawai')->onDelete('cascade');

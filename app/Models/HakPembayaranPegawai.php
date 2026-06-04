@@ -15,7 +15,8 @@ class HakPembayaranPegawai extends Model
         'pegawai_id',
         'bulan',
         'tahun',
-        'status_bayar'
+        'tw',
+        'jumlah_hak'
     ];
 
     const BULAN = [

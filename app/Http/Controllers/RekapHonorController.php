@@ -40,6 +40,10 @@ class RekapHonorController extends Controller
 
         $data = [];
 
+        // default agar tidak error
+        $isMissingHakPembayaran = false;
+        $missingMadrasah = [];
+
         if ($request->has(['bulan', 'tahun', 'honor'])) {
 
             $query = Pegawai::with('madrasah')
@@ -59,12 +63,25 @@ class RekapHonorController extends Controller
             $pegawaiList = $query->get();
 
             foreach ($pegawaiList as $pegawai) {
-                $data[] = $service->hitung(
+
+                $result = $service->hitung(
                     $pegawai,
                     $request->bulan,
                     $request->tahun,
                     $request->honor
                 );
+
+                $data[] = $result;
+
+                // =========================
+                // AGREGASI WARNING
+                // =========================
+                if ($result['is_missing_hak_pembayaran']) {
+
+                    $isMissingHakPembayaran = true;
+
+                    $missingMadrasah[$pegawai->madrasah->nama_madrasah] = true;
+                }
             }
         }
 
@@ -74,6 +91,10 @@ class RekapHonorController extends Controller
             'data' => $data,
             'tahunList' => $tahunList,
             'bulanList' => $bulanList,
+
+            // ✅ INI YANG SEBELUMNYA ERROR
+            'isMissingHakPembayaran' => $isMissingHakPembayaran,
+            'missingMadrasah' => array_keys($missingMadrasah),
         ]);
     }
 

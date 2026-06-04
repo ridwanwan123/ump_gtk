@@ -20,8 +20,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                           PAGE
-                                                                                                                                                                        ========================= */
+                                                                                                                                                                                                           PAGE
+                                                                                                                                                                                        ========================= */
 
         .page-title {
             font-size: 28px;
@@ -36,8 +36,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                           CARD
-                                                                                                                                                                                        ========================= */
+                                                                                                                                                                                                           CARD
+                                                                                                                                                                                                        ========================= */
 
         .modern-card {
             border: 0;
@@ -66,8 +66,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                           INFO BOX
-                                                                                                                                                                                        ========================= */
+                                                                                                                                                                                                           INFO BOX
+                                                                                                                                                                                                        ========================= */
 
         .info-box-modern {
             background: linear-gradient(135deg, #eff6ff, #f8fafc);
@@ -94,8 +94,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                           FORM
-                                                                                                                                                                                        ========================= */
+                                                                                                                                                                                                           FORM
+                                                                                                                                                                                                        ========================= */
 
         .form-label-modern {
             font-weight: 600;
@@ -147,8 +147,8 @@
         }
 
         /* =======================
-                                                                                                                                                                   STAT CARD
-                                                                                                                                                                ======================= */
+                                                                                                                                                                                   STAT CARD
+                                                                                                                                                                                ======================= */
         .stat-card {
             background: #ffffff;
             border-radius: 14px;
@@ -175,8 +175,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                           TABLE
-                                                                                                                                                                                        ========================= */
+                                                                                                                                                                                                           TABLE
+                                                                                                                                                                                                        ========================= */
 
         .table-wrapper {
             border-radius: 20px;
@@ -500,6 +500,11 @@
                 </div>
             </div>
 
+            @php
+                $missingMadrasah = $missingMadrasah ?? [];
+                $isMissingHakPembayaran = $isMissingHakPembayaran ?? false;
+            @endphp
+
             @if (!empty($missingMadrasah))
                 <div class="info-box-modern" style="border-left: 6px solid #dc2626;">
                     <h5 style="color:#dc2626;">
@@ -613,7 +618,13 @@
                                     {{-- DETAIL PER BULAN --}}
                                     @foreach (request('bulan', []) as $bulan)
                                         @php
-                                            $d = $row['detail_bulan'][$bulan];
+                                            $d = $row['detail_bulan'][$bulan] ?? [
+                                                's' => 0,
+                                                'i' => 0,
+                                                'tk' => 0,
+                                                'dl' => 0,
+                                                'c' => 0,
+                                            ];
                                         @endphp
 
                                         <td>{{ $d['s'] }}</td>
@@ -632,7 +643,16 @@
 
                                     <td>
 
-                                        {{ $row['total_s'] + $row['total_i'] + $row['total_tk'] + $row['total_dl'] + $row['total_c'] }}
+                                        @php
+                                            $totalAbsen =
+                                                $row['total_s'] +
+                                                $row['total_i'] +
+                                                $row['total_tk'] +
+                                                $row['total_dl'] +
+                                                $row['total_c'];
+                                        @endphp
+
+                                        {{ $totalAbsen }}
 
                                     </td>
 
