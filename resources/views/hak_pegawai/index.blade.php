@@ -24,6 +24,45 @@
             box-shadow: 0 10px 30px rgba(15, 23, 42, .06);
         }
 
+        .period-card {
+            border: none;
+            border-radius: 14px;
+            color: white;
+            background: radial-gradient(circle at center,
+                    #3b82f6 0%,
+                    #1d4ed8 40%,
+                    #0f172a 100%);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* efek glow lembut di tengah */
+        .period-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center,
+                    rgba(255, 255, 255, 0.15),
+                    transparent 60%);
+            pointer-events: none;
+        }
+
+        .period-card h6 {
+            color: rgba(255, 255, 255, 0.75);
+            font-weight: 600;
+        }
+
+        .period-card h3 {
+            color: #ffffff;
+            font-weight: 800;
+        }
+
+        .period-card small {
+            color: rgba(255, 255, 255, 0.65);
+            font-weight: 500;
+        }
+
         .notice-card {
             background: #fff7ed;
             border: 1px solid #fed7aa;
@@ -162,21 +201,21 @@
             </div>
         @endif
 
-        <div class="card saas-card mb-3">
+        <div class="card saas-card mb-3 period-card">
 
             <div class="card-body text-center">
 
-                <h6 class="text-muted mb-2">
+                <div class="text-bold">
                     Periode Aktif
-                </h6>
+                </div>
 
-                <h3 class="font-weight-bold text-primary mb-0">
+                <h2 class="font-weight-bold mb-2">
                     {{ $activePeriod->triwulan }} - {{ $activePeriod->tahun }}
-                </h3>
+                </h2>
 
-                <small class="text-muted">
+                <div class="text-bold">
                     Periode ini ditentukan oleh administrator sistem.
-                </small>
+                </div>
 
             </div>
 
