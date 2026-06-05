@@ -61,7 +61,7 @@
                     <p>Absensi Pegawai</p>
                 </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" hidden>
                 <a href="{{ route('hak-pembayaran.index') }}"
                     class="nav-link {{ request()->routeIs('hak-pembayaran.*') ? 'active' : '' }}">
                     <i class="nav-icon fas fa-layer-group"></i>
