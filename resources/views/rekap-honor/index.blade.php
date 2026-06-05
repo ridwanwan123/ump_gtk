@@ -20,8 +20,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                                                                                                                               PAGE
-                                                                                                                                                                                                                                                                                            ========================= */
+                                                                                                                                                                                                                                                                                                                                                                                           PAGE
+                                                                                                                                                                                                                                                                                                                                                                        ========================= */
 
         .page-title {
             font-size: 28px;
@@ -36,8 +36,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                                                                                                                               CARD
-                                                                                                                                                                                                                                                                                                            ========================= */
+                                                                                                                                                                                                                                                                                                                                                                                           CARD
+                                                                                                                                                                                                                                                                                                                                                                                        ========================= */
 
         .modern-card {
             border: 0;
@@ -66,8 +66,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                                                                                                                               INFO BOX
-                                                                                                                                                                                                                                                                                                            ========================= */
+                                                                                                                                                                                                                                                                                                                                                                                           INFO BOX
+                                                                                                                                                                                                                                                                                                                                                                                        ========================= */
 
         .info-box-modern {
             background: linear-gradient(135deg, #eff6ff, #f8fafc);
@@ -94,8 +94,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                                                                                                                               FORM
-                                                                                                                                                                                                                                                                                                            ========================= */
+                                                                                                                                                                                                                                                                                                                                                                                           FORM
+                                                                                                                                                                                                                                                                                                                                                                                        ========================= */
 
         .form-label-modern {
             font-weight: 600;
@@ -147,8 +147,8 @@
         }
 
         /* =======================
-                                                                                                                                                                                                                                                                                       STAT CARD
-                                                                                                                                                                                                                                                                                    ======================= */
+                                                                                                                                                                                                                                                                                                                                                                   STAT CARD
+                                                                                                                                                                                                                                                                                                                                                                ======================= */
         .stat-card {
             background: #ffffff;
             border-radius: 14px;
@@ -175,8 +175,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                                                                                                                               TABLE
-                                                                                                                                                                                                                                                                                                            ========================= */
+                                                                                                                                                                                                                                                                                                                                                                                           TABLE
+                                                                                                                                                                                                                                                                                                                                                                                        ========================= */
 
         .table-wrapper {
             border-radius: 20px;
@@ -537,7 +537,7 @@
             @endphp
 
             @if (!empty($missingMadrasah))
-                <div class="info-box-modern" style="border-left: 6px solid #dc2626;">
+                <div class="info-box-modern" style="border-left: 6px solid #dc2626;" hidden>
                     <h5 style="color:#dc2626;">
                         ⚠ Hak Pembayaran Belum Lengkap
                     </h5>
@@ -555,6 +555,35 @@
                     <small class="text-muted">
                         Data tetap ditampilkan menggunakan fallback bulan dipilih.
                     </small>
+                </div>
+
+                <div class="bg-white rounded-4 shadow-sm overflow-hidden">
+                    <div class="d-flex">
+                        <div style="width:6px; background:#dc3545;"></div>
+                        <div class="p-4 flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="text-danger fw-semibold small mb-2">
+                                        Validasi Diperlukan
+                                    </div>
+
+                                    <h5 class="fw-semibold mb-2">
+                                        Data Belum Dapat Diproses
+                                    </h5>
+
+                                    <p class="text-muted mb-0">
+                                        Terdapat
+                                        <strong>{{ count($missingMadrasah) }} madrasah</strong>
+                                        yang belum melengkapi hak pembayaran.
+                                    </p>
+
+                                </div>
+                                <a href="{{ route('dashboard') }}" class="btn btn-danger rounded-pill px-4">
+                                    Buka Dashboard →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             @else
                 {{-- TABLE --}}
