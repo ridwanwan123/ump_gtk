@@ -232,7 +232,7 @@
                 <strong>Perhatian</strong>
 
                 <div>
-                    Hak pembayaran menentukan perhitungan honor pegawai dan tidak bergantung pada jumlah absensi.
+                    Hak pembayaran menentukan perhitungan honor pegawai berdasarkan bulan ke-aktifan bekerja.
                     Pastikan data yang disimpan sudah sesuai.
                 </div>
             </div>
