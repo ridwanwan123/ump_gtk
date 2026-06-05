@@ -20,8 +20,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                                                                                                               PAGE
-                                                                                                                                                                                                                                                                            ========================= */
+                                                                                                                                                                                                                                                                                                               PAGE
+                                                                                                                                                                                                                                                                                            ========================= */
 
         .page-title {
             font-size: 28px;
@@ -36,8 +36,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                                                                                                               CARD
-                                                                                                                                                                                                                                                                                            ========================= */
+                                                                                                                                                                                                                                                                                                               CARD
+                                                                                                                                                                                                                                                                                                            ========================= */
 
         .modern-card {
             border: 0;
@@ -66,8 +66,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                                                                                                               INFO BOX
-                                                                                                                                                                                                                                                                                            ========================= */
+                                                                                                                                                                                                                                                                                                               INFO BOX
+                                                                                                                                                                                                                                                                                                            ========================= */
 
         .info-box-modern {
             background: linear-gradient(135deg, #eff6ff, #f8fafc);
@@ -94,8 +94,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                                                                                                               FORM
-                                                                                                                                                                                                                                                                                            ========================= */
+                                                                                                                                                                                                                                                                                                               FORM
+                                                                                                                                                                                                                                                                                                            ========================= */
 
         .form-label-modern {
             font-weight: 600;
@@ -147,8 +147,8 @@
         }
 
         /* =======================
-                                                                                                                                                                                                                                                                       STAT CARD
-                                                                                                                                                                                                                                                                    ======================= */
+                                                                                                                                                                                                                                                                                       STAT CARD
+                                                                                                                                                                                                                                                                                    ======================= */
         .stat-card {
             background: #ffffff;
             border-radius: 14px;
@@ -175,8 +175,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                                                                                                               TABLE
-                                                                                                                                                                                                                                                                                            ========================= */
+                                                                                                                                                                                                                                                                                                               TABLE
+                                                                                                                                                                                                                                                                                                            ========================= */
 
         .table-wrapper {
             border-radius: 20px;
@@ -367,14 +367,13 @@
 
                         {{-- HONOR --}}
                         <div class="col-md-4 mb-3">
-                            <label class="form-label-modern">
-                                Honor per Bulan
-                            </label>
+                            <label class="form-label-modern">Honor per Bulan</label>
 
-                            <input type="text" id="honor_display" class="form-control" placeholder="Rp 3.900.000"
-                                value="{{ request('honor') ? 'Rp ' . number_format(request('honor'), 0, ',', '.') : '' }}">
+                            <div class="px-3 py-2 bg-light rounded border">
+                                Rp {{ number_format(3900000, 0, ',', '.') }}
+                            </div>
 
-                            <input type="hidden" name="honor" id="honor">
+                            <input type="hidden" name="honor" value="3900000">
                         </div>
                     </div>
                     @php
