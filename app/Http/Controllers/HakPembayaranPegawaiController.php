@@ -58,9 +58,9 @@ class HakPembayaranPegawaiController extends Controller
             $pegawai = $query
                 ->orderBy('id_madrasah')
                 ->orderBy('nama_rekening')
-                // ->get();
-                ->paginate(25)
-                ->withQueryString();
+                ->get();
+                // ->paginate(25)
+                // ->withQueryString();
         }
 
         // =========================
