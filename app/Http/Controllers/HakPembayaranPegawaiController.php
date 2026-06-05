@@ -58,8 +58,9 @@ class HakPembayaranPegawaiController extends Controller
             $pegawai = $query
                 ->orderBy('id_madrasah')
                 ->orderBy('nama_rekening')
-                ->paginate(25)
-                ->withQueryString();
+                // ->paginate(25)
+                // ->withQueryString();
+                ->get();
         }
 
         // =========================
@@ -142,7 +143,7 @@ class HakPembayaranPegawaiController extends Controller
                         'pegawai_id' => $pegawaiId,
                         'tahun' => $tahun,
                         'bulan' => $bulan,
-                        'tw' => $tw, // 🔥 INI YANG KURANG
+                        'tw' => $tw,
                     ],
                     [
                         'jumlah_hak' => $status ? 1 : 0,

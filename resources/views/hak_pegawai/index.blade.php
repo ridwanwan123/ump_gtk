@@ -341,7 +341,7 @@
 
             @if (auth()->user()->hasRole('superadmin'))
                 <div class="card-footer">
-                    {{ $pegawai->links('pagination::bootstrap-4') }}
+                    {{-- {{ $pegawai->links('pagination::bootstrap-4') }} --}}
                 </div>
             @endif
         </div>
@@ -382,6 +382,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>NAMA PEGAWAI</th>
+                                        <th>NAMA MADRASAH</th>
 
                                         @foreach ($bulan as $b)
                                             <th>
@@ -407,6 +408,10 @@
 
                                             <td class="text-start fw-bold">
                                                 {{ $p->nama_rekening }}
+                                            </td>
+
+                                            <td>
+                                                {{ $p->madrasah->nama_madrasah }}
                                             </td>
 
                                             @foreach ($bulan as $b)
