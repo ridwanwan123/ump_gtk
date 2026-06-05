@@ -262,13 +262,77 @@ class RekapHonorExport implements FromArray, ShouldAutoSize, WithStyles, WithEve
                         ]
                     ]);
 
+                $sheet->getStyle("A3:{$highestColumn}{$highestRow}")
+                    ->applyFromArray([
+                        'alignment' => [
+                            'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+                            'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                        ],
+                    ]);
+                
                 // FREEZE HEADER
                 $sheet->freezePane('A3');
 
                 // LANDSCAPE
                 $sheet->getPageSetup()
                     ->setOrientation(PageSetup::ORIENTATION_LANDSCAPE);
+
+                /*
+                |--------------------------------------------------------------------------
+                | MERGE HEADER IDENTITAS
+                |--------------------------------------------------------------------------
+                */
+
+                for ($i = 1; $i <= 21; $i++) {
+
+                    $colLetter = $this->columnLetter($i);
+
+                    $sheet->mergeCells("{$colLetter}1:{$colLetter}2");
+                }
+
+                /*
+                |--------------------------------------------------------------------------
+                | MERGE HEADER BULAN
+                |--------------------------------------------------------------------------
+                */
+
+                $col = 22;
+
+                foreach ($this->bulan as $b) {
+
+                    $start = $this->columnLetter($col);
+                    $end = $this->columnLetter($col + 4);
+
+                    $sheet->mergeCells("{$start}1:{$end}1");
+
+                    $col += 5;
+                }
+
+                /*
+                |--------------------------------------------------------------------------
+                | MERGE JUMLAH KETIDAK HADIRAN
+                |--------------------------------------------------------------------------
+                */
+
+                $startTotal = $this->columnLetter($col);
+                $endTotal = $this->columnLetter($col + 5);
+
+                $sheet->mergeCells("{$startTotal}1:{$endTotal}1");
+
             }
         ];
+    }
+
+    private function columnLetter($c)
+    {
+        $letter = '';
+
+        while ($c > 0) {
+            $temp = ($c - 1) % 26;
+            $letter = chr($temp + 65) . $letter;
+            $c = intval(($c - $temp - 1) / 26);
+        }
+
+        return $letter;
     }
 }

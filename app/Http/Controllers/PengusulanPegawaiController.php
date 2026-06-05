@@ -166,7 +166,7 @@ class PengusulanPegawaiController extends Controller
                 'no_rek_bank_dki'   => 'nullable|digits:11',
                 'id_madrasah'       => 'required|exists:madrasah,id',
                 'npsn_tempat_tugas' => 'nullable|string|max:20',
-                'nik'               => 'required|digits:16',
+                'nik'               => 'required|digits:16|unique:pegawai,nik',
                 'pegid'             => 'nullable|digits:14',
                 'tempat_lahir'      => 'required|string|max:100',
                 'tanggal_lahir'     => 'required|date',
@@ -181,7 +181,13 @@ class PengusulanPegawaiController extends Controller
                 'link_drive_foto_ktp' => 'nullable|url|max:255',
                 'status_pegawai'    => 'nullable|string|max:50',
                 'dapodik'           => 'nullable|string|max:255',
-            ]);
+            ],
+            [
+                'nik.required' => 'NIK wajib diisi.',
+                'nik.digits'   => 'NIK harus terdiri dari 16 digit angka.',
+                'nik.unique'   => 'NIK sudah terdaftar di sistem.',
+            ]
+            );
 
             DB::transaction(function () use ($validated) {
                 $validated['status_pegawai'] = 'USULAN';

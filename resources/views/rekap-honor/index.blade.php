@@ -20,8 +20,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                               PAGE
-                                                                                                                                                                                            ========================= */
+                                                                                                                                                                                                                                                                                               PAGE
+                                                                                                                                                                                                                                                                            ========================= */
 
         .page-title {
             font-size: 28px;
@@ -36,8 +36,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                               CARD
-                                                                                                                                                                                                            ========================= */
+                                                                                                                                                                                                                                                                                               CARD
+                                                                                                                                                                                                                                                                                            ========================= */
 
         .modern-card {
             border: 0;
@@ -66,8 +66,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                               INFO BOX
-                                                                                                                                                                                                            ========================= */
+                                                                                                                                                                                                                                                                                               INFO BOX
+                                                                                                                                                                                                                                                                                            ========================= */
 
         .info-box-modern {
             background: linear-gradient(135deg, #eff6ff, #f8fafc);
@@ -94,8 +94,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                               FORM
-                                                                                                                                                                                                            ========================= */
+                                                                                                                                                                                                                                                                                               FORM
+                                                                                                                                                                                                                                                                                            ========================= */
 
         .form-label-modern {
             font-weight: 600;
@@ -147,8 +147,8 @@
         }
 
         /* =======================
-                                                                                                                                                                                       STAT CARD
-                                                                                                                                                                                    ======================= */
+                                                                                                                                                                                                                                                                       STAT CARD
+                                                                                                                                                                                                                                                                    ======================= */
         .stat-card {
             background: #ffffff;
             border-radius: 14px;
@@ -175,8 +175,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                               TABLE
-                                                                                                                                                                                                            ========================= */
+                                                                                                                                                                                                                                                                                               TABLE
+                                                                                                                                                                                                                                                                                            ========================= */
 
         .table-wrapper {
             border-radius: 20px;
@@ -371,25 +371,57 @@
                                 Honor per Bulan
                             </label>
 
-                            <input type="number" name="honor" class="form-control" placeholder="Contoh: 3900000"
-                                value="{{ request('honor') }}" required>
+                            <input type="text" id="honor_display" class="form-control" placeholder="Rp 3.900.000"
+                                value="{{ request('honor') ? 'Rp ' . number_format(request('honor'), 0, ',', '.') : '' }}">
+
+                            <input type="hidden" name="honor" id="honor">
                         </div>
                     </div>
+                    @php
+                        $user = auth()->user();
+
+                        $isOperator = $user->hasRole('operator');
+
+                        // aman dari null
+                        $userMadrasahId = optional($user->madrasah)->id;
+
+                        $selectedMadrasah = request('madrasah');
+
+                        if (!$selectedMadrasah && $isOperator) {
+                            $selectedMadrasah = $userMadrasahId;
+                        }
+                    @endphp
 
                     <div class="row">
                         {{-- MADRASAH --}}
                         <div class="col-md-4 mb-3">
-                            <label class="form-label-modern">
-                                Madrasah
-                            </label>
+                            <label class="form-label-modern">Madrasah</label>
+
                             <select name="madrasah" class="form-control">
-                                <option value="">Semua Madrasah</option>
-                                @foreach ($madrasahs as $m)
-                                    <option value="{{ $m->id }}"
-                                        {{ request('madrasah') == $m->id ? 'selected' : '' }}>
-                                        {{ $m->nama_madrasah }}
-                                    </option>
-                                @endforeach
+
+                                @if ($isOperator)
+
+                                    @php
+                                        $madrasah = $madrasahs->firstWhere('id', $userMadrasahId);
+                                    @endphp
+
+                                    @if ($madrasah)
+                                        <option value="{{ $madrasah->id }}" selected>
+                                            {{ $madrasah->nama_madrasah }}
+                                        </option>
+                                    @endif
+                                @else
+                                    <option value="">Semua Madrasah</option>
+
+                                    @foreach ($madrasahs as $m)
+                                        <option value="{{ $m->id }}"
+                                            {{ (string) $selectedMadrasah === (string) $m->id ? 'selected' : '' }}>
+                                            {{ $m->nama_madrasah }}
+                                        </option>
+                                    @endforeach
+
+                                @endif
+
                             </select>
                         </div>
 
@@ -814,6 +846,19 @@
 
             // jalan pertama kali
             setTimeout(setChipColor, 100);
+        });
+
+        document.getElementById('honor_display').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/[^0-9]/g, '');
+
+            document.getElementById('honor').value = value;
+
+            if (!value) {
+                e.target.value = '';
+                return;
+            }
+
+            e.target.value = 'Rp ' + new Intl.NumberFormat('id-ID').format(value);
         });
     </script>
 @endpush
