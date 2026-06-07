@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pegawai;
 use App\Models\Madrasah;
-use App\Models\AbsensiPegawai;
+use App\Models\AttendancePeriod;
 use Illuminate\Http\Request;
 use App\Services\RekapHonorService;
 use App\Exports\RekapHonorExport;
@@ -20,23 +20,43 @@ class RekapHonorController extends Controller
             ->distinct()
             ->pluck('jabatan_ump');
 
-        $tahunList = AbsensiPegawai::select('tahun')
-            ->distinct()
-            ->orderBy('tahun', 'desc')
-            ->pluck('tahun');
+        $activePeriod = AttendancePeriod::where('is_active', true)->first();
 
-        $bulanList = AbsensiPegawai::select('bulan')
-            ->distinct()
-            ->orderBy('bulan')
-            ->pluck('bulan');
-
-        if ($request->tahun) {
-            $bulanList = AbsensiPegawai::where('tahun', $request->tahun)
-                ->select('bulan')
-                ->distinct()
-                ->orderBy('bulan')
-                ->pluck('bulan');
+        if (!$activePeriod) {
+            abort(404, 'Belum ada periode aktif.');
         }
+
+        $tahunList = collect([$activePeriod->tahun]);
+
+        $triwulanMap = [
+            'TW 1' => [1, 2, 3],
+            'TW 2' => [4, 5, 6],
+            'TW 3' => [7, 8, 9],
+            'TW 4' => [10, 11, 12],
+        ];
+
+        $bulanList = collect($triwulanMap[$activePeriod->triwulan] ?? []);
+
+        $bulanNama = [
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember',
+        ];
+
+        // dd($bulanList);
+
+        $tahun = $request->tahun ?? $activePeriod->tahun;
+
+        $bulan = $request->bulan ?? $bulanList->toArray();
 
         $data = [];
 
@@ -44,7 +64,7 @@ class RekapHonorController extends Controller
         $isMissingHakPembayaran = false;
         $missingMadrasah = [];
 
-        if ($request->has(['bulan', 'tahun', 'honor'])) {
+        if ($request->filled('honor')) {
 
             $query = Pegawai::with('madrasah')
                 ->join('madrasah', 'pegawai.id_madrasah', '=', 'madrasah.id')
@@ -66,8 +86,8 @@ class RekapHonorController extends Controller
 
                 $result = $service->hitung(
                     $pegawai,
-                    $request->bulan,
-                    $request->tahun,
+                    $bulan,
+                    $tahun,
                     $request->honor
                 );
 
@@ -85,12 +105,14 @@ class RekapHonorController extends Controller
             }
         }
 
+
         return view('rekap-honor.index', [
             'madrasahs' => $madrasahs,
             'jabatanList' => $jabatanList,
             'data' => $data,
             'tahunList' => $tahunList,
             'bulanList' => $bulanList,
+            'bulanNama' => $bulanNama,
 
             // ✅ INI YANG SEBELUMNYA ERROR
             'isMissingHakPembayaran' => $isMissingHakPembayaran,

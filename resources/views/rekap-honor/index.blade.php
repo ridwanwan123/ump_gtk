@@ -20,8 +20,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                                                                                                                                                                                                           PAGE
-                                                                                                                                                                                                                                                                                                                                                                        ========================= */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                       PAGE
+                                                                                                                                                                                                                                                                                                                                                                                                                                    ========================= */
 
         .page-title {
             font-size: 28px;
@@ -36,8 +36,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                                                                                                                                                                                                           CARD
-                                                                                                                                                                                                                                                                                                                                                                                        ========================= */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                       CARD
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    ========================= */
 
         .modern-card {
             border: 0;
@@ -66,8 +66,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                                                                                                                                                                                                           INFO BOX
-                                                                                                                                                                                                                                                                                                                                                                                        ========================= */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                       INFO BOX
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    ========================= */
 
         .info-box-modern {
             background: linear-gradient(135deg, #eff6ff, #f8fafc);
@@ -94,8 +94,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                                                                                                                                                                                                           FORM
-                                                                                                                                                                                                                                                                                                                                                                                        ========================= */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                       FORM
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    ========================= */
 
         .form-label-modern {
             font-weight: 600;
@@ -147,8 +147,8 @@
         }
 
         /* =======================
-                                                                                                                                                                                                                                                                                                                                                                   STAT CARD
-                                                                                                                                                                                                                                                                                                                                                                ======================= */
+                                                                                                                                                                                                                                                                                                                                                                                                                               STAT CARD
+                                                                                                                                                                                                                                                                                                                                                                                                                            ======================= */
         .stat-card {
             background: #ffffff;
             border-radius: 14px;
@@ -175,8 +175,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                                                                                                                                                                                                           TABLE
-                                                                                                                                                                                                                                                                                                                                                                                        ========================= */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                       TABLE
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    ========================= */
 
         .table-wrapper {
             border-radius: 20px;
@@ -279,7 +279,7 @@
         {{-- PAGE HEADER --}}
         <div class="mb-4">
             <div class="page-title">
-                Rekap Honor Pegawai
+                Data Perhitungan Honor Pegawai Madrasah DKI Jakarta
             </div>
             <div class="page-subtitle">
                 Monitoring honorarium, kehadiran, dan potongan pegawai
@@ -287,18 +287,36 @@
         </div>
 
         {{-- INFO --}}
-        <div class="info-box-modern">
-            <h5>
-                <i class="fas fa-circle-info mr-1"></i>
-                Informasi Perhitungan
-            </h5>
-            <ul>
-                <li>Honor dihitung berdasarkan jumlah bulan yang dipilih.</li>
-                <li>Sakit (S) tidak dikenakan potongan.</li>
-                <li>Izin (I) dipotong 2.5% dari honor bulanan.</li>
-                <li>Tanpa Keterangan (TK) dipotong 5% dari honor bulanan.</li>
-                <li>Jumlah bersih dihitung otomatis setelah potongan.</li>
-            </ul>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="info-box-modern">
+                    <h5>
+                        <i class="fas fa-circle-info mr-1"></i>
+                        Informasi Perhitungan
+                    </h5>
+                    <ul>
+                        <li>Honor dihitung berdasarkan jumlah bulan yang dipilih.</li>
+                        <li>Sakit (S) tidak dikenakan potongan, jika melampirkan surat dokter.</li>
+                        <li>Izin (I) dipotong 2.5% dari honor bulanan.</li>
+                        <li>Tanpa Keterangan (TK) dipotong 5% dari honor bulanan.</li>
+                        <li>Jumlah bersih dihitung otomatis setelah potongan.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="info-box-modern">
+                    <h5>
+                        <i class="fas fa-circle-info mr-1"></i>
+                        Catatan Tambahan
+                    </h5>
+                    <ul>
+                        <li>Pastikan data absensi pegawai telah diisi sesuai kondisi sebenarnya.</li>
+                        <li>Pastikan hak pembayaran pegawai telah diisi dan disimpan sebelum melakukan rekap honor.</li>
+                        <li>Periksa kembali hak pembayaran pegawai untuk memastikan tidak terjadi kesalahan pembayaran.</li>
+                    </ul>
+                </div>
+            </div>
         </div>
 
         {{-- FILTER --}}
@@ -306,7 +324,7 @@
             <div class="modern-card-header">
                 <h4>
                     <i class="fas fa-filter mr-2"></i>
-                    Filter Rekap Honor
+                    Filter Data Perhitungan Honor dan Export Excel Pegawai Madrasah DKI Jakarta
                 </h4>
             </div>
 
@@ -316,53 +334,33 @@
                         {{-- TAHUN --}}
                         <div class="col-md-3 mb-3">
                             <label class="form-label-modern">
-                                Tahun
+                                Tahun Periode <small class="text-muted">(periode aktif)</small>
                             </label>
 
-                            <select name="tahun" class="form-control">
-                                <option value="">Pilih Tahun</option>
-
-                                @foreach ($tahunList as $tahun)
-                                    <option value="{{ $tahun }}"
-                                        {{ (string) request('tahun') === (string) $tahun ? 'selected' : '' }}>
-                                        {{ $tahun }}
-                                    </option>
-                                @endforeach
+                            <select name="tahun" class="form-control" readonly>
+                                <option value="{{ $tahunList->first() }}" selected>
+                                    {{ $tahunList->first() }}
+                                </option>
                             </select>
                         </div>
 
                         {{-- BULAN --}}
                         <div class="col-md-5 mb-3">
                             <label class="form-label-modern">
-                                Pilih Bulan
+                                Bulan Triwulan <small class="text-muted">(sesuai periode aktif)</small>
                             </label>
 
-                            @php
-                                $bulanNama = [
-                                    1 => 'Januari',
-                                    2 => 'Februari',
-                                    3 => 'Maret',
-                                    4 => 'April',
-                                    5 => 'Mei',
-                                    6 => 'Juni',
-                                    7 => 'Juli',
-                                    8 => 'Agustus',
-                                    9 => 'September',
-                                    10 => 'Oktober',
-                                    11 => 'November',
-                                    12 => 'Desember',
-                                ];
-                            @endphp
-
-                            <select name="bulan[]" class="form-control select2-bulan" multiple required>
-
-                                @foreach ($bulanList ?? [] as $bulan)
-                                    <option value="{{ $bulan }}"
-                                        {{ collect(request('bulan'))->contains($bulan) ? 'selected' : '' }}>
-                                        {{ $bulanNama[$bulan] }}
+                            <select class="form-control select2-bulan" multiple disabled>
+                                @foreach ($bulanList as $bulan)
+                                    <option value="{{ $bulan }}" selected>
+                                        {{ $bulanNama[$bulan] ?? $bulan }}
                                     </option>
                                 @endforeach
                             </select>
+
+                            @foreach ($bulanList as $bulan)
+                                <input type="hidden" name="bulan[]" value="{{ $bulan }}">
+                            @endforeach
                         </div>
 
                         {{-- HONOR --}}
@@ -620,7 +618,7 @@
 
                                     <th colspan="6">JUMLAH KETIDAK HADIRAN</th>
 
-                                    <th rowspan="2" style="vertical-align: middle;">BANYAK BULAN</th>
+                                    <th rowspan="2" style="vertical-align: middle;">HAK PEMBAYARAN</th>
                                     <th rowspan="2" style="vertical-align: middle;">% KEHADIRAN</th>
                                     <th rowspan="2" style="vertical-align: middle;">HONOR / BULAN</th>
                                     <th rowspan="2" style="vertical-align: middle;">JUMLAH KOTOR</th>
