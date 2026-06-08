@@ -113,6 +113,7 @@ class RekapHonorController extends Controller
             'tahunList' => $tahunList,
             'bulanList' => $bulanList,
             'bulanNama' => $bulanNama,
+            'triwulanAktif' => $activePeriod->triwulan,
 
             // ✅ INI YANG SEBELUMNYA ERROR
             'isMissingHakPembayaran' => $isMissingHakPembayaran,

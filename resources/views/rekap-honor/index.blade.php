@@ -20,8 +20,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                       PAGE
-                                                                                                                                                                                                                                                                                                                                                                                                                                    ========================= */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                       PAGE
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    ========================= */
 
         .page-title {
             font-size: 28px;
@@ -36,8 +36,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                       CARD
-                                                                                                                                                                                                                                                                                                                                                                                                                                                    ========================= */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                       CARD
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ========================= */
 
         .modern-card {
             border: 0;
@@ -66,8 +66,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                       INFO BOX
-                                                                                                                                                                                                                                                                                                                                                                                                                                                    ========================= */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                       INFO BOX
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ========================= */
 
         .info-box-modern {
             background: linear-gradient(135deg, #eff6ff, #f8fafc);
@@ -94,8 +94,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                       FORM
-                                                                                                                                                                                                                                                                                                                                                                                                                                                    ========================= */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                       FORM
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ========================= */
 
         .form-label-modern {
             font-weight: 600;
@@ -147,8 +147,8 @@
         }
 
         /* =======================
-                                                                                                                                                                                                                                                                                                                                                                                                                               STAT CARD
-                                                                                                                                                                                                                                                                                                                                                                                                                            ======================= */
+                                                                                                                                                                                                                                                                                                                                                                                                                                               STAT CARD
+                                                                                                                                                                                                                                                                                                                                                                                                                                            ======================= */
         .stat-card {
             background: #ffffff;
             border-radius: 14px;
@@ -175,8 +175,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                       TABLE
-                                                                                                                                                                                                                                                                                                                                                                                                                                                    ========================= */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                       TABLE
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ========================= */
 
         .table-wrapper {
             border-radius: 20px;
@@ -331,6 +331,13 @@
             <div class="modern-card-body">
                 <form method="GET">
                     <div class="row">
+                        <div class="col-md-2 mb-3">
+                            <label class="form-label-modern">
+                                Triwulan Aktif
+                            </label>
+
+                            <input type="text" class="form-control" value="{{ $triwulanAktif }}" readonly>
+                        </div>
                         {{-- TAHUN --}}
                         <div class="col-md-3 mb-3">
                             <label class="form-label-modern">
@@ -345,7 +352,7 @@
                         </div>
 
                         {{-- BULAN --}}
-                        <div class="col-md-5 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label class="form-label-modern">
                                 Bulan Triwulan <small class="text-muted">(sesuai periode aktif)</small>
                             </label>
@@ -364,7 +371,7 @@
                         </div>
 
                         {{-- HONOR --}}
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <label class="form-label-modern">Honor per Bulan</label>
 
                             <div class="px-3 py-2 bg-light rounded border">
