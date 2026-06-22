@@ -105,12 +105,18 @@
                     <a href="{{ route('pegawai.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> Tambah
                         Pegawai</a>
                 @endcan
-                @can('viewAny', App\Models\Pegawai::class)
+                {{-- @can('viewAny', App\Models\Pegawai::class)
                     <a href="{{ route('pegawai.export') }}" class="btn btn-success btn-sm">
                         <i class="fas fa-file-export"></i>
                         Export
                     </a>
-                @endcan
+                @endcan --}}
+                @role('superadmin')
+                    <a href="{{ route('pegawai.export') }}" class="btn btn-success btn-sm">
+                        <i class="fas fa-file-export"></i>
+                        Export
+                    </a>
+                @endrole
             </div>
         </div>
 
