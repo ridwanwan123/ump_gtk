@@ -72,9 +72,9 @@ class Pegawai extends Model
         });
 
         // ✅ Scope Status AKTIF (tambahan baru)
-        // static::addGlobalScope('aktif', function (Builder $builder) {
-        //     $builder->where('status_pegawai', self::AKTIF);
-        // });
+        static::addGlobalScope('aktif', function (Builder $builder) {
+            $builder->where('status_pegawai', self::AKTIF);
+        });
     }
 
     public function madrasah()
