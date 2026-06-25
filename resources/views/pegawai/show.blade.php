@@ -168,6 +168,52 @@
                                     <th>NPWP</th>
                                     <td>{{ $pegawai->npwp ?? '-' }}</td>
                                 </tr>
+                                <tr>
+                                    <th>NIK Terdaftar di EMIS 4.0</th>
+                                    <td>
+                                        @if ($pegawai->nik_terdaftar_emis40 == 'YA')
+                                            <span class="badge badge-success">
+                                                <i class="fas fa-check"></i> YA
+                                            </span>
+
+                                            @if ($pegawai->link_drive_emis40)
+                                                <a href="{{ $pegawai->link_drive_emis40 }}" target="_blank"
+                                                    class="btn btn-sm btn-primary ml-2">
+                                                    <i class="fas fa-file-alt"></i> Lihat Berkas
+                                                </a>
+                                            @endif
+                                        @elseif ($pegawai->nik_terdaftar_emis40 == 'TIDAK')
+                                            <span class="badge badge-danger">
+                                                <i class="fas fa-times"></i> TIDAK
+                                            </span>
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>NIK Terdaftar di EMIS GTK</th>
+                                    <td>
+                                        @if ($pegawai->nik_terdaftar_emis_gtk == 'YA')
+                                            <span class="badge badge-success">
+                                                <i class="fas fa-check"></i> YA
+                                            </span>
+
+                                            @if ($pegawai->link_drive_emis_gtk)
+                                                <a href="{{ $pegawai->link_drive_emis_gtk }}" target="_blank"
+                                                    class="btn btn-sm btn-primary ml-2">
+                                                    <i class="fas fa-file-alt"></i> Lihat Berkas
+                                                </a>
+                                            @endif
+                                        @elseif ($pegawai->nik_terdaftar_emis_gtk == 'TIDAK')
+                                            <span class="badge badge-danger">
+                                                <i class="fas fa-times"></i> TIDAK
+                                            </span>
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
+                                </tr>
                             </table>
                         </div>
                     </div>

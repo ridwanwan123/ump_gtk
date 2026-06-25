@@ -55,7 +55,12 @@ class Pegawai extends Model
         'status_pegawai',
         'dapodik',
         'alasan_mengundurkan_diri',
-        'tgl_nonaktif'
+        'tgl_nonaktif',
+        'nik_sesuai',
+        'nik_terdaftar_emis40',
+        'link_drive_emis40',
+        'nik_terdaftar_emis_gtk',
+        'link_drive_emis_gtk',
     ];
 
     protected static function booted()

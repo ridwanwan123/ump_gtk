@@ -147,6 +147,11 @@ class PegawaiController extends Controller
                 'link_drive_foto_ktp' => 'nullable|url|max:255',
                 'status_pegawai'    => 'nullable|string|max:50',
                 'dapodik'           => 'nullable|string|max:255',
+                'nik_sesuai'        => 'nullable|string|in:YA,TIDAK',
+                'nik_terdaftar_emis40' => 'nullable|string|in:YA,TIDAK',
+                'link_drive_emis40' => 'nullable|url|max:255',
+                'nik_terdaftar_emis_gtk' => 'nullable|string|in:YA,TIDAK',
+                'link_drive_emis_gtk' => 'nullable|url|max:255',
             ]);
 
             DB::transaction(function () use ($validated) {
@@ -204,6 +209,11 @@ class PegawaiController extends Controller
                 'link_drive_foto_ktp' => 'nullable|url|max:255',
                 'status_pegawai'    => 'nullable|string|max:50',
                 'dapodik'           => 'nullable|string|max:255',
+                'nik_sesuai'        => 'nullable|string|in:YA,TIDAK',
+                'nik_terdaftar_emis40' => 'nullable|string|in:YA,TIDAK',
+                'link_drive_emis40' => 'nullable|url|max:255',
+                'nik_terdaftar_emis_gtk' => 'nullable|string|in:YA,TIDAK',
+                'link_drive_emis_gtk' => 'nullable|url|max:255',
             ]);
 
             DB::transaction(function () use ($pegawai, $validated) {

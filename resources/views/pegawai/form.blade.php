@@ -160,7 +160,6 @@
 
                 {{-- Kanan: Data Kepegawaian, Kontak, Bank --}}
                 <div class="col-md-6">
-
                     {{-- Data Kepegawaian --}}
                     <div class="card card-outline card-success mb-3">
                         <div class="card-header">
@@ -320,6 +319,113 @@
 
                 </div>
 
+            </div>
+
+            {{-- Validasi Data --}}
+            <div class="card card-outline card-primary mt-3">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-check-circle"></i> Validasi Data
+                    </h3>
+                </div>
+                <div class="card-body">
+
+                    <div class="form-group">
+                        <label>Apakah NIK sudah sesuai ?</label>
+                        <select name="nik_sesuai" class="form-control @error('nik_sesuai') is-invalid @enderror">
+                            <option value="">-- Pilih --</option>
+                            <option value="YA"
+                                {{ old('nik_sesuai', $pegawai->nik_sesuai) == 'YA' ? 'selected' : '' }}>
+                                YA
+                            </option>
+                            <option value="TIDAK"
+                                {{ old('nik_sesuai', $pegawai->nik_sesuai) == 'TIDAK' ? 'selected' : '' }}>
+                                TIDAK
+                            </option>
+                        </select>
+                        @error('nik_sesuai')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label>Apakah NIK sudah terdaftar di EMIS 4.0?</label>
+                        <select name="nik_terdaftar_emis40"
+                            class="form-control @error('nik_terdaftar_emis40') is-invalid @enderror">
+                            <option value="">-- Pilih --</option>
+                            <option value="YA"
+                                {{ old('nik_terdaftar_emis40', $pegawai->nik_terdaftar_emis40) == 'YA' ? 'selected' : '' }}>
+                                YA
+                            </option>
+                            <option value="TIDAK"
+                                {{ old('nik_terdaftar_emis40', $pegawai->nik_terdaftar_emis40) == 'TIDAK' ? 'selected' : '' }}>
+                                TIDAK
+                            </option>
+                        </select>
+                        @error('nik_terdaftar_emis40')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label>Link Drive Bukti EMIS 4.0</label>
+                        <input type="text" name="link_drive_emis40"
+                            class="form-control @error('link_drive_emis40') is-invalid @enderror"
+                            value="{{ old('link_drive_emis40', $pegawai->link_drive_emis40) }}">
+
+                        <small class="form-text text-muted">
+                            Jika Iya, Mohon masukkan <strong>link langsung ke file bukti EMIS 4.0</strong> yang telah
+                            dibagikan
+                            (share) di Google Drive.
+                            Pastikan link mengarah langsung ke dokumen yang dimaksud, <strong>bukan ke
+                                folder Drive</strong>,
+                            serta dapat diakses oleh pihak yang berwenang untuk keperluan verifikasi data.
+                        </small>
+
+                        @error('link_drive_emis40')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label>Apakah NIK sudah terdaftar di EMIS GTK?</label>
+                        <select name="nik_terdaftar_emis_gtk"
+                            class="form-control @error('nik_terdaftar_emis_gtk') is-invalid @enderror">
+                            <option value="">-- Pilih --</option>
+                            <option value="YA"
+                                {{ old('nik_terdaftar_emis_gtk', $pegawai->nik_terdaftar_emis_gtk) == 'YA' ? 'selected' : '' }}>
+                                YA
+                            </option>
+                            <option value="TIDAK"
+                                {{ old('nik_terdaftar_emis_gtk', $pegawai->nik_terdaftar_emis_gtk) == 'TIDAK' ? 'selected' : '' }}>
+                                TIDAK
+                            </option>
+                        </select>
+                        @error('nik_terdaftar_emis_gtk')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label>Link Drive Bukti EMIS GTK</label>
+                        <input type="text" name="link_drive_emis_gtk"
+                            class="form-control @error('link_drive_emis_gtk') is-invalid @enderror"
+                            value="{{ old('link_drive_emis_gtk', $pegawai->link_drive_emis_gtk) }}">
+
+                        <small class="form-text text-muted">
+                            Jika Iya, Mohon masukkan <strong>link langsung ke file bukti EMIS GTK</strong> yang telah
+                            dibagikan
+                            (share) di Google Drive.
+                            Pastikan link mengarah langsung ke dokumen yang dimaksud, <strong>bukan ke
+                                folder Drive</strong>,
+                            serta dapat diakses oleh pihak yang berwenang untuk keperluan verifikasi data.
+                        </small>
+
+                        @error('link_drive_emis_gtk')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
             </div>
 
             {{-- Action Button --}}
