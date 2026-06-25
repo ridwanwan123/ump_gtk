@@ -369,23 +369,46 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Link Drive Bukti EMIS 4.0</label>
+
+                            <label class="font-weight-bold">
+                                Link Drive Bukti EMIS 4.0
+                            </label>
+
                             <input type="text" name="link_drive_emis40"
                                 class="form-control @error('link_drive_emis40') is-invalid @enderror"
-                                value="{{ old('link_drive_emis40', $pegawai->link_drive_emis40) }}">
-
-                            <small class="form-text text-muted">
-                                Jika Iya, Mohon masukkan <strong>link langsung ke file bukti EMIS 4.0</strong> yang telah
-                                dibagikan
-                                (share) di Google Drive.
-                                Pastikan link mengarah langsung ke dokumen yang dimaksud, <strong>bukan ke
-                                    folder Drive</strong>,
-                                serta dapat diakses oleh pihak yang berwenang untuk keperluan verifikasi data.
-                            </small>
+                                value="{{ old('link_drive_emis40', $pegawai->link_drive_emis40) }}"
+                                placeholder="https://drive.google.com/...">
 
                             @error('link_drive_emis40')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
+
+
+                            {{-- INFO BOX --}}
+                            <div class="mt-2 p-2 border rounded bg-light">
+
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle text-primary"></i>
+                                    Pastikan link yang dimasukkan adalah <b>file langsung</b>, bukan folder Google Drive.
+                                </small>
+
+                                <br>
+
+                                <small class="text-muted">
+                                    Link harus dapat diakses untuk proses verifikasi data.
+                                </small>
+
+                                {{-- LINK CONTOH --}}
+                                <div class="mt-2">
+                                    <a href="#" class="text-primary font-weight-bold" data-toggle="modal"
+                                        data-target="#modalEmis40">
+                                        <i class="fas fa-image"></i>
+                                        Lihat Contoh Bukti EMIS 4.0
+                                    </a>
+                                </div>
+
+                            </div>
+
                         </div>
 
                         <div class="form-group">
@@ -408,24 +431,43 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Link Drive Bukti EMIS GTK</label>
+
+                            <label class="font-weight-bold">
+                                Link Drive Bukti EMIS GTK
+                            </label>
+
                             <input type="text" name="link_drive_emis_gtk"
                                 class="form-control @error('link_drive_emis_gtk') is-invalid @enderror"
-                                value="{{ old('link_drive_emis_gtk', $pegawai->link_drive_emis_gtk) }}">
-
-                            <small class="form-text text-muted">
-                                Jika Iya, Mohon masukkan <strong>link langsung ke file bukti EMIS GTK</strong> yang telah
-                                dibagikan
-                                (share) di Google Drive.
-                                Pastikan link mengarah langsung ke dokumen yang dimaksud, <strong>bukan ke
-                                    folder Drive</strong>,
-                                serta dapat diakses oleh pihak yang berwenang untuk keperluan verifikasi data.
-                            </small>
+                                value="{{ old('link_drive_emis_gtk', $pegawai->link_drive_emis_gtk) }}"
+                                placeholder="https://drive.google.com/...">
 
                             @error('link_drive_emis_gtk')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
+
+                            {{-- INFO BOX --}}
+                            <div class="mt-2 p-2 border rounded bg-light">
+
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle text-primary"></i>
+                                    Pastikan link yang dimasukkan adalah <b>file langsung</b>, bukan folder Google Drive.
+                                </small>
+                                <br>
+                                <small class="text-muted">
+                                    Link harus dapat diakses untuk proses verifikasi data EMIS GTK.
+                                </small>
+
+                                {{-- LINK CONTOH --}}
+                                <div class="mt-2">
+                                    <a href="#" class="text-primary font-weight-bold" data-toggle="modal"
+                                        data-target="#modalEmisGTK">
+                                        <i class="fas fa-image"></i>
+                                        Lihat Contoh Bukti EMIS GTK
+                                    </a>
+                                </div>
+                            </div>
                         </div>
+
                     </div>
                 </div>
             @endif
@@ -445,6 +487,52 @@
 
     </div>
 
+
+    <div class="modal fade" id="modalEmis40" tabindex="-1" role="dialog" aria-labelledby="modalEmis40Label"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEmis40Label">
+                        Contoh Bukti EMIS 4.0
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body text-center">
+                    <img src="{{ asset('assets/images/emis-40.png') }}" class="img-fluid" style="max-height: 75vh;"
+                        alt="Contoh Bukti EMIS 4.0">
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalEmisGTK" tabindex="-1" role="dialog" aria-labelledby="modalEmisGTKLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEmisGTKLabel">
+                        Contoh Bukti EMIS GTK
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body text-center">
+                    <img src="{{ asset('assets/images/emis-gtk.png') }}" class="img-fluid" style="max-height: 75vh;"
+                        alt="Contoh Bukti EMIS 4.0">
+                </div>
+
+            </div>
+        </div>
+    </div>
     @push('scripts')
         @if (session('swal_success'))
             <script>
