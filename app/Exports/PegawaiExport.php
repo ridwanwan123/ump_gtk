@@ -96,7 +96,7 @@ class PegawaiExport implements FromCollection, WithHeadings, WithMapping, Should
             $pegawai->dapodik ?? '',
             $pegawai->link_drive_foto_ktp ?? '',
             $pegawai->nik_sesuai ?? '',
-            $pegawai->nik_terdaftar_emis_40 ?? '',
+            $pegawai->nik_terdaftar_emis40 ?? '',
             $pegawai->link_drive_emis40 ?? '',
             $pegawai->nik_terdaftar_emis_gtk ?? '',
             $pegawai->link_drive_emis_gtk ?? '',
