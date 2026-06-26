@@ -83,9 +83,7 @@ class PegawaiExport implements FromCollection, WithHeadings, WithMapping, Should
             $pegawai->nik ? "'".$pegawai->nik : '',
             $pegawai->pegid ? "'".$pegawai->pegid : '',
             $pegawai->tempat_lahir ?? '',
-            $pegawai->tanggal_lahir 
-                ? ExcelDate::stringToExcel($pegawai->tanggal_lahir) 
-                : null,
+            $pegawai->tanggal_lahir ? ExcelDate::stringToExcel($pegawai->tanggal_lahir) : null,
             $pegawai->nama_ibu_kandung ?? '',
             $pegawai->agama ?? '',
             $pegawai->pend_terakhir ?? '',
