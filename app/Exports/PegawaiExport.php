@@ -55,7 +55,14 @@ class PegawaiExport implements FromCollection, WithHeadings, WithMapping, Should
             'Alamat Sesuai KTP',
             'Status Pegawai',
             'Dapodik',
-            'Link KTP'
+            'Link KTP',
+            'NIK SESUAI KTP',
+            'NIK Terdaftar EMIS 4.0',
+            'Bukti EMIS 4.0 (Link)',
+            'NIK Terdaftar EMIS GTK',
+            'Bukti EMIS GTK (Link)',
+            'Alasan Mengundurkan Diri',
+            'Tanggal Mengundurkan Diri',
         ];
     }
 
@@ -90,6 +97,13 @@ class PegawaiExport implements FromCollection, WithHeadings, WithMapping, Should
             $pegawai->status_pegawai ?? '',
             $pegawai->dapodik ?? '',
             $pegawai->link_drive_foto_ktp ?? '',
+            $pegawai->nik_sesuai ?? '',
+            $pegawai->nik_terdaftar_emis_40 ?? '',
+            $pegawai->link_drive_emis40 ?? '',
+            $pegawai->nik_terdaftar_emis_gtk ?? '',
+            $pegawai->link_drive_emis_gtk ?? '',
+            $pegawai->alasan_mengundurkan_diri ?? '',
+            $pegawai->tgl_nonaktif ?? '',
         ];
     }
 
