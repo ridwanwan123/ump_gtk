@@ -81,7 +81,9 @@ class DashboardController extends Controller
             ->pluck('total', 'pendidikan');
 
             $pendidikanLabels = $statistikPendidikan->keys();
-            $pendidikanData   = $statistikPendidikan->values();
+            $pendidikanData = $statistikPendidikan
+                ->values()
+                ->map('intval');
 
             /*
             |--------------------------------------------------------------------------
