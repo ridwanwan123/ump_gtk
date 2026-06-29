@@ -114,9 +114,69 @@
 
                             <div class="form-group">
                                 <label>Pendidikan Terakhir</label>
-                                <input type="text" name="pend_terakhir"
-                                    class="form-control @error('pend_terakhir') is-invalid @enderror"
-                                    value="{{ old('pend_terakhir', $pegawai->pend_terakhir) }}" required>
+
+                                <select name="pend_terakhir"
+                                    class="form-control @error('pend_terakhir') is-invalid @enderror">
+
+                                    <option value="">-- Pilih Pendidikan --</option>
+
+                                    <option value="SD"
+                                        {{ old('pend_terakhir', $pegawai->pend_terakhir) == 'SD' ? 'selected' : '' }}>
+                                        SD
+                                    </option>
+
+                                    <option value="SMP/MTs"
+                                        {{ old('pend_terakhir', $pegawai->pend_terakhir) == 'SMP/MTs' ? 'selected' : '' }}>
+                                        SMP/MTs
+                                    </option>
+
+                                    <option value="SMA/SMK/MA"
+                                        {{ old('pend_terakhir', $pegawai->pend_terakhir) == 'SMA/SMK/MA' ? 'selected' : '' }}>
+                                        SMA/SMK/MA
+                                    </option>
+
+                                    <option value="D2"
+                                        {{ old('pend_terakhir', $pegawai->pend_terakhir) == 'D2' ? 'selected' : '' }}>
+                                        D2
+                                    </option>
+
+                                    <option value="D3"
+                                        {{ old('pend_terakhir', $pegawai->pend_terakhir) == 'D3' ? 'selected' : '' }}>
+                                        D3
+                                    </option>
+
+                                    <option value="S1/D4"
+                                        {{ old('pend_terakhir', $pegawai->pend_terakhir) == 'S1/D4' ? 'selected' : '' }}>
+                                        S1/D4
+                                    </option>
+
+                                    <option value="S2"
+                                        {{ old('pend_terakhir', $pegawai->pend_terakhir) == 'S2' ? 'selected' : '' }}>
+                                        S2
+                                    </option>
+
+                                    <option value="S3"
+                                        {{ old('pend_terakhir', $pegawai->pend_terakhir) == 'S3' ? 'selected' : '' }}>
+                                        S3
+                                    </option>
+
+                                    <option value="Paket A"
+                                        {{ old('pend_terakhir', $pegawai->pend_terakhir) == 'Paket A' ? 'selected' : '' }}>
+                                        Paket A
+                                    </option>
+
+                                    <option value="Paket B"
+                                        {{ old('pend_terakhir', $pegawai->pend_terakhir) == 'Paket B' ? 'selected' : '' }}>
+                                        Paket B
+                                    </option>
+
+                                    <option value="Paket C"
+                                        {{ old('pend_terakhir', $pegawai->pend_terakhir) == 'Paket C' ? 'selected' : '' }}>
+                                        Paket C
+                                    </option>
+
+                                </select>
+
                                 @error('pend_terakhir')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -174,8 +234,8 @@
 
                             <div class="form-group">
                                 <label>Jabatan UMP</label>
-                                <select name="jabatan_ump" class="form-control @error('jabatan_ump') is-invalid @enderror"
-                                    required>
+                                <select name="jabatan_ump"
+                                    class="form-control @error('jabatan_ump') is-invalid @enderror" required>
                                     <option value="">-- Pilih Jabatan UMP --</option>
                                     @foreach ($jabatanUMPList as $jabatan)
                                         <option value="{{ $jabatan }}"
