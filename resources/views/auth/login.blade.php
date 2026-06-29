@@ -37,6 +37,7 @@
             margin: 0;
             font-family: "Poppins", sans-serif;
             overflow: hidden;
+            background: radial-gradient(circle at top, #e0e7ff, #f8fafc);
             /* FIX SCROLL & SWAL SHIFT */
         }
 
@@ -59,14 +60,14 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             background: var(--white);
-            border-radius: 18px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
             overflow: hidden;
-            box-shadow: var(--shadow);
         }
 
         /* LEFT */
         .login-left {
-            background: linear-gradient(135deg, var(--blue-primary), var(--blue-hover));
+            background: linear-gradient(160deg, #1d4ed8, #1e40af);
             color: white;
             display: flex;
             flex-direction: column;
@@ -122,12 +123,12 @@
 
         /* INPUT NORMAL */
         .form-control {
-            border-radius: 10px;
+            border-radius: 12px;
             border: 1px solid var(--border);
             padding: 12px;
             font-size: 14px;
             transition: all 0.25s ease;
-            background: #fff;
+            background: #f8fafc;
         }
 
         /* INPUT FOCUS / HOVER */
@@ -151,12 +152,13 @@
             padding: 12px;
             border-radius: 10px;
             border: none;
-            background: var(--blue-primary);
+            background: #1d4ed8;
             color: white;
             font-weight: 600;
             transition: all 0.25s ease;
             position: relative;
             overflow: hidden;
+            letter-spacing: 0.3px;
         }
 
         /* hover effect */
@@ -208,18 +210,34 @@
 
             <!-- LEFT -->
             <div class="login-left">
-                <img src="{{ asset('assets/images/kemenag/kemenag.png') }}" alt="">
-                <h1>Honorarium GTK Non-PNS</h1>
-                <p>Guru & Tenaga Kependidikan - DKI Jakarta</p>
+                <div>
+                    <img src="{{ asset('assets/images/kemenag/kemenag.png') }}" alt="">
+
+                    <h1>Bidang Pendidikan Madrasah</h1>
+
+                    <p style="margin-top:8px;">
+                        Sistem Manajemen<br>
+                        Honorarium GTK Non-PNS
+                    </p>
+                </div>
             </div>
 
             <!-- RIGHT -->
             <div class="login-right">
                 <div class="form-box">
 
-                    <img src="{{ asset('assets/images/kemenag/penmad.png') }}" class="logo" alt="">
+                    <div style="text-align:center; margin-bottom:18px;">
+                        <img src="{{ asset('assets/images/kemenag/penmad.png') }}" style="width:60px; opacity:0.9;"
+                            alt="">
 
-                    <div class="title">Masuk ke Sistem</div>
+                        <div style="margin-top:10px; font-size:18px; font-weight:700; color:#0f172a;">
+                            Honorarium GTK Non-PNS
+                        </div>
+
+                        <div style="font-size:13px; color:#64748b; margin-top:5px;">
+                            Silakan masuk menggunakan akun yang telah terdaftar
+                        </div>
+                    </div>
 
                     <form action="{{ route('login.submit') }}" method="POST">
                         @csrf
@@ -227,23 +245,20 @@
                         <div class="mb-3">
                             <input type="text" name="username"
                                 class="form-control @error('username') is-invalid @enderror" placeholder="Username">
-
-                            @error('username')
-                                <div class="error-text">{{ $message }}</div>
-                            @enderror
                         </div>
 
                         <div class="mb-3">
                             <input type="password" name="password"
                                 class="form-control @error('password') is-invalid @enderror" placeholder="Password">
-
-                            @error('password')
-                                <div class="error-text">{{ $message }}</div>
-                            @enderror
                         </div>
 
-                        <button class="btn-login">Masuk</button>
+                        <button class="btn-login">
+                            Masuk Sistem
+                        </button>
 
+                        <div style="text-align:center; font-size:12px; color:#94a3b8; margin-top:12px;">
+                            © Pendidikan Madrasah <br /> Kanwil Kementerian Agama DKI Jakarta
+                        </div>
                     </form>
 
                 </div>

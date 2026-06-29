@@ -29,8 +29,9 @@
 ========================================================= */
 html,
 body {
-    overflow: hidden;
     height: 100%;
+    margin: 0;
+    overflow: hidden;
 }
 
 .main {
@@ -46,7 +47,7 @@ body {
 
 .app-wrapper {
     display: flex;
-    height: 105vh;
+    height: 103dvh; /* gunakan dynamic viewport */
 }
 
 /* MAIN FIX */
@@ -93,6 +94,7 @@ SIDEBAR (PRESMA STYLE)
     display: flex;
     flex-direction: column;
     transition: 0.3s;
+    flex-shrink: 0;
 }
 
 /* brand */
@@ -306,7 +308,6 @@ LOGO CENTER FIX
 /* =========================
 TOPBAR PRESMA STYLE
 ========================= */
-
 .topbar {
     height: 70px;
     background: #fff;
@@ -315,6 +316,7 @@ TOPBAR PRESMA STYLE
     position: sticky;
     top: 0;
     z-index: 10;
+    flex-shrink: 0;
 }
 
 /* LEFT SIDE */
