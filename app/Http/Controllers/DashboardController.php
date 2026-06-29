@@ -83,7 +83,8 @@ class DashboardController extends Controller
             $pendidikanLabels = $statistikPendidikan->keys();
             $pendidikanData = $statistikPendidikan
                 ->values()
-                ->map('intval');
+                ->map('intval')
+                ->values();
 
             /*
             |--------------------------------------------------------------------------
@@ -220,8 +221,8 @@ class DashboardController extends Controller
                 'tahun' => $tahun,
                 'tw' => $tw,
 
-                // 'totalPegawai' => $totalPegawai,
-                // 'totalMadrasah' => $totalMadrasah,
+                'totalPegawai' => $totalPegawai,
+                'totalMadrasah' => $totalMadrasah,
 
                 //
                 'jenjangLabels' => $jenjangLabels,
