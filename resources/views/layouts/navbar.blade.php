@@ -1,91 +1,53 @@
-<nav class="main-header navbar navbar-expand shadow-sm navbar-modern">
-    <!-- Left navbar links -->
-    <ul class="navbar-nav">
-        <li class="nav-item">
-            <a class="nav-link text-white" data-widget="pushmenu" href="#" role="button" title="Toggle Sidebar">
-                <i class="fas fa-bars fa-lg"></i>
-            </a>
-        </li>
+<nav class="topbar d-flex justify-content-between align-items-center">
 
-        <li class="nav-item d-flex align-items-center ml-3 hide-mobile">
-            <a class="nav-link text-white font-weight-bold title-wrap" href="#">
+    {{-- LEFT --}}
+    <div class="left d-flex align-items-center gap-2">
+
+        {{-- Toggle Sidebar (AdminLTE pushmenu tetap dipakai) --}}
+        <a href="#" class="toggle-btn" data-widget="pushmenu" role="button">
+            <i class="bi bi-list"></i>
+        </a>
+
+        {{-- Logo Kemenag --}}
+        <img src="{{ asset('assets/images/kemenag/kemenag.png') }}" alt="logo" class="topbar-logo">
+
+        {{-- App Title --}}
+        <div class="app-title">
+            <span class="app-name">
                 Honorarium GTK Non-PNS
-            </a>
-
-            <span class="badge badge-light ml-2 role-badge">
-                {{ auth()->user()->getRoleNames()->first() }}
             </span>
-        </li>
-    </ul>
 
-    <!-- Right navbar links -->
-    <ul class="navbar-nav ml-auto align-items-center">
-        <li class="nav-item">
-            <a class="nav-link text-white icon-hover" data-widget="fullscreen" href="#" role="button">
-                <i class="fas fa-expand-arrows-alt fa-lg"></i>
-            </a>
-        </li>
+            <span class="app-region">
+                Penmad DKI Jakarta
+            </span>
+        </div>
 
-        <li class="nav-item">
-            <a class="nav-link text-white icon-hover logout-btn" href="#"
-                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                <i class="fas fa-sign-out-alt fa-lg"></i>
-                <span class="logout-text">Logout</span>
-            </a>
+    </div>
 
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                @csrf
-            </form>
-        </li>
-    </ul>
+    {{-- RIGHT --}}
+    <div class="right d-flex align-items-center gap-3">
+
+        {{-- Notification --}}
+        <div class="topbar-icon">
+            <i class="bi bi-bell"></i>
+        </div>
+
+        {{-- Fullscreen (opsional tetap AdminLTE) --}}
+        <div class="topbar-icon" data-widget="fullscreen">
+            <i class="bi bi-arrows-fullscreen"></i>
+        </div>
+
+        {{-- Logout --}}
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+
+            <button type="submit" class="logout-btn">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Logout</span>
+            </button>
+
+        </form>
+
+    </div>
+
 </nav>
-
-<style>
-    .navbar-modern {
-        background: linear-gradient(90deg, #0D47A1, #1DE9B6);
-        color: white;
-        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
-    }
-
-    /* Hover ikon */
-    .icon-hover i {
-        transition: transform 0.2s, color 0.2s;
-    }
-
-    .icon-hover:hover i {
-        transform: scale(1.2);
-        color: #ffd700;
-    }
-
-    /* Badge role */
-    .role-badge {
-        font-size: 0.75rem;
-        color: #0D47A1;
-        background-color: #fff;
-        font-weight: 600;
-    }
-
-    /* Wrap judul */
-    .title-wrap {
-        white-space: normal;
-        font-size: 1.05rem;
-    }
-
-    /* =========================
-   MOBILE MODE
-========================= */
-
-    @media (max-width: 768px) {
-
-        /* sembunyikan judul dan role */
-        .hide-mobile {
-            display: none !important;
-        }
-
-        /* sembunyikan tulisan logout */
-        .logout-text {
-            display: none;
-        }
-
-    }
-</style>

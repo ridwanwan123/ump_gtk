@@ -1,0 +1,518 @@
+:root {
+    /* PRIMARY BLUE SYSTEM (NEW THEME) */
+    --blue-primary: #1d4ed8; /* main blue */
+    --blue-hover: #2563eb; /* hover blue */
+    --blue-soft: #eff6ff; /* background soft */
+    --blue-light: #dbeafe; /* highlight */
+
+    /* ACCENT (OPTIONAL cyan feel biar modern) */
+    --accent: #38bdf8;
+
+    /* TEXT */
+    --text-dark: #0f172a;
+    --text-muted: #64748b;
+
+    /* BORDER */
+    --border: #e5e7eb;
+
+    /* BACKGROUND */
+    --bg: #f8fafc;
+    --white: #ffffff;
+
+    /* SHADOW (blue tone biar soft SaaS) */
+    --shadow: 0 6px 18px rgba(29, 78, 216, 0.12);
+}
+/* =========================================================
+   PENMAD DESIGN SYSTEM
+   Base CSS (Sidebar + Navbar + Footer + Layout)
+   Style Reference: PRESMA UI
+========================================================= */
+html,
+body {
+    overflow: hidden;
+    height: 100%;
+}
+
+.main {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.app-wrapper {
+    display: flex;
+    height: 100vh;
+}
+
+/* MAIN FIX */
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    height: 100vh;
+    transition: margin-left 0.3s ease;
+}
+
+/* 🔥 ONLY ONE SCROLL AREA */
+.main-content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 20px;
+}
+
+/* =========================
+GLASS / GLOW BACKGROUND (PRESMA DNA)
+========================= */
+.glow {
+    position: fixed;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    filter: blur(120px);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.glow-1 {
+    background: rgba(29, 78, 216, 0.18);
+    top: -120px;
+    left: -120px;
+}
+
+.glow-2 {
+    background: rgba(245, 158, 11, 0.12);
+    bottom: -120px;
+    right: -120px;
+}
+
+/* =========================
+ORNAMENT BACKGROUND
+========================= */
+.bg-ornament {
+    position: fixed;
+    inset: 0;
+    background-image: url("/assets/images/latarbelakang.png");
+    background-size: 500px;
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* =========================================================
+SIDEBAR (PRESMA STYLE)
+========================================================= */
+
+.sidebar {
+    width: 280px;
+    background: #fff;
+    border-right: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    transition: 0.3s;
+}
+
+/* brand */
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px 10px;
+}
+
+.sidebar-brand img {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+}
+
+.brand-text {
+    font-size: 22px;
+    font-weight: 800;
+    background: linear-gradient(90deg, #1d4ed8, #2563eb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* menu */
+.sidebar-menu {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 10px;
+}
+
+/* menu item */
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #4b5563;
+    font-weight: 500;
+    transition: 0.25s;
+    position: relative;
+}
+
+/* icon */
+.menu-item i {
+    font-size: 18px;
+    color: #9ca3af;
+    transition: 0.2s;
+}
+
+/* hover */
+.menu-item:hover {
+    background: rgba(29, 78, 216, 0.08);
+    color: #1d4ed8;
+    transform: translateX(3px);
+}
+
+.menu-item:hover i {
+    color: #1d4ed8;
+}
+
+/* active */
+.menu-item.active {
+    background: rgba(29, 78, 216, 0.1);
+    color: #1d4ed8;
+    font-weight: 600;
+}
+
+.menu-item.active::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 10px;
+    bottom: 10px;
+    width: 4px;
+    background: #1d4ed8;
+    border-radius: 10px;
+}
+
+/* menu title */
+.menu-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #9ca3af;
+    margin: 15px 10px 8px;
+    letter-spacing: 0.5px;
+}
+
+/* profile */
+.sidebar-footer {
+    border-top: 1px solid #e5e7eb;
+    padding: 12px;
+}
+
+.profile-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    transition: 0.2s;
+}
+
+.profile-card:hover {
+    border-color: rgba(29, 78, 216, 0.4);
+    box-shadow: 0 6px 18px rgba(29, 78, 216, 0.08);
+}
+
+.profile-avatar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+}
+
+.profile-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.profile-role {
+    font-size: 11px;
+    color: #6b7280;
+}
+/* =========================
+SIDEBAR BASE
+========================= */
+.sidebar {
+    width: 280px;
+    background: #fff;
+    border-right: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    transition: width 0.3s ease;
+    overflow: hidden;
+}
+
+/* =========================
+COLLAPSED MODE (ICON ONLY)
+========================= */
+.sidebar.collapsed {
+    width: 80px;
+}
+
+/* =========================
+HIDE ALL TEXT (STRICT MODE)
+========================= */
+.sidebar.collapsed .brand-text,
+.sidebar.collapsed .menu-title,
+.sidebar.collapsed .profile-name,
+.sidebar.collapsed .profile-role {
+    display: none !important;
+}
+
+/* =========================
+CENTER ALL ICON ITEMS
+========================= */
+.sidebar.collapsed .menu-item {
+    justify-content: center;
+    padding: 12px 0;
+    gap: 0;
+}
+
+/* ICON ONLY SIZE */
+.sidebar.collapsed .menu-item i {
+    font-size: 20px;
+}
+
+/* REMOVE TEXT GAP EFFECT */
+.sidebar.collapsed .menu-item span {
+    display: none !important;
+}
+
+/* =========================
+PROFILE FIX (ICON ONLY)
+========================= */
+.sidebar.collapsed .profile-card {
+    justify-content: center;
+    padding: 10px 0;
+}
+
+.sidebar.collapsed .profile-card .profile-info {
+    display: none !important;
+}
+
+/* =========================
+REMOVE ACTIVE BAR (BUG FIX)
+========================= */
+.sidebar.collapsed .menu-item::before {
+    display: none;
+}
+
+/* =========================
+LOGO CENTER FIX
+========================= */
+.sidebar.collapsed .sidebar-brand {
+    justify-content: center;
+}
+
+.sidebar.collapsed .sidebar-brand img {
+    width: 38px;
+    height: 38px;
+}
+
+/* =========================
+TOPBAR PRESMA STYLE
+========================= */
+
+.topbar {
+    height: 70px;
+    background: #fff;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 0 20px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+/* LEFT SIDE */
+.topbar .left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.toggle-btn {
+    font-size: 22px;
+    color: #4b5563;
+    cursor: pointer;
+}
+
+.topbar-logo {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+/* APP TITLE */
+.app-title {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+    padding-left: 10px;
+    border-left: 2px solid #e5e7eb;
+}
+
+.app-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.app-region {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+/* RIGHT ICON */
+.topbar-icon {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    color: #4b5563;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.topbar-icon:hover {
+    background: rgba(29, 78, 216, 0.08);
+    color: #1d4ed8;
+}
+
+/* LOGOUT */
+.logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    color: #ef4444;
+    transition: 0.2s;
+}
+
+.logout-btn:hover {
+    background: #fee2e2;
+    border-color: #fecaca;
+}
+
+/* =========================
+FOOTER PRESMA STYLE
+========================= */
+
+.footer {
+    margin-top: auto; /* 🔥 INI KUNCI FOOTER TIDAK IKUT SCROLL */
+    background: #fff;
+    border-top: 1px solid #e5e7eb;
+    padding: 12px 20px;
+    font-size: 13px;
+    color: #6b7280;
+    flex-shrink: 0;
+}
+
+/* layout dalam footer */
+.footer-inner {
+    width: 100%;
+}
+
+/* kiri */
+.footer-left strong {
+    color: #111827;
+    font-weight: 600;
+}
+
+/* versi badge */
+.version-badge {
+    background: rgba(29, 78, 216, 0.08);
+    color: #1d4ed8;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(29, 78, 216, 0.2);
+}
+
+/* logo kecil */
+.footer-logo {
+    height: 24px;
+    object-fit: contain;
+}
+
+/* MOBILE */
+@media (max-width: 576px) {
+    .footer-inner {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer-right {
+        justify-content: center;
+    }
+}
+
+/* =========================================================
+RESPONSIVE (PRESMA STYLE)
+========================================================= */
+
+/* tablet */
+@media (max-width: 992px) {
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100%;
+        transform: translateX(-100%);
+        z-index: 999;
+        transition: 0.3s;
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .main::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.3);
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.3s;
+    }
+
+    .sidebar.active ~ .main::before {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+
+/* mobile */
+@media (max-width: 576px) {
+    .app-region {
+        display: none;
+    }
+
+    .logout-btn span {
+        display: none;
+    }
+}

@@ -1,120 +1,156 @@
-<div class="sidebar">
-    {{-- User Panel --}}
-    <div class="user-panel d-flex align-items-center mt-3 mb-3">
-        {{-- <div class="image"> --}}
-        <img src="{{ asset('assets/images/kemenag/kemenag.png') }}" alt="User Image" class="user-image">
-        {{-- </div> --}}
-        <div class="info ml-2">
-            <a href="#" class="d-block">
-                {{ auth()->user()->madrasah->nama_madrasah ?? 'KANWIL DKI JAKARTA' }}
-            </a>
-            <small>{{ auth()->user()->getRoleNames()->first() }}</small>
-        </div>
+@php
+    $user = auth()->user();
+@endphp
+
+<aside class="sidebar" id="sidebar">
+
+    {{-- Brand --}}
+    <div class="sidebar-brand">
+        <img src="{{ asset('assets/images/kemenag/kemenag.png') }}" alt="Logo">
+        <span class="brand-text">PENMAD</span>
     </div>
 
     {{-- Menu --}}
-    <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+    <div class="sidebar-menu">
 
-            {{-- DASHBOARD --}}
-            <li class="nav-item">
-                <a href="{{ route('dashboard') }}"
-                    class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-tachometer-alt"></i>
-                    <p>Dashboard</p>
-                </a>
-            </li>
+        {{-- Dashboard --}}
+        <a href="{{ route('dashboard') }}" class="menu-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+            <i class="bi bi-speedometer2"></i>
+            <span>Dashboard</span>
+        </a>
 
-            {{-- PENGAJUAN PEGAWAI --}}
-            <li class="nav-header">Pengajuan Pegawai</li>
+        {{-- ============================= --}}
+        {{-- PENGAJUAN --}}
+        {{-- ============================= --}}
+        <div class="menu-title">
+            Pengajuan Pegawai
+        </div>
 
-            <li class="nav-item">
-                <a href="{{ route('pengusulan-pegawai.index') }}"
-                    class="nav-link {{ request()->routeIs('pengusulan-pegawai.*') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-user-plus"></i>
-                    <p>Pengusulan Pegawai</p>
-                </a>
-            </li>
+        <a href="{{ route('pengusulan-pegawai.index') }}"
+            class="menu-item {{ request()->routeIs('pengusulan-pegawai.*') ? 'active' : '' }}">
+            <i class="bi bi-person-plus"></i>
+            <span>Pengusulan Pegawai</span>
+        </a>
 
-            <li class="nav-item">
-                <a href="{{ route('penonaktifan-pegawai.index') }}"
-                    class="nav-link {{ request()->routeIs('penonaktifan-pegawai.*') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-user-slash"></i>
-                    <p>Penonaktifan Pegawai</p>
-                </a>
-            </li>
+        <a href="{{ route('penonaktifan-pegawai.index') }}"
+            class="menu-item {{ request()->routeIs('penonaktifan-pegawai.*') ? 'active' : '' }}">
+            <i class="bi bi-person-dash"></i>
+            <span>Penonaktifan Pegawai</span>
+        </a>
 
-            {{-- DATA UMP --}}
-            <li class="nav-header">Data UMP</li>
-            <li class="nav-item">
-                <a href="{{ route('pegawai.index') }}"
-                    class="nav-link {{ request()->routeIs('pegawai.*') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-users"></i>
-                    <p>Data Pegawai</p>
-                </a>
-            </li>
-            <li class="nav-header">Absensi</li>
-            <li class="nav-item">
-                <a href="{{ route('absensi.index') }}"
-                    class="nav-link {{ request()->routeIs('absensi.index', 'absensi.create', 'absensi.edit') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-calendar-check"></i>
-                    <p>Absensi Pegawai</p>
-                </a>
-            </li>
+        {{-- ============================= --}}
+        {{-- DATA --}}
+        {{-- ============================= --}}
+        <div class="menu-title">
+            Data UMP
+        </div>
 
-            <li class="nav-header">Pembayaran Pegawai</li>
-            <li class="nav-item">
-                <a href="{{ route('hak-pembayaran.index') }}"
-                    class="nav-link {{ request()->routeIs('hak-pembayaran.*') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-layer-group"></i>
-                    <p>Hak Pembayaran</p>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{{ route('rekap-honor.index') }}"
-                    class="nav-link {{ request()->routeIs('rekap-honor.*') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-money-bill-wave"></i>
-                    <p>Rekap Honor</p>
-                </a>
-            </li>
+        <a href="{{ route('pegawai.index') }}" class="menu-item {{ request()->routeIs('pegawai.*') ? 'active' : '' }}">
+            <i class="bi bi-people"></i>
+            <span>Data Pegawai</span>
+        </a>
 
-            @role('superadmin')
-                <li class="nav-header">Absensi</li>
-                <li class="nav-item">
-                    <a href="{{ route('attendance-period.index') }}"
-                        class="nav-link {{ request()->routeIs('attendance-period.*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-calendar-alt"></i>
-                        <p>
-                            Periode Absensi
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-header">Management</li>
-                <li class="nav-item">
-                    <a href="{{ route('admin.users.index') }}"
-                        class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-user-cog"></i>
-                        <p>Manajemen User</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="" class="nav-link {{ request()->routeIs('admin.madrasah.*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-school"></i>
-                        <p>Data Madrasah</p>
-                    </a>
-                </li>
-            @endrole
+        {{-- ============================= --}}
+        {{-- ABSENSI --}}
+        {{-- ============================= --}}
+        <div class="menu-title">
+            Absensi
+        </div>
 
-            {{-- PENGATURAN AKUN --}}
-            <li class="nav-header">Akun</li>
-            <li class="nav-item">
-                <a href="{{ route('auth.ubah_password') }}"
-                    class="nav-link {{ request()->routeIs('auth.ubah_password') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-key"></i>
-                    <p>Ubah Password</p>
-                </a>
-            </li>
+        <a href="{{ route('absensi.index') }}" class="menu-item {{ request()->routeIs('absensi.*') ? 'active' : '' }}">
+            <i class="bi bi-calendar-check"></i>
+            <span>Absensi Pegawai</span>
+        </a>
 
-        </ul>
-    </nav>
-</div>
+        {{-- ============================= --}}
+        {{-- PEMBAYARAN --}}
+        {{-- ============================= --}}
+        <div class="menu-title">
+            Pembayaran
+        </div>
+
+        <a href="{{ route('hak-pembayaran.index') }}"
+            class="menu-item {{ request()->routeIs('hak-pembayaran.*') ? 'active' : '' }}">
+            <i class="bi bi-wallet2"></i>
+            <span>Hak Pembayaran</span>
+        </a>
+
+        <a href="{{ route('rekap-honor.index') }}"
+            class="menu-item {{ request()->routeIs('rekap-honor.*') ? 'active' : '' }}">
+            <i class="bi bi-cash-stack"></i>
+            <span>Rekap Honor</span>
+        </a>
+
+        {{-- ============================= --}}
+        {{-- SUPERADMIN --}}
+        {{-- ============================= --}}
+        @role('superadmin')
+            <div class="menu-title">
+                Management
+            </div>
+
+            <a href="{{ route('attendance-period.index') }}"
+                class="menu-item {{ request()->routeIs('attendance-period.*') ? 'active' : '' }}">
+                <i class="bi bi-calendar3"></i>
+                <span>Periode Absensi</span>
+            </a>
+
+            <a href="{{ route('admin.users.index') }}"
+                class="menu-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                <i class="bi bi-person-gear"></i>
+                <span>Manajemen User</span>
+            </a>
+
+            <a href="#" class="menu-item">
+                <i class="bi bi-building"></i>
+                <span>Data Madrasah</span>
+            </a>
+        @endrole
+
+        {{-- ============================= --}}
+        {{-- AKUN --}}
+        {{-- ============================= --}}
+        <div class="menu-title">
+            Akun
+        </div>
+
+        <a href="{{ route('auth.ubah_password') }}"
+            class="menu-item {{ request()->routeIs('auth.ubah_password') ? 'active' : '' }}">
+            <i class="bi bi-key"></i>
+            <span>Ubah Password</span>
+        </a>
+
+    </div>
+
+    {{-- Profile --}}
+    <div class="sidebar-footer">
+
+        <div class="profile-card">
+
+            <div class="profile-avatar">
+
+                <img src="{{ asset('assets/images/kemenag/kemenag.png') }}" alt="Avatar">
+
+            </div>
+
+            <div class="profile-info">
+
+                <div class="profile-name">
+
+                    {{ $user->madrasah->nama_madrasah ?? 'KANWIL DKI JAKARTA' }}
+
+                </div>
+
+                <div class="profile-role">
+
+                    {{ $user->getRoleNames()->first() }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</aside>
