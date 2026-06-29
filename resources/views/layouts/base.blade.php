@@ -31,18 +31,19 @@
     <link rel="icon" href="{{ asset('assets/images/kemenag/kemenag.png') }}">
 
     @stack('styles')
+    
 </head>
 
 <body>
 
     <div class="app-wrapper">
+        <div class="bg-ornament"></div>
 
         {{-- SIDEBAR --}}
         @include('layouts.sidebar')
 
         {{-- MAIN AREA --}}
         <div class="main">
-
             {{-- TOPBAR --}}
             @include('layouts.navbar')
 
