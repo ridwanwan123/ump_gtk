@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Pegawai;
 use App\Models\Madrasah;
 use App\Models\AttendancePeriod;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 use Carbon\Carbon;
@@ -65,10 +64,21 @@ class DashboardController extends Controller
             */
 
             $statistikPendidikan = (clone $pegawaiQuery)
-                ->selectRaw('pend_terakhir, COUNT(*) as total')
-                ->groupBy('pend_terakhir')
-                ->orderBy('pend_terakhir')
-                ->pluck('total', 'pend_terakhir');
+            ->selectRaw("
+                CASE
+                    WHEN pend_terakhir IN ('S1','D4','S1/D4', 'S1-Pkn') THEN 'S1/D4'
+                    WHEN pend_terakhir IN ('SMA','SMK','MA','Madrasah Aliyah','SLTA','STM','SMIP/SMK PARIWISATA') THEN 'SMA/SMK/MA'
+                    WHEN pend_terakhir IN ('SMP','MTS','SLTP') THEN 'SMP/MTs'
+                    WHEN pend_terakhir IN ('SD','SI-PAI') THEN 'SD'
+                    WHEN pend_terakhir IN ('PAKET A','Paket A') THEN 'Paket A'
+                    WHEN pend_terakhir IN ('PAKET B','Paket B') THEN 'Paket B'
+                    WHEN pend_terakhir IN ('PAKET C','Paket C') THEN 'Paket C'
+                    ELSE pend_terakhir
+                END AS pendidikan,
+                COUNT(*) as total
+            ")
+            ->groupBy('pendidikan')
+            ->pluck('total', 'pendidikan');
 
             $pendidikanLabels = $statistikPendidikan->keys();
             $pendidikanData   = $statistikPendidikan->values();

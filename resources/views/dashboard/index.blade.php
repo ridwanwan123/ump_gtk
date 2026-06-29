@@ -954,14 +954,26 @@
 
         new ApexCharts(document.querySelector("#chartJabatan"), options).render();
 
-        //pendidikan
+        // Pendidikan
+        console.log("=== Pendidikan Chart ===");
+        console.log("Labels:", @json($pendidikanLabels));
+        console.log("Series:", @json($pendidikanData));
+        console.log("Element:", document.querySelector("#chartPendidikan"));
+        console.log("ApexCharts:", typeof ApexCharts);
+
         let pendidikanOptions = {
 
             series: @json($pendidikanData),
 
             chart: {
                 type: 'donut',
-                height: 350
+                height: 350,
+
+                events: {
+                    mounted: function() {
+                        console.log("Chart berhasil dimount");
+                    }
+                }
             },
 
             labels: @json($pendidikanLabels),
@@ -995,48 +1007,51 @@
                     donut: {
                         size: '68%',
                         labels: {
-
                             show: true,
 
                             total: {
-
                                 show: true,
-
                                 label: 'Total',
 
                                 formatter: function(w) {
+                                    console.log("SeriesTotals:", w.globals.seriesTotals);
 
-                                    return w.globals.seriesTotals.reduce((a, b) => a + b, 0)
-
+                                    return w.globals.seriesTotals.reduce(function(a, b) {
+                                        return Number(a) + Number(b);
+                                    }, 0);
                                 }
-
                             }
-
                         }
                     }
                 }
             },
 
             tooltip: {
-
                 y: {
-
                     formatter: function(val) {
-
-                        return val + " Pegawai"
-
+                        return val + " Pegawai";
                     }
-
                 }
-
             }
 
         };
 
-        new ApexCharts(
-            document.querySelector("#chartPendidikan"),
-            pendidikanOptions
-        ).render();
+        try {
+
+            const chart = new ApexCharts(
+                document.querySelector("#chartPendidikan"),
+                pendidikanOptions
+            );
+
+            chart.render().then(() => {
+                console.log("Chart render SUCCESS");
+            });
+
+        } catch (e) {
+
+            console.error("Chart render ERROR:", e);
+
+        }
 
 
         //pegawai per jenjang
