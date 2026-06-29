@@ -52,6 +52,8 @@ class DashboardController extends Controller
             $statistikJabatan = (clone $pegawaiQuery)
                 ->selectRaw('jabatan_ump, COUNT(*) as total')
                 ->groupBy('jabatan_ump')
+                ->orderByDesc('total')
+                ->orderBy('jabatan_ump')
                 ->pluck('total', 'jabatan_ump');
 
             $chartLabels = $statistikJabatan->keys();

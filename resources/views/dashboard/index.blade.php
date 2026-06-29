@@ -897,11 +897,15 @@
 @endsection
 @push('scripts')
     <script>
-        let options = {
+        // ==========================
+        // Statistik Jabatan
+        // ==========================
+        const jabatanOptions = {
             series: [{
                 name: 'Pegawai',
                 data: @json($chartData)
             }],
+
             chart: {
                 type: 'bar',
                 height: 380,
@@ -913,10 +917,9 @@
             plotOptions: {
                 bar: {
                     horizontal: true,
-                    borderRadius: 6,
-                    borderRadiusApplication: 'end',
-                    distributed: true,
-                    barHeight: '65%'
+                    dataLabels: {
+                        position: 'top'
+                    }
                 }
             },
 
@@ -931,39 +934,37 @@
                 '#ef4444'
             ],
 
-
             dataLabels: {
                 enabled: true,
+                offsetX: 15,
                 style: {
-                    fontSize: '13px',
-                    fontWeight: 600
+                    colors: ['#000']
+                },
+                formatter(val) {
+                    return val;
                 }
             },
+
             legend: {
-                show: false,
+                show: false
             },
 
             xaxis: {
-
                 categories: @json($chartLabels),
-
                 labels: {
                     style: {
                         fontSize: '12px'
                     }
                 }
-
             },
 
             yaxis: {
-
                 labels: {
                     style: {
                         fontSize: '13px',
                         fontWeight: 500
                     }
                 }
-
             },
 
             grid: {
@@ -972,19 +973,23 @@
 
             tooltip: {
                 y: {
-                    formatter: function(val) {
-                        return val + " Pegawai";
+                    formatter(val) {
+                        return `${val} Pegawai`;
                     }
                 }
             }
-
         };
 
-        new ApexCharts(document.querySelector("#chartJabatan"), options).render();
+        new ApexCharts(
+            document.querySelector("#chartJabatan"),
+            jabatanOptions
+        ).render();
 
+
+        // ==========================
         // Pendidikan
+        // ==========================
         const pendidikanOptions = {
-
             series: @json($pendidikanData),
 
             chart: {
@@ -1024,11 +1029,10 @@
                         size: '68%',
                         labels: {
                             show: true,
-
                             total: {
                                 show: true,
                                 label: 'Total',
-                                formatter: function() {
+                                formatter() {
                                     return @json($totalPegawai);
                                 }
                             }
@@ -1039,12 +1043,11 @@
 
             tooltip: {
                 y: {
-                    formatter: function(val) {
+                    formatter(val) {
                         return `${val} Pegawai`;
                     }
                 }
             }
-
         };
 
         new ApexCharts(
@@ -1052,9 +1055,11 @@
             pendidikanOptions
         ).render();
 
-        //pegawai per jenjang
-        let optionsJenjang = {
 
+        // ==========================
+        // Pegawai per Jenjang
+        // ==========================
+        const jenjangOptions = {
             series: [{
                 name: 'Pegawai',
                 data: @json($jenjangData)
@@ -1096,22 +1101,23 @@
 
             tooltip: {
                 y: {
-                    formatter: function(val) {
-                        return val + " Pegawai";
+                    formatter(val) {
+                        return `${val} Pegawai`;
                     }
                 }
             }
-
         };
 
         new ApexCharts(
             document.querySelector("#chartJenjang"),
-            optionsJenjang
+            jenjangOptions
         ).render();
 
-        //pegawai per madrasah
-        let optionsMadrasah = {
 
+        // ==========================
+        // Pegawai per Madrasah
+        // ==========================
+        const madrasahOptions = {
             series: [{
                 name: 'Pegawai',
                 data: @json($madrasahData)
@@ -1135,22 +1141,31 @@
             },
 
             colors: [
-                '#2563EB', '#3B82F6', '#60A5FA',
-                '#10B981', '#34D399',
-                '#F59E0B', '#FBBF24',
-                '#EF4444', '#F97316', '#8B5CF6'
+                '#2563EB',
+                '#3B82F6',
+                '#60A5FA',
+                '#10B981',
+                '#34D399',
+                '#F59E0B',
+                '#FBBF24',
+                '#EF4444',
+                '#F97316',
+                '#8B5CF6'
             ],
 
             dataLabels: {
                 enabled: true,
+                offsetX: 15,
                 style: {
-                    fontWeight: 600
+                    colors: ['#000']
+                },
+                formatter: function(val) {
+                    return val;
                 }
             },
 
             xaxis: {
                 categories: @json($madrasahLabels),
-
                 labels: {
                     style: {
                         fontSize: '12px'
@@ -1173,8 +1188,8 @@
 
             tooltip: {
                 y: {
-                    formatter: function(val) {
-                        return val + " Pegawai";
+                    formatter(val) {
+                        return `${val} Pegawai`;
                     }
                 }
             },
@@ -1182,12 +1197,11 @@
             legend: {
                 show: false
             }
-
         };
 
         new ApexCharts(
             document.querySelector("#chartMadrasah"),
-            optionsMadrasah
+            madrasahOptions
         ).render();
     </script>
     @if (session('swal_success'))
