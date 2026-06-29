@@ -308,12 +308,15 @@
                 <div class="card shadow-sm border-0 rounded-4">
 
                     <div class="card-header bg-white border-0 pt-4">
-                        <h5 class="fw-bold mb-1 text-danger">
+                        <h5 class="fw-bold mb-1 text-danger d-flex align-items-center gap-2">
+                            <i class="bi bi-person-exclamation"></i>
                             Pegawai Akan Pensiun
                         </h5>
 
-                        <small class="text-muted">
-                            Data pegawai yang mendekati usia pensiun (≥ 58 tahun)
+                        <small class="text-muted d-block">
+                            Data pegawai yang mendekati usia pensiun.
+                            <br>
+                            Pendidik &lt; 60 tahun, Tendik &lt; 58 tahun
                         </small>
                     </div>
 
@@ -336,7 +339,7 @@
 
                                 <tbody>
 
-                                    @foreach ($pegawaiAkanPensiun as $p)
+                                    @forelse ($pegawaiAkanPensiun as $p)
                                         <tr>
 
                                             <td class="fw-semibold">
@@ -376,7 +379,25 @@
                                             </td>
 
                                         </tr>
-                                    @endforeach
+                                    @empty
+                                        <tr>
+                                            <td colspan="6" class="text-center py-5 text-muted">
+
+                                                <i class="fa fa-file d-block mb-3 opacity-50"
+                                                    style="font-size: 2.5rem;"></i>
+
+                                                <div class="fw-semibold text-dark mb-1">
+                                                    Tidak Ada Data Pegawai Mendekati Pensiun
+                                                </div>
+
+                                                <div class="small">
+                                                    Belum terdapat pegawai madrasah yang memasuki masa pensiun dalam 2 tahun
+                                                    ke depan.
+                                                </div>
+
+                                            </td>
+                                        </tr>
+                                    @endforelse
 
                                 </tbody>
 
