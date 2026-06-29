@@ -114,20 +114,40 @@ class DashboardController extends Controller
             |--------------------------------------------------------------------------
             */
 
+            $usiaPensiunMap = function ($pegawai) {
+                $lahir = \Carbon\Carbon::parse($pegawai->tanggal_lahir);
+
+                $usiaPensiun = $pegawai->jabatan_dinas === 'PENDIDIK' ? 60 : 58;
+
+                $pegawai->usia = $lahir->age;
+                $pegawai->usia_pensiun = $usiaPensiun;
+                $pegawai->tanggal_pensiun = $lahir->copy()->addYears($usiaPensiun);
+                $pegawai->sisa_tahun = max(0, $usiaPensiun - $pegawai->usia);
+
+                return $pegawai;
+            };
+
             $pegawaiAkanPensiun = (clone $pegawaiQuery)
                 ->with('madrasah')
-                ->whereDate('tanggal_lahir', '<=', now()->subYears(58))
-                ->orderBy('tanggal_lahir')
                 ->get()
-                ->map(function ($pegawai) {
-                    $lahir = \Carbon\Carbon::parse($pegawai->tanggal_lahir);
+                ->map($usiaPensiunMap)
+                ->filter(function ($pegawai) {
+                    return $pegawai->usia >= ($pegawai->usia_pensiun - 2);
+                })
+                ->sortBy('tanggal_pensiun')
+                ->values();
 
-                    $pegawai->usia = $lahir->age;
-                    $pegawai->tanggal_pensiun = $lahir->copy()->addYears(60);
-                    $pegawai->sisa_tahun = max(0, 60 - $pegawai->usia);
+            // manual pagination
+            $page = request()->get('page', 1);
+            $perPage = 10;
 
-                    return $pegawai;
-                });
+            $pegawaiAkanPensiun = new \Illuminate\Pagination\LengthAwarePaginator(
+                $pegawaiAkanPensiun->forPage($page, $perPage),
+                $pegawaiAkanPensiun->count(),
+                $perPage,
+                $page,
+                ['path' => request()->url(), 'query' => request()->query()]
+            );
 
             /*
             |--------------------------------------------------------------------------

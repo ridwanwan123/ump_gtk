@@ -327,6 +327,7 @@
                                     <tr>
                                         <th>Nama</th>
                                         <th>Madrasah</th>
+                                        <th>Jabatan Dinas</th>
                                         <th>Usia</th>
                                         <th>Tanggal Pensiun</th>
                                         <th>Status</th>
@@ -336,13 +337,6 @@
                                 <tbody>
 
                                     @foreach ($pegawaiAkanPensiun as $p)
-                                        @php
-                                            $lahir = \Carbon\Carbon::parse($p->tanggal_lahir);
-                                            $usia = $lahir->age;
-                                            $tanggalPensiun = $lahir->copy()->addYears(60);
-                                            $sisa = $usia >= 60 ? 0 : 60 - $usia;
-                                        @endphp
-
                                         <tr>
 
                                             <td class="fw-semibold">
@@ -353,17 +347,29 @@
                                                 {{ $p->madrasah->nama_madrasah ?? '-' }}
                                             </td>
 
-                                            <td>{{ $p->usia }} Tahun</td>
-
-                                            <td>{{ $p->tanggal_pensiun->translatedFormat('d F Y') }}</td>
+                                            <td>
+                                                {{ $p->jabatan_dinas }}
+                                            </td>
 
                                             <td>
-                                                @if ($p->usia >= 59)
+                                                {{ $p->usia }} Tahun
+                                            </td>
+
+                                            <td>
+                                                {{ $p->tanggal_pensiun->translatedFormat('d F Y') }}
+                                            </td>
+
+                                            <td>
+                                                @if (now()->gt($p->tanggal_pensiun))
                                                     <span class="badge bg-danger">
+                                                        Melebihi BUP
+                                                    </span>
+                                                @elseif($p->sisa_tahun <= 1)
+                                                    <span class="badge bg-warning">
                                                         Sangat Dekat ({{ $p->sisa_tahun }} thn)
                                                     </span>
-                                                @elseif($p->usia >= 58)
-                                                    <span class="badge bg-warning text-dark">
+                                                @else
+                                                    <span class="badge bg-primary">
                                                         Dekat ({{ $p->sisa_tahun }} thn)
                                                     </span>
                                                 @endif
@@ -375,7 +381,9 @@
                                 </tbody>
 
                             </table>
-
+                            <div>
+                                {{ $pegawaiAkanPensiun->links('pagination::bootstrap-5') }}
+                            </div>
                         </div>
 
                     </div>
