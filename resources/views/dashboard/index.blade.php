@@ -143,6 +143,42 @@
                 font-size: 14px;
             }
         }
+
+        .dash-card {
+            border: 1px solid #eef2f7;
+            border-radius: 16px;
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+            transition: all 0.2s ease-in-out;
+            background: #fff;
+        }
+
+        .dash-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.10);
+        }
+
+        .dash-card-header {
+            padding: 18px 20px 0 20px;
+            border-bottom: none;
+            background: transparent;
+        }
+
+        .dash-title {
+            font-weight: 700;
+            font-size: 16px;
+            color: #0f172a;
+            margin-bottom: 2px;
+        }
+
+        .dash-subtitle {
+            font-size: 12.5px;
+            color: #64748b;
+            margin-bottom: 0;
+        }
+
+        .dash-card-body {
+            padding: 18px 20px 22px 20px;
+        }
     </style>
 @endpush
 
@@ -156,81 +192,195 @@
     <section class="content">
         <div class="container-fluid">
             {{-- Selamat Datang --}}
-            <div class="alert alert-info rounded-3 shadow-sm d-flex align-items-center">
-                <i class="fas fa-user-circle fa-2x me-3"></i>
-                <div>
-                    <h3 class="mb-1 fw-bold">Selamat Datang, <strong>{{ auth()->user()->name }}</strong></h3>
-                    <small>Unit Kerja:
-                        <strong>{{ auth()->user()->madrasah->nama_madrasah ?? 'KANWIL DKI JAKARTA' }}</strong></small>
+            <div class="row mb-4">
+
+                <div class="col-12">
+
+                    <div class="dash-card">
+
+                        <div class="dash-card-body d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+                            {{-- LEFT --}}
+                            <div>
+
+                                <h4 class="mb-1 fw-bold text-dark">
+                                    👋 Selamat Datang, {{ auth()->user()->name ?? 'User' }}
+                                </h4>
+
+                                <div class="text-muted">
+                                    Berikut ringkasan data pegawai dan madrasah pada sistem
+                                </div>
+
+                            </div>
+
+                            {{-- RIGHT --}}
+                            <div class="text-end">
+
+                                <div class="mb-1">
+                                    <span class="badge bg-primary px-3 py-2 rounded-pill">
+                                        📅 Tahun {{ $tahun }}
+                                    </span>
+
+                                    <span class="badge bg-success px-3 py-2 rounded-pill">
+                                        🟢 TW {{ $tw }} Aktif
+                                    </span>
+                                </div>
+
+                                <small class="text-muted">
+                                    Periode aktif digunakan untuk seluruh rekap absensi & pembayaran
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
                 </div>
+
             </div>
 
-            {{-- Dashboard Pegawai & Jabatan --}}
-            <div class="row mt-4">
-                {{-- Total Pegawai --}}
-                <div class="col-lg-4 col-md-12 mb-4 pegawai-kiri">
-                    <div class="card shadow-lg border-0 h-100 text-white"
-                        style="background: linear-gradient(135deg, #4e73df, #224abe);">
-                        <div class="card-body d-flex flex-column justify-content-center align-items-center text-center">
-                            <p>Total Pegawai</p>
-                            <i class="fas fa-users fa-3x mb-3"></i>
-                            <p class="card-text">{{ $totalPegawai }} Orang</p>
+            <div class="row">
+
+                <div class="col-lg-6 col-md-6 mb-4">
+                    <div class="dash-card h-100">
+
+                        <div class="dash-card-header">
+                            <div class="dash-title">Statistik Jabatan Pegawai</div>
+                            <div class="dash-subtitle">Distribusi pegawai berdasarkan jabatan UMP</div>
                         </div>
+
+                        <div class="dash-card-body">
+                            <div id="chartJabatan"></div>
+                        </div>
+
                     </div>
                 </div>
 
-                {{-- Statistik Jabatan --}}
-                <div class="col-lg-8 col-md-12">
-                    <div class="row g-3">
-                        @php
-                            $warna = [
-                                'Guru' => 'primary',
-                                'Kepala Pengelola Asrama' => 'danger',
-                                'Tenaga Administrasi' => 'warning',
-                                'Tenaga Keamanan' => 'success',
-                                'Tenaga Kebersihan' => 'secondary',
-                                'Tenaga Laboratorium' => 'purple',
-                                'Tenaga Pengelola Asrama' => 'teal',
-                                'Tenaga Perpustakaan' => 'orange',
-                            ];
+                <div class="col-lg-6 col-md-6 mb-4">
+                    <div class="dash-card h-100">
 
-                            $ikon = [
-                                'Guru' => 'fa-chalkboard-teacher',
-                                'Kepala Pengelola Asrama' => 'fa-user-tie',
-                                'Tenaga Administrasi' => 'fa-file-alt',
-                                'Tenaga Keamanan' => 'fa-shield-alt',
-                                'Tenaga Kebersihan' => 'fa-broom',
-                                'Tenaga Laboratorium' => 'fa-flask',
-                                'Tenaga Pengelola Asrama' => 'fa-building',
-                                'Tenaga Perpustakaan' => 'fa-book',
-                            ];
-                        @endphp
+                        <div class="dash-card-header">
+                            <div class="dash-title">Pendidikan Terakhir</div>
+                            <div class="dash-subtitle">Distribusi tingkat pendidikan pegawai</div>
+                        </div>
 
-                        @foreach ($statistikJabatan as $jabatan => $total)
-                            <div class="col-md-6">
-                                <div class="card shadow-sm border-0 card-jabatan">
-                                    <div class="card-body d-flex align-items-center px-4 py-4">
-                                        <div class="icon-box me-4">
-                                            <i
-                                                class="fas {{ $ikon[$jabatan] ?? 'fa-user' }} fa-2x text-{{ $warna[$jabatan] ?? 'dark' }}"></i>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <div class="fw-semibold text-uppercase mb-1"
-                                                style="letter-spacing:1px; color:#000; font-size:16px;">
-                                                {{ $jabatan }}
-                                            </div>
-                                            <div>
-                                                <span
-                                                    class="badge bg-{{ $warna[$jabatan] ?? 'secondary' }} fw-bold toptol text-center d-inline-block">
-                                                    {{ $total }}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
+                        <div class="dash-card-body">
+                            <div id="chartPendidikan"></div>
+                        </div>
+
                     </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 mb-4">
+                    <div class="dash-card h-100">
+
+                        <div class="dash-card-header">
+                            <div class="dash-title">Pegawai per Jenjang</div>
+                            <div class="dash-subtitle">MIN, MTsN, dan MAN</div>
+                        </div>
+
+                        <div class="dash-card-body">
+                            <div id="chartJenjang"></div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 mb-4">
+                    <div class="dash-card h-100">
+
+                        <div class="dash-card-header">
+                            <div class="dash-title">Pegawai per Madrasah (Top 10)</div>
+                            <div class="dash-subtitle">Ranking jumlah pegawai terbanyak</div>
+                        </div>
+
+                        <div class="dash-card-body">
+                            <div id="chartMadrasah"></div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-lg-12">
+                <div class="card shadow-sm border-0 rounded-4">
+
+                    <div class="card-header bg-white border-0 pt-4">
+                        <h5 class="fw-bold mb-1 text-danger">
+                            Pegawai Akan Pensiun
+                        </h5>
+
+                        <small class="text-muted">
+                            Data pegawai yang mendekati usia pensiun (≥ 58 tahun)
+                        </small>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="table-responsive">
+
+                            <table class="table table-hover align-middle">
+
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Nama</th>
+                                        <th>Madrasah</th>
+                                        <th>Usia</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    @foreach ($pegawaiAkanPensiun as $p)
+                                        @php
+                                            $usia = \Carbon\Carbon::parse($p->tanggal_lahir)->age;
+                                            $sisa = 60 - $usia;
+                                        @endphp
+
+                                        <tr>
+
+                                            <td class="fw-semibold">
+                                                {{ $p->nama_simpatika }}
+                                            </td>
+
+                                            <td>
+                                                {{ $p->madrasah->nama_madrasah ?? '-' }}
+                                            </td>
+
+                                            <td>
+                                                {{ $usia }} Tahun
+                                            </td>
+
+                                            <td>
+                                                @if ($usia >= 59)
+                                                    <span class="badge bg-danger">
+                                                        Sangat Dekat ({{ $sisa }} thn)
+                                                    </span>
+                                                @elseif($usia >= 58)
+                                                    <span class="badge bg-warning text-dark">
+                                                        Dekat ({{ $sisa }} thn)
+                                                    </span>
+                                                @else
+                                                    <span class="badge bg-secondary">
+                                                        Normal
+                                                    </span>
+                                                @endif
+                                            </td>
+
+                                        </tr>
+                                    @endforeach
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
                 </div>
             </div>
 
@@ -356,8 +506,8 @@
                                             <small class="mt-2">Belum mengisi hak pembayaran</small>
 
                                             @if ($belumHakCount > 0)
-                                                <button class="btn btn-light btn-sm w-100 mt-3 fw-bold" data-toggle="modal"
-                                                    data-target="#madrasahBelumHakModal">
+                                                <button class="btn btn-light btn-sm w-100 mt-3 fw-bold"
+                                                    data-toggle="modal" data-target="#madrasahBelumHakModal">
                                                     Lihat Detail <i class="fas fa-arrow-right ms-1"></i>
                                                 </button>
                                             @else
@@ -715,31 +865,340 @@
         </div>
     </section>
 
-    @push('scripts')
-        @if (session('swal_success'))
-            <script>
-                Swal.fire({
-                    title: '🎉 Selamat Datang!',
-                    text: "{{ session('swal_success') }}",
-                    icon: 'success',
-                    iconColor: '#28a745', // hijau cerah
-                    // background: 'linear-gradient(135deg, #1DE9B6, #0D47A1)',
-                    color: '#ffffff',
-                    showConfirmButton: true,
-                    confirmButtonText: 'Lanjut ke Dashboard',
-                    confirmButtonColor: '#ffc107',
-                    timer: 1500,
-                    timerProgressBar: true,
-                    didOpen: () => {
-                        const b = Swal.getHtmlContainer().querySelector('b')
-                        Swal.showLoading()
-                    },
-                    willClose: () => {
-                        console.log('Swal ditutup')
-                    }
-                });
-            </script>
-        @endif
-    @endpush
 
 @endsection
+@push('scripts')
+    <script>
+        let options = {
+            series: [{
+                name: 'Pegawai',
+                data: @json($chartData)
+            }],
+            chart: {
+                type: 'bar',
+                height: 380,
+                toolbar: {
+                    show: false
+                }
+            },
+
+            plotOptions: {
+                bar: {
+                    horizontal: true,
+                    borderRadius: 6,
+                    borderRadiusApplication: 'end',
+                    distributed: true,
+                    barHeight: '65%'
+                }
+            },
+
+            colors: [
+                '#2563eb',
+                '#0ea5e9',
+                '#06b6d4',
+                '#10b981',
+                '#22c55e',
+                '#f59e0b',
+                '#f97316',
+                '#ef4444'
+            ],
+
+
+            dataLabels: {
+                enabled: true,
+                style: {
+                    fontSize: '13px',
+                    fontWeight: 600
+                }
+            },
+            legend: {
+                show: false,
+            },
+
+            xaxis: {
+
+                categories: @json($chartLabels),
+
+                labels: {
+                    style: {
+                        fontSize: '12px'
+                    }
+                }
+
+            },
+
+            yaxis: {
+
+                labels: {
+                    style: {
+                        fontSize: '13px',
+                        fontWeight: 500
+                    }
+                }
+
+            },
+
+            grid: {
+                borderColor: '#f1f5f9'
+            },
+
+            tooltip: {
+                y: {
+                    formatter: function(val) {
+                        return val + " Pegawai";
+                    }
+                }
+            }
+
+        };
+
+        new ApexCharts(document.querySelector("#chartJabatan"), options).render();
+
+        //pendidikan
+        let pendidikanOptions = {
+
+            series: @json($pendidikanData),
+
+            chart: {
+                type: 'donut',
+                height: 350
+            },
+
+            labels: @json($pendidikanLabels),
+
+            colors: [
+                '#2563EB',
+                '#06B6D4',
+                '#10B981',
+                '#F59E0B',
+                '#EF4444',
+                '#8B5CF6',
+                '#EC4899'
+            ],
+
+            legend: {
+                position: 'bottom',
+                horizontalAlign: 'left',
+                fontSize: '13px'
+            },
+
+            dataLabels: {
+                enabled: true
+            },
+
+            stroke: {
+                width: 0
+            },
+
+            plotOptions: {
+                pie: {
+                    donut: {
+                        size: '68%',
+                        labels: {
+
+                            show: true,
+
+                            total: {
+
+                                show: true,
+
+                                label: 'Total',
+
+                                formatter: function(w) {
+
+                                    return w.globals.seriesTotals.reduce((a, b) => a + b, 0)
+
+                                }
+
+                            }
+
+                        }
+                    }
+                }
+            },
+
+            tooltip: {
+
+                y: {
+
+                    formatter: function(val) {
+
+                        return val + " Pegawai"
+
+                    }
+
+                }
+
+            }
+
+        };
+
+        new ApexCharts(
+            document.querySelector("#chartPendidikan"),
+            pendidikanOptions
+        ).render();
+
+
+        //pegawai per jenjang
+        let optionsJenjang = {
+
+            series: [{
+                name: 'Pegawai',
+                data: @json($jenjangData)
+            }],
+
+            chart: {
+                type: 'bar',
+                height: 350,
+                toolbar: {
+                    show: false
+                }
+            },
+
+            colors: ['#2563EB'],
+
+            plotOptions: {
+                bar: {
+                    columnWidth: '45%',
+                    borderRadius: 8,
+                    distributed: true
+                }
+            },
+
+            dataLabels: {
+                enabled: true
+            },
+
+            xaxis: {
+                categories: @json($jenjangLabels)
+            },
+
+            legend: {
+                show: false
+            },
+
+            grid: {
+                borderColor: '#edf2f7'
+            },
+
+            tooltip: {
+                y: {
+                    formatter: function(val) {
+                        return val + " Pegawai";
+                    }
+                }
+            }
+
+        };
+
+        new ApexCharts(
+            document.querySelector("#chartJenjang"),
+            optionsJenjang
+        ).render();
+
+        //pegawai per madrasah
+        let optionsMadrasah = {
+
+            series: [{
+                name: 'Pegawai',
+                data: @json($madrasahData)
+            }],
+
+            chart: {
+                type: 'bar',
+                height: 450,
+                toolbar: {
+                    show: false
+                }
+            },
+
+            plotOptions: {
+                bar: {
+                    horizontal: true,
+                    borderRadius: 6,
+                    barHeight: '60%',
+                    distributed: true
+                }
+            },
+
+            colors: [
+                '#2563EB', '#3B82F6', '#60A5FA',
+                '#10B981', '#34D399',
+                '#F59E0B', '#FBBF24',
+                '#EF4444', '#F97316', '#8B5CF6'
+            ],
+
+            dataLabels: {
+                enabled: true,
+                style: {
+                    fontWeight: 600
+                }
+            },
+
+            xaxis: {
+                categories: @json($madrasahLabels),
+
+                labels: {
+                    style: {
+                        fontSize: '12px'
+                    }
+                }
+            },
+
+            yaxis: {
+                labels: {
+                    style: {
+                        fontSize: '12px',
+                        fontWeight: 500
+                    }
+                }
+            },
+
+            grid: {
+                borderColor: '#eef2f7'
+            },
+
+            tooltip: {
+                y: {
+                    formatter: function(val) {
+                        return val + " Pegawai";
+                    }
+                }
+            },
+
+            legend: {
+                show: false
+            }
+
+        };
+
+        new ApexCharts(
+            document.querySelector("#chartMadrasah"),
+            optionsMadrasah
+        ).render();
+    </script>
+    @if (session('swal_success'))
+        <script>
+            Swal.fire({
+                title: '🎉 Selamat Datang!',
+                text: "{{ session('swal_success') }}",
+                icon: 'success',
+                iconColor: '#28a745', // hijau cerah
+                // background: 'linear-gradient(135deg, #1DE9B6, #0D47A1)',
+                color: '#ffffff',
+                showConfirmButton: true,
+                confirmButtonText: 'Lanjut ke Dashboard',
+                confirmButtonColor: '#ffc107',
+                timer: 1500,
+                timerProgressBar: true,
+                didOpen: () => {
+                    const b = Swal.getHtmlContainer().querySelector('b')
+                    Swal.showLoading()
+                },
+                willClose: () => {
+                    console.log('Swal ditutup')
+                }
+            });
+        </script>
+    @endif
+@endpush

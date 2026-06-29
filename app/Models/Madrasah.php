@@ -21,6 +21,5 @@ class Madrasah extends Model
     public function pegawai()
     {
         return $this->hasMany(Pegawai::class, 'id_madrasah'); 
-        // id_madrasah adalah foreign key di tabel pegawai
     }
 }

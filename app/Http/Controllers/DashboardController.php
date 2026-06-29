@@ -8,6 +8,7 @@ use App\Models\AttendancePeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Throwable;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -21,7 +22,7 @@ class DashboardController extends Controller
         try {
             $user = auth()->user();
 
-            $activePeriod = \App\Models\AttendancePeriod::where('is_active', true)->first();
+            $activePeriod = AttendancePeriod::where('is_active', true)->first();
 
             if (!$activePeriod) {
                 abort(404, 'Tidak ada periode aktif.');
@@ -30,19 +31,11 @@ class DashboardController extends Controller
             $tahun = $activePeriod->tahun;
             $tw = (int) str_replace('TW ', '', $activePeriod->triwulan);
 
-            // ===========================
-            // Statistik Pegawai
-            // ===========================
-            $jabatanList = [
-                'Guru',
-                'Kepala Pengelola Asrama',
-                'Tenaga Administrasi',
-                'Tenaga Keamanan',
-                'Tenaga Kebersihan',
-                'Tenaga Laboratorium',
-                'Tenaga Pengelola Asrama',
-                'Tenaga Perpustakaan',
-            ];
+            /*
+            |--------------------------------------------------------------------------
+            | Query Pegawai
+            |--------------------------------------------------------------------------
+            */
 
             $pegawaiQuery = Pegawai::query()
                 ->when(!$user->hasRole('superadmin'), function ($q) use ($user) {
@@ -51,51 +44,112 @@ class DashboardController extends Controller
 
             $totalPegawai = (clone $pegawaiQuery)->count();
 
-            $statistikJabatan = [];
+            /*
+            |--------------------------------------------------------------------------
+            | Statistik Jabatan
+            |--------------------------------------------------------------------------
+            */
 
-            foreach ($jabatanList as $jabatan) {
-                $statistikJabatan[$jabatan] = (clone $pegawaiQuery)
-                    ->where('jabatan_ump', $jabatan)
-                    ->count();
-            }
+            $statistikJabatan = (clone $pegawaiQuery)
+                ->selectRaw('jabatan_ump, COUNT(*) as total')
+                ->groupBy('jabatan_ump')
+                ->pluck('total', 'jabatan_ump');
 
-            $chartLabels = array_keys($statistikJabatan);
-            $chartData   = array_values($statistikJabatan);
+            $chartLabels = $statistikJabatan->keys();
+            $chartData   = $statistikJabatan->values();
 
-            // ===========================
-            // Query Madrasah
-            // ===========================
+            /*
+            |--------------------------------------------------------------------------
+            | Statistik Pendidikan
+            |--------------------------------------------------------------------------
+            */
+
+            $statistikPendidikan = (clone $pegawaiQuery)
+                ->selectRaw('pend_terakhir, COUNT(*) as total')
+                ->groupBy('pend_terakhir')
+                ->orderBy('pend_terakhir')
+                ->pluck('total', 'pend_terakhir');
+
+            $pendidikanLabels = $statistikPendidikan->keys();
+            $pendidikanData   = $statistikPendidikan->values();
+
+            /*
+            |--------------------------------------------------------------------------
+            | Pegawai per Jenjang
+            |--------------------------------------------------------------------------
+            */
+
+            $pegawaiPerJenjang = (clone $pegawaiQuery)
+                ->join('madrasah', 'pegawai.id_madrasah', '=', 'madrasah.id')
+                ->selectRaw('madrasah.type, COUNT(*) as total')
+                ->groupBy('madrasah.type')
+                ->pluck('total', 'type');
+
+            $jenjangLabels = $pegawaiPerJenjang->keys();
+            $jenjangData   = $pegawaiPerJenjang->values();
+
+            /*
+            |--------------------------------------------------------------------------
+            | Pegawai per Madrasah
+            |--------------------------------------------------------------------------
+            */
+
+            $pegawaiPerMadrasah = Madrasah::query()
+                ->when(!$user->hasRole('superadmin'), function ($q) use ($user) {
+                    $q->where('id', $user->unit_kerja);
+                })
+                ->withCount('pegawai')
+                ->orderByDesc('pegawai_count')
+                ->limit(10)
+                ->get();
+
+            $madrasahLabels = $pegawaiPerMadrasah->pluck('nama_madrasah');
+            $madrasahData   = $pegawaiPerMadrasah->pluck('pegawai_count');
+
+            /*
+            |--------------------------------------------------------------------------
+            | Pegawai Akan Pensiun (58 Tahun ke Atas)
+            |--------------------------------------------------------------------------
+            */
+
+            $pegawaiAkanPensiun = (clone $pegawaiQuery)
+    ->with('madrasah')
+    ->whereDate('tanggal_lahir', '<=', now()->subYears(58))
+    ->orderBy('tanggal_lahir')
+    ->get();
+
+            /*
+            |--------------------------------------------------------------------------
+            | Query Madrasah
+            |--------------------------------------------------------------------------
+            */
 
             $madrasahQuery = Madrasah::query()
                 ->when(!$user->hasRole('superadmin'), function ($q) use ($user) {
                     $q->where('id', $user->unit_kerja);
                 });
 
-            // ===========================
-            // Madrasah SUDAH Absensi
-            // ===========================
+            $totalMadrasah = (clone $madrasahQuery)->count();
+
+            /*
+            |--------------------------------------------------------------------------
+            | Absensi
+            |--------------------------------------------------------------------------
+            */
 
             $madrasahSudahAbsensi = (clone $madrasahQuery)
                 ->whereHas('pegawai.absensi', function ($q) use ($tahun, $tw) {
                     $q->where('tahun', $tahun)
-                    ->where('tw', $tw);
+                        ->where('tw', $tw);
                 })
                 ->get();
-
-            // ===========================
-            // Madrasah BELUM Absensi
-            // ===========================
 
             $madrasahBelumAbsensi = (clone $madrasahQuery)
                 ->whereDoesntHave('pegawai.absensi', function ($q) use ($tahun, $tw) {
                     $q->where('tahun', $tahun)
-                    ->where('tw', $tw);
+                        ->where('tw', $tw);
                 })
                 ->get();
-
-            // ===========================
-            // Group per Jenjang
-            // ===========================
 
             $madrasahSudah = $madrasahSudahAbsensi
                 ->sortBy('type')
@@ -105,101 +159,98 @@ class DashboardController extends Controller
                 ->sortBy('type')
                 ->groupBy('type');
 
-            // ===========================
-            // Statistik Absensi
-            // ===========================
-
-            $totalMadrasah = $madrasahQuery->count();
-
             $sudahCount = $madrasahSudahAbsensi->count();
             $belumCount = $madrasahBelumAbsensi->count();
 
             $percentSudah = $totalMadrasah
-                ? ($sudahCount / $totalMadrasah) * 100
+                ? round(($sudahCount / $totalMadrasah) * 100, 2)
                 : 0;
 
             $percentBelum = 100 - $percentSudah;
 
+            /*
+            |--------------------------------------------------------------------------
+            | Hak Pembayaran
+            |--------------------------------------------------------------------------
+            */
 
-            // ===========================
-            // Madrasah SUDAH isi Hak Pembayaran
-            // ===========================
             $madrasahSudahHak = (clone $madrasahQuery)
                 ->whereHas('pegawai.hakPembayaranPegawai', function ($q) use ($tahun) {
                     $q->where('tahun', $tahun);
                 })
                 ->get();
 
-            // ===========================
-            // Madrasah BELUM isi Hak Pembayaran
-            // ===========================
             $madrasahBelumHak = (clone $madrasahQuery)
                 ->whereDoesntHave('pegawai.hakPembayaranPegawai', function ($q) use ($tahun) {
                     $q->where('tahun', $tahun);
                 })
                 ->get();
 
-            // ===========================
-            // Group per type
-            // ===========================
-            $madrasahSudahHakGroup = $madrasahSudahHak->sortBy('type')->groupBy('type');
-            $madrasahBelumHakGroup = $madrasahBelumHak->sortBy('type')->groupBy('type');
+            $madrasahSudahHakGroup = $madrasahSudahHak
+                ->sortBy('type')
+                ->groupBy('type');
 
-            // ===========================
-            // Count
-            // ===========================
+            $madrasahBelumHakGroup = $madrasahBelumHak
+                ->sortBy('type')
+                ->groupBy('type');
+
             $sudahHakCount = $madrasahSudahHak->count();
             $belumHakCount = $madrasahBelumHak->count();
 
-            // ===========================
-            // Log Dashboard
-            // ===========================
+            /*
+            |--------------------------------------------------------------------------
+            | Return View
+            |--------------------------------------------------------------------------
+            */
 
-            Log::info('Akses dashboard', [
-                'user_id' => $user->id,
-                'role' => $user->roles->pluck('name'),
-                'unit_kerja' => $user->unit_kerja,
+            
+            return view('dashboard.index', [
                 'tahun' => $tahun,
                 'tw' => $tw,
-                'ip' => request()->ip(),
-            ]);
 
-            // ===========================
-            // Return View
-            // ===========================
+                // 'totalPegawai' => $totalPegawai,
+                // 'totalMadrasah' => $totalMadrasah,
 
-            return view('dashboard.index', [
-                'totalPegawai'          => $totalPegawai,
-                'statistikJabatan'      => $statistikJabatan,
-                'chartLabels'           => $chartLabels,
-                'chartData'             => $chartData,
+                //
+                'jenjangLabels' => $jenjangLabels,
+                'jenjangData'   => $jenjangData,
 
-                'madrasahSudahAbsensi'  => $madrasahSudahAbsensi,
-                'madrasahBelumAbsensi'  => $madrasahBelumAbsensi,
+                //
+                'madrasahLabels' => $madrasahLabels,
+                'madrasahData'   => $madrasahData,
 
-                'madrasahSudah'         => $madrasahSudah,
-                'madrasahBelum'         => $madrasahBelum,
+                // Statistik Jabatan
+                'statistikJabatan' => $statistikJabatan,
+                'chartLabels' => $chartLabels,
+                'chartData' => $chartData,
 
+                // // Statistik Pendidikan
+                'statistikPendidikan' => $statistikPendidikan,
+                'pendidikanLabels' => $pendidikanLabels,
+                'pendidikanData' => $pendidikanData,
+
+                // // Pegawai
+                'pegawaiAkanPensiun' => $pegawaiAkanPensiun,
+
+                // Absensi
+                'madrasahSudahAbsensi' => $madrasahSudahAbsensi,
+                'madrasahBelumAbsensi' => $madrasahBelumAbsensi,
+                'madrasahSudah' => $madrasahSudah,
+                'madrasahBelum' => $madrasahBelum,
+                'sudahCount' => $sudahCount,
+                'belumCount' => $belumCount,
+                'percentSudah' => $percentSudah,
+                'percentBelum' => $percentBelum,
+
+                // Hak Pembayaran
                 'madrasahSudahHak' => $madrasahSudahHak,
                 'madrasahBelumHak' => $madrasahBelumHak,
                 'madrasahSudahHakGroup' => $madrasahSudahHakGroup,
                 'madrasahBelumHakGroup' => $madrasahBelumHakGroup,
-
                 'sudahHakCount' => $sudahHakCount,
                 'belumHakCount' => $belumHakCount,
-
-                'tw'                    => $tw,
-                'tahun'                 => $tahun,
-
-                'sudahCount'            => $sudahCount,
-                'belumCount'            => $belumCount,
-
-                'percentSudah'          => $percentSudah,
-                'percentBelum'          => $percentBelum,
             ]);
-
         } catch (Throwable $e) {
-
             Log::error('Gagal memuat dashboard', [
                 'message' => $e->getMessage(),
                 'user_id' => auth()->id(),
