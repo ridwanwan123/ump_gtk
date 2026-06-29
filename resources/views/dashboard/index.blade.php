@@ -328,6 +328,7 @@
                                         <th>Nama</th>
                                         <th>Madrasah</th>
                                         <th>Usia</th>
+                                        <th>Tanggal Pensiun</th>
                                         <th>Status</th>
                                     </tr>
                                 </thead>
@@ -336,8 +337,10 @@
 
                                     @foreach ($pegawaiAkanPensiun as $p)
                                         @php
-                                            $usia = \Carbon\Carbon::parse($p->tanggal_lahir)->age;
-                                            $sisa = 60 - $usia;
+                                            $lahir = \Carbon\Carbon::parse($p->tanggal_lahir);
+                                            $usia = $lahir->age;
+                                            $tanggalPensiun = $lahir->copy()->addYears(60);
+                                            $sisa = $usia >= 60 ? 0 : 60 - $usia;
                                         @endphp
 
                                         <tr>
@@ -350,22 +353,18 @@
                                                 {{ $p->madrasah->nama_madrasah ?? '-' }}
                                             </td>
 
-                                            <td>
-                                                {{ $usia }} Tahun
-                                            </td>
+                                            <td>{{ $p->usia }} Tahun</td>
+
+                                            <td>{{ $p->tanggal_pensiun->translatedFormat('d F Y') }}</td>
 
                                             <td>
-                                                @if ($usia >= 59)
+                                                @if ($p->usia >= 59)
                                                     <span class="badge bg-danger">
-                                                        Sangat Dekat ({{ $sisa }} thn)
+                                                        Sangat Dekat ({{ $p->sisa_tahun }} thn)
                                                     </span>
-                                                @elseif($usia >= 58)
+                                                @elseif($p->usia >= 58)
                                                     <span class="badge bg-warning text-dark">
-                                                        Dekat ({{ $sisa }} thn)
-                                                    </span>
-                                                @else
-                                                    <span class="badge bg-secondary">
-                                                        Normal
+                                                        Dekat ({{ $p->sisa_tahun }} thn)
                                                     </span>
                                                 @endif
                                             </td>

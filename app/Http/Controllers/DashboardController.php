@@ -64,21 +64,10 @@ class DashboardController extends Controller
             */
 
             $statistikPendidikan = (clone $pegawaiQuery)
-            ->selectRaw("
-                CASE
-                    WHEN pend_terakhir IN ('S1','D4','S1/D4', 'S1-Pkn') THEN 'S1/D4'
-                    WHEN pend_terakhir IN ('SMA','SMK','MA','Madrasah Aliyah','SLTA','STM','SMIP/SMK PARIWISATA') THEN 'SMA/SMK/MA'
-                    WHEN pend_terakhir IN ('SMP','MTS','SLTP') THEN 'SMP/MTs'
-                    WHEN pend_terakhir IN ('SD','SI-PAI') THEN 'SD'
-                    WHEN pend_terakhir IN ('PAKET A','Paket A') THEN 'Paket A'
-                    WHEN pend_terakhir IN ('PAKET B','Paket B') THEN 'Paket B'
-                    WHEN pend_terakhir IN ('PAKET C','Paket C') THEN 'Paket C'
-                    ELSE pend_terakhir
-                END AS pendidikan,
-                COUNT(*) as total
-            ")
-            ->groupBy('pendidikan')
-            ->pluck('total', 'pendidikan');
+                ->selectRaw('pend_terakhir, COUNT(*) as total')
+                ->groupBy('pend_terakhir')
+                ->orderBy('pend_terakhir')
+                ->pluck('total', 'pend_terakhir');
 
             $pendidikanLabels = $statistikPendidikan->keys();
             $pendidikanData = $statistikPendidikan
@@ -126,10 +115,19 @@ class DashboardController extends Controller
             */
 
             $pegawaiAkanPensiun = (clone $pegawaiQuery)
-    ->with('madrasah')
-    ->whereDate('tanggal_lahir', '<=', now()->subYears(58))
-    ->orderBy('tanggal_lahir')
-    ->get();
+                ->with('madrasah')
+                ->whereDate('tanggal_lahir', '<=', now()->subYears(58))
+                ->orderBy('tanggal_lahir')
+                ->get()
+                ->map(function ($pegawai) {
+                    $lahir = \Carbon\Carbon::parse($pegawai->tanggal_lahir);
+
+                    $pegawai->usia = $lahir->age;
+                    $pegawai->tanggal_pensiun = $lahir->copy()->addYears(60);
+                    $pegawai->sisa_tahun = max(0, 60 - $pegawai->usia);
+
+                    return $pegawai;
+                });
 
             /*
             |--------------------------------------------------------------------------
