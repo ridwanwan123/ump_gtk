@@ -47,7 +47,7 @@ body {
 
 .app-wrapper {
     display: flex;
-    height: 103dvh; /* gunakan dynamic viewport */
+    height: 107dvh; /* gunakan dynamic viewport */
 }
 
 /* MAIN FIX */
@@ -89,11 +89,10 @@ SIDEBAR (PRESMA STYLE)
 
 .sidebar {
     width: 280px;
-    background: #fff;
-    border-right: 1px solid #e5e7eb;
+    height: 100vh;
     display: flex;
     flex-direction: column;
-    transition: 0.3s;
+    overflow-y: auto;
     flex-shrink: 0;
 }
 
