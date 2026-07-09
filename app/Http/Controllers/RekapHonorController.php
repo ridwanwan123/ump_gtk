@@ -97,10 +97,15 @@ class RekapHonorController extends Controller
                 // AGREGASI WARNING
                 // =========================
                 if ($result['is_missing_hak_pembayaran']) {
-
                     $isMissingHakPembayaran = true;
 
-                    $missingMadrasah[$pegawai->madrasah->nama_madrasah] = true;
+                    $namaMadrasah = $pegawai->madrasah->nama_madrasah;
+
+                    if (!isset($missingMadrasah[$namaMadrasah])) {
+                        $missingMadrasah[$namaMadrasah] = 0;
+                    }
+
+                    $missingMadrasah[$namaMadrasah]++;
                 }
             }
         }
@@ -117,7 +122,7 @@ class RekapHonorController extends Controller
 
             // ✅ INI YANG SEBELUMNYA ERROR
             'isMissingHakPembayaran' => $isMissingHakPembayaran,
-            'missingMadrasah' => array_keys($missingMadrasah),
+            'missingMadrasah' => $missingMadrasah,
         ]);
     }
 

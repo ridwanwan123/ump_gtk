@@ -20,8 +20,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                       PAGE
-                                                                                                                                                                                                                                                                                                                                                                                                                                                    ========================= */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   PAGE
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                ========================= */
 
         .page-title {
             font-size: 28px;
@@ -36,8 +36,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                       CARD
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ========================= */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   CARD
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ========================= */
 
         .modern-card {
             border: 0;
@@ -66,8 +66,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                       INFO BOX
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ========================= */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   INFO BOX
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ========================= */
 
         .info-box-modern {
             background: linear-gradient(135deg, #eff6ff, #f8fafc);
@@ -94,8 +94,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                       FORM
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ========================= */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   FORM
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ========================= */
 
         .form-label-modern {
             font-weight: 600;
@@ -147,8 +147,8 @@
         }
 
         /* =======================
-                                                                                                                                                                                                                                                                                                                                                                                                                                               STAT CARD
-                                                                                                                                                                                                                                                                                                                                                                                                                                            ======================= */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                           STAT CARD
+                                                                                                                                                                                                                                                                                                                                                                                                                                                        ======================= */
         .stat-card {
             background: #ffffff;
             border-radius: 14px;
@@ -175,8 +175,8 @@
         }
 
         /* =========================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                       TABLE
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ========================= */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   TABLE
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ========================= */
 
         .table-wrapper {
             border-radius: 20px;
@@ -552,8 +552,11 @@
                     </p>
 
                     <ul class="mb-2">
-                        @foreach ($missingMadrasah as $m)
-                            <li><b>{{ $m }}</b></li>
+                        @foreach ($missingMadrasah as $madrasah => $jumlah)
+                            <li>
+                                <strong>{{ $madrasah }}</strong>
+                                — {{ $jumlah }} pegawai belum diisi hak pembayarannya.
+                            </li>
                         @endforeach
                     </ul>
 
@@ -562,34 +565,78 @@
                     </small>
                 </div>
 
-                <div class="bg-white rounded-4 shadow-sm overflow-hidden">
-                    <div class="d-flex">
-                        <div style="width:6px; background:#dc3545;"></div>
-                        <div class="p-4 flex-grow-1">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <div class="text-danger fw-semibold small mb-2">
-                                        Validasi Diperlukan
+                @if (count($missingMadrasah) == count($madrasahs))
+                    {{-- Semua madrasah belum lengkap --}}
+                    <div class="bg-white rounded-4 shadow-sm overflow-hidden">
+                        <div class="d-flex">
+                            <div style="width:6px; background:#dc3545;"></div>
+
+                            <div class="p-4 flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <div class="text-danger fw-semibold small mb-2">
+                                            Validasi Diperlukan
+                                        </div>
+
+                                        <h5 class="fw-semibold mb-2">
+                                            Data Belum Dapat Diproses
+                                        </h5>
+
+                                        <p class="text-muted mb-0">
+                                            Terdapat
+                                            <strong>{{ count($missingMadrasah) }} madrasah</strong>
+                                            yang belum melengkapi hak pembayaran.
+                                        </p>
                                     </div>
 
-                                    <h5 class="fw-semibold mb-2">
-                                        Data Belum Dapat Diproses
-                                    </h5>
-
-                                    <p class="text-muted mb-0">
-                                        Terdapat
-                                        <strong>{{ count($missingMadrasah) }} madrasah</strong>
-                                        yang belum melengkapi hak pembayaran.
-                                    </p>
-
+                                    <a href="{{ route('dashboard') }}" class="btn btn-danger rounded-pill px-4">
+                                        Buka Dashboard →
+                                    </a>
                                 </div>
-                                <a href="{{ route('dashboard') }}" class="btn btn-danger rounded-pill px-4">
-                                    Buka Dashboard →
-                                </a>
                             </div>
                         </div>
                     </div>
-                </div>
+                @else
+                    {{-- Tinggal beberapa madrasah --}}
+                    <div class="bg-white rounded-4 shadow-sm overflow-hidden">
+                        <div class="d-flex">
+                            <div style="width:6px; background:#dc3545;"></div>
+
+                            <div class="p-4 flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <div class="text-danger fw-semibold small mb-2">
+                                            Validasi Diperlukan
+                                        </div>
+
+                                        <h5 class="fw-semibold mb-2">
+                                            Data Belum Dapat Diproses
+                                        </h5>
+
+                                        <p class="text-muted mb-2">
+                                            Rekap honor belum dapat diproses karena masih terdapat
+                                            <strong>{{ count($missingMadrasah) }} madrasah</strong>
+                                            yang belum melengkapi hak pembayaran.
+                                        </p>
+
+                                        <ul class="mb-0 ps-3">
+                                            @foreach ($missingMadrasah as $madrasah => $jumlah)
+                                                <li>
+                                                    <strong>{{ $madrasah }}</strong>
+                                                    — {{ $jumlah }} pegawai belum diisi hak pembayarannya.
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+
+                                    <a href="{{ route('dashboard') }}" class="btn btn-danger rounded-pill px-4">
+                                        Buka Dashboard →
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
             @else
                 {{-- TABLE --}}
                 <div class="table-wrapper">
