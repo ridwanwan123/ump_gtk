@@ -13,11 +13,24 @@ use Throwable;
 
 class AbsensiPegawaiController extends Controller
 {
+    private $namaBulan = [
+        1 => 'Januari', 2 => 'Februari', 3 => 'Maret',
+        4 => 'April', 5 => 'Mei', 6 => 'Juni',
+        7 => 'Juli', 8 => 'Agustus', 9 => 'September',
+        10 => 'Oktober', 11 => 'November', 12 => 'Desember',
+    ];
+
     public function __construct()
     {
         $this->authorizeResource(AbsensiPegawai::class, 'absensi');
     }
 
+    /**
+     * Rekap absensi. Ditampilkan dinamis: kalau periode (tahun+tw) yang diminta
+     * masih aktif, kolom bulan yang muncul hanya sampai bulan_aktif saat ini
+     * (bulan_terbuka). Kalau periode itu sudah tidak aktif lagi (TW lampau),
+     * tampilkan penuh 3 bulan triwulan tsb.
+     */
     public function index(Request $request)
     {
         try {
@@ -28,26 +41,36 @@ class AbsensiPegawaiController extends Controller
             }
 
             $tahun = $request->tahun ?? $activePeriod->tahun;
+            $tw = $request->tw ?? $activePeriod->tw_number;
 
-            $twAktif = (int) str_replace('TW ', '', $activePeriod->triwulan);
+            // Cari periode sesuai tahun & tw yang diminta (bisa periode aktif / periode lampau)
+            $period = AttendancePeriod::where('tahun', $tahun)
+                ->where('triwulan', 'TW ' . $tw)
+                ->first();
 
-            $tw = $request->tw ?? $twAktif;
-
-            $bulanAngka = [
+            $bulanAngkaPerTW = [
                 1 => [1, 2, 3],
                 2 => [4, 5, 6],
                 3 => [7, 8, 9],
                 4 => [10, 11, 12],
             ];
 
-            $namaBulan = [
-                1 => 'Januari', 2 => 'Februari', 3 => 'Maret',
-                4 => 'April', 5 => 'Mei', 6 => 'Juni',
-                7 => 'Juli', 8 => 'Agustus', 9 => 'September',
-                10 => 'Oktober', 11 => 'November', 12 => 'Desember',
-            ];
+            if ($period && $period->is_active) {
+                // periode masih berjalan -> tampilkan progresif sesuai bulan yang sudah dibuka
+                $bulanTW = $period->bulan_terbuka;
+            } else {
+                // periode sudah lewat / tidak ditemukan -> tampilkan penuh 1 TW
+                $bulanTW = $bulanAngkaPerTW[$tw] ?? [];
+            }
 
-            $bulanTW = $bulanAngka[$tw];
+            if (empty($bulanTW)) {
+                return view('absensi.index', [
+                    'pegawaiList'   => collect(),
+                    'tw'            => $tw,
+                    'bulanTriwulan' => [],
+                    'totalPerBulan' => [],
+                ]);
+            }
 
             $pegawaiList = Pegawai::whereHas('absensi', function ($q) use ($tahun, $bulanTW) {
                     $q->where('tahun', $tahun)
@@ -98,13 +121,14 @@ class AbsensiPegawaiController extends Controller
                 'user_id' => auth()->id(),
                 'tahun' => $tahun,
                 'tw' => $tw,
+                'bulan_ditampilkan' => $bulanTW,
                 'ip' => $request->ip(),
             ]);
 
             return view('absensi.index', [
                 'pegawaiList'   => $pegawaiList,
                 'tw'            => $tw,
-                'bulanTriwulan' => array_map(fn ($b) => $namaBulan[$b], $bulanTW),
+                'bulanTriwulan' => array_map(fn ($b) => $this->namaBulan[$b], $bulanTW),
                 'totalPerBulan' => $totalPerBulan,
             ]);
         } catch (Throwable $e) {
@@ -119,52 +143,54 @@ class AbsensiPegawaiController extends Controller
         }
     }
 
+    /**
+     * Form input HANYA untuk satu bulan: bulan_aktif dari periode yang sedang aktif.
+     * Ini menggantikan form lama yang render 3 bulan sekaligus (gelondongan).
+     */
     public function create(Request $request)
     {
         try {
-            $tahun = $request->tahun ?? now()->year;
-            $tw = $request->tw ?? ceil(now()->month / 3);
+            $activePeriod = AttendancePeriod::where('is_active', true)->first();
 
-            $bulanPerTW = [
-                1 => [1, 2, 3],
-                2 => [4, 5, 6],
-                3 => [7, 8, 9],
-                4 => [10, 11, 12],
-            ];
+            if (!$activePeriod) {
+                abort(404, 'Belum ada periode aktif.');
+            }
 
-            $namaBulan = [
-                1 => 'Januari', 2 => 'Februari', 3 => 'Maret',
-                4 => 'April', 5 => 'Mei', 6 => 'Juni',
-                7 => 'Juli', 8 => 'Agustus', 9 => 'September',
-                10 => 'Oktober', 11 => 'November', 12 => 'Desember',
-            ];
+            if (!$activePeriod->bulan_aktif) {
+                abort(404, 'Admin belum menentukan bulan aktif untuk periode ini.');
+            }
 
-            $bulanAngka = $bulanPerTW[$tw];
-            $bulan = array_map(fn ($b) => $namaBulan[$b], $bulanAngka);
+            $tahun = $activePeriod->tahun;
+            $tw = $activePeriod->tw_number;
+            $bulanAktif = $activePeriod->bulan_aktif;
 
             $pegawaiList = Pegawai::orderBy('nama_rekening')->get();
 
+            // Data existing HANYA untuk bulan aktif ini (bukan gelondongan 3 bulan),
+            // supaya operator lihat isian yang sudah ada dan bisa mengedit ulang
+            // tanpa menyentuh data bulan lain.
             $absensiExisting = AbsensiPegawai::where('tahun', $tahun)
-                ->where('tw', $tw)
+                ->where('bulan', $bulanAktif)
                 ->get()
-                ->groupBy(['pegawai_id', 'bulan']);
+                ->keyBy('pegawai_id');
 
             // ===== SUKSES =====
             Log::info('Akses form input absensi', [
                 'user_id' => auth()->id(),
                 'tahun' => $tahun,
                 'tw' => $tw,
+                'bulan_aktif' => $bulanAktif,
                 'ip' => $request->ip(),
             ]);
 
-            return view('absensi.create', compact(
-                'pegawaiList',
-                'bulan',
-                'bulanAngka',
-                'absensiExisting',
-                'tw',
-                'tahun'
-            ));
+            return view('absensi.create', [
+                'pegawaiList'     => $pegawaiList,
+                'absensiExisting' => $absensiExisting,
+                'tahun'           => $tahun,
+                'tw'              => $tw,
+                'bulanAktif'      => $bulanAktif,
+                'namaBulanAktif'  => $this->namaBulan[$bulanAktif],
+            ]);
         } catch (Throwable $e) {
             // ===== ERROR =====
             Log::error('Gagal membuka form input absensi', [
@@ -177,54 +203,74 @@ class AbsensiPegawaiController extends Controller
         }
     }
 
+    /**
+     * Simpan absensi HANYA untuk bulan aktif. Struktur input sekarang
+     * absensi[pegawai_id][field] (tidak lagi dinested per bulan), sehingga
+     * secara struktural tidak mungkin menyentuh/menimpa data bulan lain.
+     * Divalidasi ulang di server: bulan yang dikirim harus sama persis dengan
+     * bulan_aktif periode yang sedang aktif saat ini.
+     */
     public function store(Request $request)
     {
         try {
             $request->validate([
-                'tahun' => 'required|integer',
-                'tw' => 'required|integer|min:1|max:4',
-                'absensi' => 'array'
+                'tahun'   => 'required|integer',
+                'tw'      => 'required|integer|min:1|max:4',
+                'bulan'   => 'required|integer|min:1|max:12',
+                'absensi' => 'array',
             ]);
 
-            $tahun = $request->tahun;
-            $tw = $request->tw;
+            $tahun = (int) $request->tahun;
+            $tw    = (int) $request->tw;
+            $bulan = (int) $request->bulan;
+
+            $activePeriod = AttendancePeriod::where('is_active', true)->first();
+
+            if (
+                !$activePeriod
+                || (int) $activePeriod->bulan_aktif !== $bulan
+                || $activePeriod->tw_number !== $tw
+                || (int) $activePeriod->tahun !== $tahun
+            ) {
+                return back()->with(
+                    'swal_error',
+                    'Bulan ini sudah tidak aktif atau tidak sesuai periode berjalan. Silakan muat ulang halaman.'
+                );
+            }
+
             $absensiData = $request->input('absensi', []);
 
-            DB::transaction(function () use ($absensiData, $tahun, $tw) {
-                foreach ($absensiData as $pegawaiId => $bulanList) {
-                    foreach ($bulanList as $bulan => $data) {
-                        AbsensiPegawai::updateOrCreate(
-                            [
-                                'pegawai_id' => $pegawaiId,
-                                'bulan' => $bulan,
-                                'tahun' => $tahun,
-                                'tw' => $tw,
-                            ],
-                            [
-                                'sakit' => (int) ($data['sakit'] ?? 0),
-                                'izin' => (int) ($data['izin'] ?? 0),
-                                'ketidakhadiran' => (int) ($data['ketidakhadiran'] ?? 0),
-                                'dinas_luar' => (int) ($data['dinas_luar'] ?? 0),
-                                'cuti' => (int) ($data['cuti'] ?? 0),
-                            ]
-                        );
-                    }
+            DB::transaction(function () use ($absensiData, $tahun, $tw, $bulan) {
+                foreach ($absensiData as $pegawaiId => $data) {
+                    AbsensiPegawai::updateOrCreate(
+                        [
+                            'pegawai_id' => $pegawaiId,
+                            'bulan'      => $bulan,
+                            'tahun'      => $tahun,
+                            'tw'         => $tw,
+                        ],
+                        [
+                            'sakit'          => (int) ($data['sakit'] ?? 0),
+                            'izin'           => (int) ($data['izin'] ?? 0),
+                            'ketidakhadiran' => (int) ($data['ketidakhadiran'] ?? 0),
+                            'dinas_luar'     => (int) ($data['dinas_luar'] ?? 0),
+                            'cuti'           => (int) ($data['cuti'] ?? 0),
+                        ]
+                    );
                 }
             });
 
-            // ===== SUKSES =====
-            Log::info('Absensi pegawai berhasil disimpan', [
-                'user_id' => auth()->id(),
+            return redirect()->route('absensi.index', [
                 'tahun' => $tahun,
-                'tw' => $tw,
-                'ip' => $request->ip(),
-            ]);
-
-            return back()->with('swal_success', 'Absensi berhasil disimpan / diperbarui.');
+                'tw'    => $tw,
+                'bulan' => $bulan,
+            ])->with(
+                'swal_success',
+                'Absensi bulan ' . ($this->namaBulan[$bulan] ?? $bulan) . ' berhasil disimpan / diperbarui.'
+            );
         } catch (ValidationException $e) {
             throw $e;
         } catch (Throwable $e) {
-            // ===== ERROR =====
             Log::error('Gagal menyimpan absensi pegawai', [
                 'message' => $e->getMessage(),
                 'user_id' => auth()->id(),
@@ -240,15 +286,14 @@ class AbsensiPegawaiController extends Controller
         try {
             $this->authorize('viewAny', AbsensiPegawai::class);
 
-            $activePeriod = \App\Models\AttendancePeriod::where('is_active', true)->first();
+            $activePeriod = AttendancePeriod::where('is_active', true)->first();
 
             if (!$activePeriod) {
                 return back()->with('swal_error', 'Tidak ada periode aktif.');
             }
 
             $tahun = $request->tahun ?? $activePeriod->tahun;
-
-            $tw = $request->tw ?? (int) str_replace('TW ', '', $activePeriod->triwulan);
+            $tw = $request->tw ?? $activePeriod->tw_number;
 
             Log::info('Export absensi pegawai', [
                 'user_id' => auth()->id(),

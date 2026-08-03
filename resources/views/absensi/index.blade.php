@@ -235,19 +235,22 @@
                                 <th rowspan="2">Madrasah</th>
                                 <th rowspan="2">Nama Pegawai</th>
 
-                                <th colspan="5" class="bulan-pertama">{{ $bulanTriwulan[0] }}</th>
-                                <th colspan="5" class="bulan-kedua">{{ $bulanTriwulan[1] }}</th>
-                                <th colspan="5" class="bulan-ketiga">{{ $bulanTriwulan[2] }}</th>
+                                <th colspan="5" class="bulan-pertama">{{ $bulanTriwulan[0] ?? '-' }}</th>
+                                @if (isset($bulanTriwulan[1]))
+                                    <th colspan="5" class="bulan-kedua">{{ $bulanTriwulan[1] }}</th>
+                                @endif
+                                @if (isset($bulanTriwulan[2]))
+                                    <th colspan="5" class="bulan-ketiga">{{ $bulanTriwulan[2] }}</th>
+                                @endif
                             </tr>
                             <tr class="font-weight-bold">
-                                @foreach (['S', 'I', 'TK', 'DL', 'C'] as $h)
-                                    <th class="bulan-pertama sub-header">{{ $h }}</th>
-                                @endforeach
-                                @foreach (['S', 'I', 'TK', 'DL', 'C'] as $h)
-                                    <th class="bulan-kedua sub-header">{{ $h }}</th>
-                                @endforeach
-                                @foreach (['S', 'I', 'TK', 'DL', 'C'] as $h)
-                                    <th class="bulan-ketiga sub-header">{{ $h }}</th>
+                                @foreach ($bulanTriwulan as $idxBulan => $namaBulanKolom)
+                                    @php
+                                        $kelasHeader = ['bulan-pertama', 'bulan-kedua', 'bulan-ketiga'][$idxBulan];
+                                    @endphp
+                                    @foreach (['S', 'I', 'TK', 'DL', 'C'] as $h)
+                                        <th class="{{ $kelasHeader }} sub-header">{{ $h }}</th>
+                                    @endforeach
                                 @endforeach
                             </tr>
                         </thead>
@@ -261,9 +264,7 @@
 
                                     @foreach ($pegawai->bulan as $idx => $data)
                                         @php
-                                            $kelas = ['bulan-pertama', 'bulan-kedua', 'bulan-ketiga'][
-                                                array_search($idx, array_keys($pegawai->bulan->toArray()))
-                                            ];
+                                            $kelas = ['bulan-pertama', 'bulan-kedua', 'bulan-ketiga'][$loop->index];
                                         @endphp
 
                                         <td
@@ -294,12 +295,7 @@
 
                                     @foreach ($pegawaiList->first()->bulan as $bulan => $dummy)
                                         @php
-                                            $kelas = ['bulan-pertama', 'bulan-kedua', 'bulan-ketiga'][
-                                                array_search(
-                                                    $bulan,
-                                                    array_keys($pegawaiList->first()->bulan->toArray()),
-                                                )
-                                            ];
+                                            $kelas = ['bulan-pertama', 'bulan-kedua', 'bulan-ketiga'][$loop->index];
                                             $total = $totalPerBulan[$bulan] ?? [
                                                 's' => 0,
                                                 'i' => 0,

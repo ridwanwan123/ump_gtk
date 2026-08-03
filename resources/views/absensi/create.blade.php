@@ -161,8 +161,8 @@
         </div>
 
         @php
-            $tw = request('tw', ceil(now()->month / 3));
-            $tahun = request('tahun', now()->year);
+            // $tw, $tahun, $bulanAktif, $namaBulanAktif sudah dikirim langsung dari controller
+            // (berdasarkan periode aktif), tidak lagi diambil dari query string.
         @endphp
 
         <div class="row mb-2">
@@ -175,7 +175,8 @@
                     <div>
                         <div class="font-weight-bold" style="font-size: 18px;">Periode Absensi</div>
                         <div class="text-bold">
-                            TW {{ $tw }} · {{ $tahun }}
+                            TW {{ $tw }} · {{ $tahun }} · <span class="text-info">Bulan
+                                {{ $namaBulanAktif }}</span>
                         </div>
                     </div>
                 </div>
@@ -218,8 +219,9 @@
 
             <form action="{{ route('absensi.store') }}" method="POST">
                 @csrf
-                <input type="hidden" name="tahun" value="{{ request('tahun', now()->year) }}">
-                <input type="hidden" name="tw" value="{{ request('tw', ceil(now()->month / 3)) }}">
+                <input type="hidden" name="tahun" value="{{ $tahun }}">
+                <input type="hidden" name="tw" value="{{ $tw }}">
+                <input type="hidden" name="bulan" value="{{ $bulanAktif }}">
 
                 <div class="card-body table-responsive p-1" style="max-height: calc(100vh - 200px); overflow-y: auto;">
                     <div class="absensi-keterangan">
@@ -237,21 +239,11 @@
                                 <th rowspan="2">No</th>
                                 <th rowspan="2">Nama Pegawai</th>
                                 <th rowspan="2">Jabatan Pegawai</th>
-                                @foreach ($bulan as $index => $b)
-                                    @php
-                                        $kelasBulan = ['bulan-pertama', 'bulan-kedua', 'bulan-ketiga'][$index];
-                                    @endphp
-                                    <th colspan="5" class="{{ $kelasBulan }}">{{ $b }}</th>
-                                @endforeach
+                                <th colspan="5" class="bulan-pertama">{{ $namaBulanAktif }}</th>
                             </tr>
                             <tr class="text-center">
-                                @foreach ($bulan as $index => $b)
-                                    @php
-                                        $kelasBulan = ['bulan-pertama', 'bulan-kedua', 'bulan-ketiga'][$index];
-                                    @endphp
-                                    @foreach (['S', 'I', 'TK', 'DL', 'C'] as $jenis)
-                                        <th class="{{ $kelasBulan }}">{{ $jenis }}</th>
-                                    @endforeach
+                                @foreach (['S', 'I', 'TK', 'DL', 'C'] as $jenis)
+                                    <th class="bulan-pertama">{{ $jenis }}</th>
                                 @endforeach
                             </tr>
                         </thead>
@@ -262,24 +254,17 @@
                                     <td class="nama-pegawai">{{ $pegawai->nama_rekening }}</td>
                                     <td class="nama-pegawai">{{ $pegawai->jabatan_ump }}</td>
 
-                                    @foreach ($bulan as $index => $b)
+                                    @foreach (['sakit', 'izin', 'ketidakhadiran', 'dinas_luar', 'cuti'] as $key)
                                         @php
-                                            $kelasBulan = ['bulan-pertama', 'bulan-kedua', 'bulan-ketiga'][$index];
-                                            $bulanAngka = $index + ($tw - 1) * 3 + 1;
+                                            $existing = $absensiExisting[$pegawai->id] ?? null;
+                                            $value = $existing->{$key} ?? 0;
                                         @endphp
 
-                                        @foreach (['sakit', 'izin', 'ketidakhadiran', 'dinas_luar', 'cuti'] as $key)
-                                            @php
-                                                $value = $absensiExisting[$pegawai->id][$bulanAngka][0]->{$key} ?? 0;
-                                            @endphp
-
-                                            <td class="{{ $kelasBulan }}">
-                                                <input type="number"
-                                                    name="absensi[{{ $pegawai->id }}][{{ $bulanAngka }}][{{ $key }}]"
-                                                    value="{{ $value }}" placeholder="0" min="0"
-                                                    step="1" class="form-control form-control-sm">
-                                            </td>
-                                        @endforeach
+                                        <td class="bulan-pertama">
+                                            <input type="number" name="absensi[{{ $pegawai->id }}][{{ $key }}]"
+                                                value="{{ $value }}" placeholder="0" min="0" step="1"
+                                                class="form-control form-control-sm">
+                                        </td>
                                     @endforeach
 
                                 </tr>

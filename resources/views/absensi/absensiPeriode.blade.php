@@ -1,5 +1,3 @@
-{{-- resources/views/pages/attendance-periods/index.blade.php --}}
-
 @extends('layouts.base')
 
 @section('title', 'Periode Absensi')
@@ -442,6 +440,7 @@
                                 <th>Tahun</th>
                                 <th>Triwulan</th>
                                 <th>Status</th>
+                                <th>Bulan Aktif</th>
                                 <th width="120">Aksi</th>
                             </tr>
                         </thead>
@@ -458,6 +457,25 @@
                                     ];
 
                                     $twNumber = (int) str_replace('TW ', '', $period->triwulan);
+
+                                    $namaBulanSingkat = [
+                                        1 => 'Jan',
+                                        2 => 'Feb',
+                                        3 => 'Mar',
+                                        4 => 'Apr',
+                                        5 => 'Mei',
+                                        6 => 'Jun',
+                                        7 => 'Jul',
+                                        8 => 'Agu',
+                                        9 => 'Sep',
+                                        10 => 'Okt',
+                                        11 => 'Nov',
+                                        12 => 'Des',
+                                    ];
+
+                                    $bulanListPeriode = $bulanMap[$twNumber] ?? null; // hanya untuk range display lama
+                                    $bulanAngkaPeriode =
+                                        \App\Models\AttendancePeriod::BULAN_PER_TW[$period->triwulan] ?? [];
                                 @endphp
 
                                 <tr>
@@ -488,6 +506,70 @@
                                                 Nonaktif
                                             </span>
                                         @endif
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            @foreach ($bulanAngkaPeriode as $b)
+                                                @php
+                                                    if ($period->is_active) {
+                                                        if ($b < $period->bulan_aktif) {
+                                                            $statusBulan = 'selesai';
+                                                        } elseif ($b == $period->bulan_aktif) {
+                                                            $statusBulan = 'aktif';
+                                                        } else {
+                                                            $statusBulan = 'belum';
+                                                        }
+                                                    } else {
+                                                        // periode sudah nonaktif -> anggap semua bulan s.d. terakhir dibuka sudah selesai
+                                                        $statusBulan = $b <= $period->bulan_aktif ? 'selesai' : 'belum';
+                                                    }
+
+                                                    $btnClass = match ($statusBulan) {
+                                                        'selesai' => 'btn-success',
+                                                        'aktif' => 'btn-primary-soft',
+                                                        default => 'btn-outline-secondary',
+                                                    };
+                                                @endphp
+
+                                                @if ($period->is_active)
+                                                    <form action="{{ route('attendance-period.setBulan', $period->id) }}"
+                                                        method="POST" class="d-inline">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <input type="hidden" name="bulan_aktif"
+                                                            value="{{ $b }}">
+
+                                                        <button type="submit" class="btn btn-sm {{ $btnClass }}"
+                                                            style="border-radius: 8px; margin-right: 4px; padding: 6px 12px;"
+                                                            title="{{ $statusBulan == 'selesai' ? 'Bulan ' . $namaBulanSingkat[$b] . ' sudah dibuka, klik untuk buka ulang' : 'Buka bulan ' . $namaBulanSingkat[$b] . ' untuk input operator' }}"
+                                                            {{ $statusBulan == 'aktif' ? 'disabled' : '' }}>
+                                                            @if ($statusBulan == 'selesai')
+                                                                <i class="fas fa-check" style="font-size: 10px;"></i>
+                                                            @endif
+                                                            {{ $namaBulanSingkat[$b] }}
+                                                        </button>
+                                                    </form>
+                                                @else
+                                                    {{-- periode nonaktif: tampilkan status saja, tidak bisa diklik --}}
+                                                    <span class="btn btn-sm {{ $btnClass }}"
+                                                        style="border-radius: 8px; margin-right: 4px; padding: 6px 12px; cursor: default;">
+                                                        @if ($statusBulan == 'selesai')
+                                                            <i class="fas fa-check" style="font-size: 10px;"></i>
+                                                        @endif
+                                                        {{ $namaBulanSingkat[$b] }}
+                                                    </span>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                        <div class="text-muted mt-1" style="font-size: 12px;">
+                                            @if ($period->is_active)
+                                                Bulan berjalan:
+                                                <strong>{{ $namaBulanSingkat[$period->bulan_aktif] ?? '-' }}</strong>
+                                            @else
+                                                Terakhir dibuka:
+                                                <strong>{{ $namaBulanSingkat[$period->bulan_aktif] ?? '-' }}</strong>
+                                            @endif
+                                        </div>
                                     </td>
                                     <td>
                                         <form action="{{ route('attendance-period.toggle', $period->id) }}" method="POST">

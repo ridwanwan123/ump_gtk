@@ -91,20 +91,25 @@ Route::middleware(['auth', 'set.unit'])->group(function () {
         Route::post('{pegawai}/nonaktif', [PenonaktifanPegawaiController::class, 'terima_nonaktif_pegawai'])->name('nonaktif');
         Route::post('{pegawai}/tolak', [PenonaktifanPegawaiController::class, 'tolak_nonaktif_pegawai'])->name('tolak');
     });
-    
+
     // baru resource di bawah
     Route::resource('penonaktifan-pegawai', PenonaktifanPegawaiController::class);
-    
+
     Route::get('/rekap-honor-export', [RekapHonorController::class, 'export'])
-    ->name('rekap-honor.export');
+        ->name('rekap-honor.export');
     Route::resource('rekap-honor', RekapHonorController::class);
 
 
     Route::patch('/attendance-period/{id}/toggle', [AttendancePeriodController::class, 'toggle'])
-    ->name('attendance-period.toggle');
-    
+        ->name('attendance-period.toggle');
+
+    // Superadmin memindahkan bulan aktif (bulan yang boleh diinput operator)
+    // dalam triwulan yang sedang berjalan.
+    Route::patch('/attendance-period/{id}/set-bulan', [AttendancePeriodController::class, 'setBulanAktif'])
+        ->name('attendance-period.setBulan');
+
     Route::resource('attendance-period', AttendancePeriodController::class);
-    
+
     /*
     |--------------------------------------------------------------------------
     | Hak Pembayaran Pegawai
