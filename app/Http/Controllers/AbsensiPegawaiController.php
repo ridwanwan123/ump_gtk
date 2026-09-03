@@ -56,12 +56,39 @@ class AbsensiPegawaiController extends Controller
             ];
 
             if ($period && $period->is_active) {
-                // periode masih berjalan -> tampilkan progresif sesuai bulan yang sudah dibuka
-                $bulanTW = $period->bulan_terbuka;
+                // periode masih berjalan -> bulan yang BOLEH ditampilkan hanya
+                // sampai bulan_aktif yang sudah ditentukan superadmin
+                $bulanTersedia = $period->bulan_terbuka;
             } else {
-                // periode sudah lewat / tidak ditemukan -> tampilkan penuh 1 TW
-                $bulanTW = $bulanAngkaPerTW[$tw] ?? [];
+                // periode sudah lewat / tidak ditemukan -> seluruh bulan TW tsb sudah "tertutup", boleh ditampilkan penuh
+                $bulanTersedia = $bulanAngkaPerTW[$tw] ?? [];
             }
+
+            // Filter tambahan: user boleh pilih SATU bulan spesifik dari bulan
+            // yang tersedia (bulan_terbuka). Validasi in_array() memastikan
+            // user tidak bisa "mengintip" bulan yang belum dibuka superadmin
+            // lewat parameter GET.
+            if ($request->has('bulan')) {
+                // Form filter sudah disubmit -> hormati pilihan user apa adanya
+                // (termasuk kalau dia sengaja pilih "Semua Bulan (Progresif)").
+                $bulanFilter = $request->filled('bulan') ? (int) $request->bulan : null;
+            } else {
+                // Halaman baru dibuka / belum ada filter disubmit sama sekali
+                // -> default langsung ke bulan yang sedang aktif (bulan_aktif).
+                $bulanFilter = ($period && $period->bulan_aktif) ? (int) $period->bulan_aktif : null;
+            }
+
+            if ($bulanFilter && in_array($bulanFilter, $bulanTersedia, true)) {
+                $bulanTW = [$bulanFilter];
+            } else {
+                $bulanFilter = null;
+                $bulanTW = $bulanTersedia;
+            }
+
+            $opsiBulan = array_map(
+                fn ($b) => ['value' => $b, 'label' => $this->namaBulan[$b]],
+                $bulanTersedia
+            );
 
             if (empty($bulanTW)) {
                 return view('absensi.index', [
@@ -69,6 +96,8 @@ class AbsensiPegawaiController extends Controller
                     'tw'            => $tw,
                     'bulanTriwulan' => [],
                     'totalPerBulan' => [],
+                    'opsiBulan'     => $opsiBulan,
+                    'bulanFilter'   => $bulanFilter,
                 ]);
             }
 
@@ -130,6 +159,8 @@ class AbsensiPegawaiController extends Controller
                 'tw'            => $tw,
                 'bulanTriwulan' => array_map(fn ($b) => $this->namaBulan[$b], $bulanTW),
                 'totalPerBulan' => $totalPerBulan,
+                'opsiBulan'     => $opsiBulan,
+                'bulanFilter'   => $bulanFilter,
             ]);
         } catch (Throwable $e) {
             // ===== ERROR =====

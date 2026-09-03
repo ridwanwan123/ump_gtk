@@ -224,6 +224,12 @@
                                     <span class="badge bg-success px-3 py-2 rounded-pill">
                                         🟢 TW {{ $tw }} Aktif
                                     </span>
+
+                                    @if ($namaBulanAktif)
+                                        <span class="badge bg-info px-3 py-2 rounded-pill">
+                                            🗓️ Bulan {{ $namaBulanAktif }}
+                                        </span>
+                                    @endif
                                 </div>
 
                                 <small class="text-muted">
@@ -423,8 +429,13 @@
                                 <div class="d-flex justify-content-between align-items-center mb-4">
                                     <div>
                                         <h4 class="fw-bold mb-1 text-dark">Status Input Absensi</h4>
-                                        <small class="text-muted">Monitoring pengisian absensi madrasah secara
-                                            real-time</small>
+                                        <small class="text-muted">
+                                            Monitoring pengisian absensi madrasah
+                                            @if ($namaBulanAktif)
+                                                bulan <strong>{{ $namaBulanAktif }}</strong>
+                                            @endif
+                                            secara real-time
+                                        </small>
                                     </div>
                                     <div class="position-relative">
                                         <i class="fas fa-chart-pie fa-2x text-primary opacity-75"></i>
@@ -446,7 +457,12 @@
                                             </div>
                                             <h1 class="status-number">{{ $sudahCount }}</h1>
                                             <span class="status-title">Sudah Input</span>
-                                            <small class="mt-2">Madrasah telah mengisi</small>
+                                            <small class="mt-2">
+                                                Madrasah telah mengisi
+                                                @if ($namaBulanAktif)
+                                                    bulan {{ $namaBulanAktif }}
+                                                @endif
+                                            </small>
                                             <button class="btn btn-light btn-sm w-100 mt-3 fw-bold" data-toggle="modal"
                                                 data-target="#madrasahSudahModal" style="border-radius: 8px;">
                                                 Lihat Detail <i class="fas fa-arrow-right ms-1"></i>
@@ -463,7 +479,12 @@
                                             </div>
                                             <h1 class="status-number">{{ $belumCount }}</h1>
                                             <span class="status-title">Belum Input</span>
-                                            <small class="mt-2">Madrasah belum mengisi</small>
+                                            <small class="mt-2">
+                                                Madrasah belum mengisi
+                                                @if ($namaBulanAktif)
+                                                    bulan {{ $namaBulanAktif }}
+                                                @endif
+                                            </small>
                                             @if ($belumCount > 0)
                                                 <button class="btn btn-light btn-sm w-100 mt-3 fw-bold" data-toggle="modal"
                                                     data-target="#madrasahBelumModal" style="border-radius: 8px;">
@@ -772,7 +793,12 @@
                         <div class="d-flex align-items-center justify-content-center w-100">
                             {{-- <i class="fas fa-check-circle fa-lg me-3"></i> --}}
                             <div class="text-center">
-                                <h5 class="modal-title mb-0" id="madrasahSudahLabel">Madrasah Sudah Input Absensi</h5>
+                                <h5 class="modal-title mb-0" id="madrasahSudahLabel">
+                                    Madrasah Sudah Input Absensi
+                                    @if ($namaBulanAktif)
+                                        Bulan {{ $namaBulanAktif }}
+                                    @endif
+                                </h5>
                                 <small class="opacity-75">Total: {{ $sudahCount }} Madrasah</small>
                             </div>
                         </div>
@@ -837,7 +863,12 @@
                         <div class="d-flex align-items-center justify-content-center w-100">
                             {{-- <i class="fas fa-exclamation-triangle fa-lg me-3"></i> --}}
                             <div class="text-center">
-                                <h5 class="modal-title mb-0" id="madrasahBelumLabel">Madrasah Belum Input Absensi</h5>
+                                <h5 class="modal-title mb-0" id="madrasahBelumLabel">
+                                    Madrasah Belum Input Absensi
+                                    @if ($namaBulanAktif)
+                                        Bulan {{ $namaBulanAktif }}
+                                    @endif
+                                </h5>
                                 <small class="opacity-75">Total: {{ $belumCount }} Madrasah</small>
                             </div>
                         </div>

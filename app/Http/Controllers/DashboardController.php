@@ -11,6 +11,13 @@ use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
+    private $namaBulan = [
+        1 => 'Januari', 2 => 'Februari', 3 => 'Maret',
+        4 => 'April', 5 => 'Mei', 6 => 'Juni',
+        7 => 'Juli', 8 => 'Agustus', 9 => 'September',
+        10 => 'Oktober', 11 => 'November', 12 => 'Desember',
+    ];
+
     public function __construct()
     {
         $this->middleware(['auth', 'set.unit']);
@@ -29,6 +36,8 @@ class DashboardController extends Controller
 
             $tahun = $activePeriod->tahun;
             $tw = (int) str_replace('TW ', '', $activePeriod->triwulan);
+            $bulanAktif = $activePeriod->bulan_aktif;
+            $namaBulanAktif = $bulanAktif ? ($this->namaBulan[$bulanAktif] ?? null) : null;
 
             /*
             |--------------------------------------------------------------------------
@@ -170,19 +179,30 @@ class DashboardController extends Controller
             |--------------------------------------------------------------------------
             */
 
-            $madrasahSudahAbsensi = (clone $madrasahQuery)
-                ->whereHas('pegawai.absensi', function ($q) use ($tahun, $tw) {
-                    $q->where('tahun', $tahun)
-                        ->where('tw', $tw);
-                })
-                ->get();
+            // Kalau superadmin belum menentukan bulan_aktif untuk periode ini,
+            // tidak ada "bulan yang sedang berjalan" untuk dibandingkan ->
+            // anggap semua madrasah masih "belum mengisi" (bukan whereNull('bulan')
+            // yang salah makna kalau bulan_aktif kosong).
+            if (!$bulanAktif) {
+                $madrasahSudahAbsensi = (clone $madrasahQuery)->whereRaw('1 = 0')->get();
+                $madrasahBelumAbsensi = (clone $madrasahQuery)->get();
+            } else {
+                $madrasahSudahAbsensi = (clone $madrasahQuery)
+                    ->whereHas('pegawai.absensi', function ($q) use ($tahun, $tw, $bulanAktif) {
+                        $q->where('tahun', $tahun)
+                            ->where('tw', $tw)
+                            ->where('bulan', $bulanAktif);
+                    })
+                    ->get();
 
-            $madrasahBelumAbsensi = (clone $madrasahQuery)
-                ->whereDoesntHave('pegawai.absensi', function ($q) use ($tahun, $tw) {
-                    $q->where('tahun', $tahun)
-                        ->where('tw', $tw);
-                })
-                ->get();
+                $madrasahBelumAbsensi = (clone $madrasahQuery)
+                    ->whereDoesntHave('pegawai.absensi', function ($q) use ($tahun, $tw, $bulanAktif) {
+                        $q->where('tahun', $tahun)
+                            ->where('tw', $tw)
+                            ->where('bulan', $bulanAktif);
+                    })
+                    ->get();
+            }
 
             $madrasahSudah = $madrasahSudahAbsensi
                 ->sortBy('type')
@@ -240,6 +260,8 @@ class DashboardController extends Controller
             return view('dashboard.index', [
                 'tahun' => $tahun,
                 'tw' => $tw,
+                'bulanAktif' => $bulanAktif,
+                'namaBulanAktif' => $namaBulanAktif,
 
                 'totalPegawai' => $totalPegawai,
                 'totalMadrasah' => $totalMadrasah,

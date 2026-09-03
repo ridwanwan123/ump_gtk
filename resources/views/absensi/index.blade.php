@@ -139,7 +139,7 @@
                     <div class="form-row align-items-end">
 
                         {{-- Tahun --}}
-                        <div class="form-group col-md-5">
+                        <div class="form-group col-md-3">
                             <label for="tahun">Tahun</label>
                             <select name="tahun" id="tahun" class="form-control form-control-sm">
                                 <option value="2026" {{ $selectedYear == 2026 ? 'selected' : '' }}> 2026 </option>
@@ -147,7 +147,7 @@
                         </div>
 
                         {{-- Triwulan --}}
-                        <div class="form-group col-md-5">
+                        <div class="form-group col-md-3">
                             <label for="tw">Triwulan</label>
                             <select name="tw" id="tw" class="form-control form-control-sm">
                                 @for ($i = 1; $i <= 4; $i++)
@@ -155,6 +155,20 @@
                                         TW {{ $i }}
                                     </option>
                                 @endfor
+                            </select>
+                        </div>
+
+                        {{-- Bulan (dibatasi hanya bulan yang sudah dibuka superadmin / bulan_aktif) --}}
+                        <div class="form-group col-md-4">
+                            <label for="bulan">Bulan</label>
+                            <select name="bulan" id="bulan" class="form-control form-control-sm">
+                                <option value="">Semua Bulan</option>
+                                @foreach ($opsiBulan ?? [] as $opsi)
+                                    <option value="{{ $opsi['value'] }}"
+                                        {{ (string) ($bulanFilter ?? '') === (string) $opsi['value'] ? 'selected' : '' }}>
+                                        {{ $opsi['label'] }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
 
