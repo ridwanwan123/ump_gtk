@@ -116,7 +116,7 @@
                                 <label>Pendidikan Terakhir</label>
 
                                 <select name="pend_terakhir"
-                                    class="form-control @error('pend_terakhir') is-invalid @enderror">
+                                    class="form-control @error('pend_terakhir') is-invalid @enderror" required>
 
                                     <option value="">-- Pilih Pendidikan --</option>
 
@@ -218,6 +218,44 @@
                                 @enderror
                             </div>
 
+                            <div class="form-group">
+                                <label>Link Drive EMIS 4.0</label>
+                                <input type="text" name="link_drive_emis40"
+                                    class="form-control @error('link_drive_emis40') is-invalid @enderror"
+                                    value="{{ old('link_drive_emis40', $pegawai->link_drive_emis40) }}" required>
+
+                                <small class="form-text text-muted">
+                                    Mohon masukkan <strong>link langsung ke file EMIS 4.0</strong> yang telah dibagikan
+                                    (share) di Google Drive.
+                                    Pastikan link mengarah langsung ke dokumen/foto EMIS 4.0 yang dimaksud, <strong>bukan ke
+                                        folder Drive</strong>,
+                                    serta dapat diakses oleh pihak yang berwenang untuk keperluan verifikasi data.
+                                </small>
+
+                                @error('link_drive_emis40')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label>Link Drive EMIS GTK</label>
+                                <input type="text" name="link_drive_emis_gtk"
+                                    class="form-control @error('link_drive_emis_gtk') is-invalid @enderror"
+                                    value="{{ old('link_drive_emis_gtk', $pegawai->link_drive_emis_gtk) }}" required>
+
+                                <small class="form-text text-muted">
+                                    Mohon masukkan <strong>link langsung ke file EMIS GTK</strong> yang telah dibagikan
+                                    (share) di Google Drive.
+                                    Pastikan link mengarah langsung ke dokumen/foto EMIS GTK yang dimaksud, <strong>bukan ke
+                                        folder Drive</strong>,
+                                    serta dapat diakses oleh pihak yang berwenang untuk keperluan verifikasi data.
+                                </small>
+
+                                @error('link_drive_emis_gtk')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -310,7 +348,7 @@
                                 <label>NPWP</label>
                                 <input type="text" id="npwp" inputmode="numeric" name="npwp"
                                     class="form-control @error('npwp') is-invalid @enderror"
-                                    value="{{ old('npwp', $pegawai->npwp) }}">
+                                    value="{{ old('npwp', $pegawai->npwp) }}" required>
 
                                 <small id="npwpError" class="text-danger d-none">
                                     NPWP harus 15 atau 16 digit angka, tidak boleh mengandung ( spasi, ., -, _ )
@@ -325,7 +363,7 @@
                                 <label>PEG ID</label>
                                 <input type="text" id="pegid" name="pegid"
                                     class="form-control @error('pegid') is-invalid @enderror"
-                                    value="{{ old('pegid', $pegawai->pegid) }}">
+                                    value="{{ old('pegid', $pegawai->pegid) }}" required>
 
                                 <small id="pegidError" class="text-danger d-none">
                                     PEG ID harus 14 digit angka
@@ -386,7 +424,7 @@
                                 <label>No Rekening Bank DKI</label>
                                 <input type="text" id="rek" name="no_rek_bank_dki"
                                     class="form-control @error('no_rek_bank_dki') is-invalid @enderror"
-                                    value="{{ old('no_rek_bank_dki', $pegawai->no_rek_bank_dki) }}">
+                                    value="{{ old('no_rek_bank_dki', $pegawai->no_rek_bank_dki) }}" required>
 
                                 <small id="rekError" class="text-danger d-none">
                                     No rekening harus 11 digit angka
