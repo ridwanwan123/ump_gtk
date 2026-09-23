@@ -144,6 +144,7 @@
                             <th>NIK</th>
                             <th>PEG ID</th>
                             <th>NPWP</th>
+                            <th>STATUS</th>
                             <th>AKSI</th>
                         </tr>
                     </thead>
@@ -164,6 +165,16 @@
                                 <td>{{ $pegawai->pegid ?? '-' }}</td>
                                 <td>{{ $pegawai->npwp ?? '-' }}</td>
                                 <td class="text-center">
+                                    @if ($pegawai->status_pegawai === \App\Models\Pegawai::DITOLAK)
+                                        <span class="badge bg-danger badge-role">DITOLAK</span>
+                                        <div class="small text-muted text-wrap" style="max-width:220px">
+                                            {{ $pegawai->alasan_ditolak }}
+                                        </div>
+                                    @else
+                                        <span class="badge bg-warning badge-role">USULAN</span>
+                                    @endif
+                                </td>
+                                <td class="text-center">
                                     <a href="{{ route('pengusulan-pegawai.show', $pegawai->id) }}"
                                         class="btn btn-sm btn-info btn-action">
                                         <i class="fas fa-eye"></i>
@@ -172,7 +183,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="text-center text-muted">
+                                <td colspan="9" class="text-center text-muted">
                                     Tidak ada data pegawai usulan
                                 </td>
                             </tr>

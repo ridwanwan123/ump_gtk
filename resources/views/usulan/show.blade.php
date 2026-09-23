@@ -2,6 +2,22 @@
 
 @section('title', 'Detail Usulan Pegawai')
 
+@php
+    $isDitolak = $pegawai->status_pegawai === \App\Models\Pegawai::DITOLAK;
+
+    $berkas = [
+        'Link Drive Foto KTP' => $pegawai->link_drive_foto_ktp,
+        'Link Drive EMIS 4.0' => $pegawai->link_drive_emis40,
+        'Link Drive EMIS GTK' => $pegawai->link_drive_emis_gtk,
+    ];
+
+    $validasi = [
+        'NIK Sesuai' => $pegawai->nik_sesuai,
+        'NIK Terdaftar di EMIS 4.0' => $pegawai->nik_terdaftar_emis40,
+        'NIK Terdaftar di EMIS GTK' => $pegawai->nik_terdaftar_emis_gtk,
+    ];
+@endphp
+
 @section('content')
     <div class="content-header">
         <div class="container-fluid">
@@ -15,13 +31,24 @@
                     </a>
 
                     @role('superadmin')
-                        <form action="{{ route('pengusulan-pegawai.terima_pengusulan_pegawai', $pegawai->id) }}" method="POST"
-                            class="d-inline">
-                            @csrf
-                            <button type="submit" class="btn btn-success btn-sm ml-2">
-                                <i class="fas fa-check"></i> Setujui Pegawai
-                            </button>
-                        </form>
+                        @if ($pegawai->status_pegawai === \App\Models\Pegawai::USULAN)
+                            <form action="{{ route('pengusulan-pegawai.terima_pengusulan_pegawai', $pegawai->id) }}"
+                                method="POST" class="d-inline">
+                                @csrf
+                                <button type="submit" class="btn btn-success btn-sm ml-2">
+                                    <i class="fas fa-check"></i> Setujui Pegawai
+                                </button>
+                            </form>
+
+                            <form action="{{ route('pengusulan-pegawai.tolak_pengusulan_pegawai', $pegawai->id) }}"
+                                method="POST" class="d-inline" id="formTolak">
+                                @csrf
+                                <input type="hidden" name="alasan_ditolak">
+                                <button type="button" class="btn btn-danger btn-sm ml-2" id="btnTolak">
+                                    <i class="fas fa-times"></i> Tolak Usulan
+                                </button>
+                            </form>
+                        @endif
                     @endrole
                 </div>
             </div>
@@ -30,6 +57,18 @@
 
     <section class="content">
         <div class="container-fluid">
+
+            @error('alasan_ditolak')
+                <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
+
+            @if ($isDitolak)
+                <div class="alert alert-danger">
+                    <h5 class="mb-1"><i class="fas fa-ban"></i> Usulan Ditolak</h5>
+                    <div><strong>Alasan:</strong> {{ $pegawai->alasan_ditolak ?? '-' }}</div>
+                    <small>Lengkapi data lalu ajukan ulang usulan dengan NIK yang sama.</small>
+                </div>
+            @endif
 
             {{-- CARD HEADER --}}
             <div class="card card-primary card-outline">
@@ -44,6 +83,9 @@
                         <div class="col-md-10">
                             <h4 class="mb-1">{{ $pegawai->nama_simpatika }}</h4>
                             <span class="badge badge-info">{{ $pegawai->jabatan_ump }}</span>
+                            <span class="badge {{ $isDitolak ? 'badge-danger' : 'badge-warning' }}">
+                                {{ $pegawai->status_pegawai }}
+                            </span>
                             <div class="text-muted mt-1">
                                 <i class="fas fa-school"></i>
                                 {{ $pegawai->madrasah->nama_madrasah ?? '-' }}
@@ -66,18 +108,22 @@
                         <div class="card-body p-0">
                             <table class="table table-striped">
                                 <tr>
-                                    <th width="40%">Nama Rekening</th>
+                                    <th width="40%">Nama Simpatika</th>
+                                    <td>{{ $pegawai->nama_simpatika ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Nama Rekening</th>
                                     <td>{{ $pegawai->nama_rekening ?? '-' }}</td>
                                 </tr>
                                 <tr>
-                                    <th width="40%">NIK</th>
+                                    <th>NIK</th>
                                     <td>{{ $pegawai->nik ?? '-' }}</td>
                                 </tr>
                                 <tr>
                                     <th>Tempat, Tanggal Lahir</th>
                                     <td>
-                                        {{ $pegawai->tempat_lahir }},
-                                        {{ \Carbon\Carbon::parse($pegawai->tanggal_lahir)->format('d M Y') }}
+                                        {{ $pegawai->tempat_lahir ?? '-' }},
+                                        {{ $pegawai->tanggal_lahir ? \Carbon\Carbon::parse($pegawai->tanggal_lahir)->format('d M Y') : '-' }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -100,19 +146,6 @@
                                     <th>Alamat Sesuai KTP</th>
                                     <td>{{ $pegawai->alamat_sesuai_ktp ?? '-' }}</td>
                                 </tr>
-                                <tr>
-                                    <th>Link Drive Foto KTP</th>
-                                    <td>
-                                        @if ($pegawai->link_drive_foto_ktp)
-                                            <a href="{{ $pegawai->link_drive_foto_ktp }}" target="_blank"
-                                                class="btn btn-sm btn-primary">
-                                                <i class="fas fa-external-link-alt"></i> Lihat Berkas
-                                            </a>
-                                        @else
-                                            -
-                                        @endif
-                                    </td>
-                                </tr>
                             </table>
                         </div>
                     </div>
@@ -129,10 +162,10 @@
                         <div class="card-body p-0">
                             <table class="table table-striped">
                                 <tr>
-                                    <th>Status ASN</th>
+                                    <th width="40%">Status ASN</th>
                                     <td>
                                         @if ($pegawai->status_asn)
-                                            <span class="badge badge-primary">{{ $pegawai->status_asn ?? '-' }}</span>
+                                            <span class="badge badge-primary">{{ $pegawai->status_asn }}</span>
                                         @else
                                             -
                                         @endif
@@ -142,14 +175,16 @@
                                     <th>Status Pegawai</th>
                                     <td>
                                         @if ($pegawai->status_pegawai)
-                                            <span class="badge badge-warning">{{ $pegawai->status_pegawai ?? '-' }}</span>
+                                            <span class="badge {{ $isDitolak ? 'badge-danger' : 'badge-warning' }}">
+                                                {{ $pegawai->status_pegawai }}
+                                            </span>
                                         @else
                                             -
                                         @endif
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th width="40%">Jabatan UMP</th>
+                                    <th>Jabatan UMP</th>
                                     <td>{{ $pegawai->jabatan_ump ?? '-' }}</td>
                                 </tr>
                                 <tr>
@@ -165,19 +200,67 @@
                                     <td>{{ $pegawai->madrasah->nama_madrasah ?? '-' }}</td>
                                 </tr>
                                 <tr>
-                                    <th>NPSN MADRASAH</th>
+                                    <th>NPSN Madrasah</th>
                                     <td>{{ $pegawai->npsn_tempat_tugas ?? '-' }}</td>
                                 </tr>
                                 <tr>
                                     <th>NPWP</th>
                                     <td>{{ $pegawai->npwp ?? '-' }}</td>
                                 </tr>
+                                <tr>
+                                    <th>Dapodik</th>
+                                    <td>{{ $pegawai->dapodik ?? '-' }}</td>
+                                </tr>
                             </table>
                         </div>
                     </div>
                 </div>
 
-                {{-- DATA KONTAK --}}
+                {{-- BERKAS & VALIDASI --}}
+                <div class="col-md-6">
+                    <div class="card card-outline card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-folder-open"></i> Berkas &amp; Validasi
+                            </h3>
+                        </div>
+                        <div class="card-body p-0">
+                            <table class="table table-striped">
+                                @foreach ($berkas as $label => $link)
+                                    <tr>
+                                        <th width="40%">{{ $label }}</th>
+                                        <td>
+                                            @if ($link)
+                                                <a href="{{ $link }}" target="_blank" rel="noopener"
+                                                    class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-external-link-alt"></i> Lihat Berkas
+                                                </a>
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                @foreach ($validasi as $label => $nilai)
+                                    <tr>
+                                        <th>{{ $label }}</th>
+                                        <td>
+                                            @if ($nilai == 'YA')
+                                                <span class="badge badge-success"><i class="fas fa-check"></i> YA</span>
+                                            @elseif ($nilai == 'TIDAK')
+                                                <span class="badge badge-danger"><i class="fas fa-times"></i> TIDAK</span>
+                                            @else
+                                                <span class="text-muted">-</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- DATA KONTAK & BANK --}}
                 <div class="col-md-6">
                     <div class="card card-outline card-warning">
                         <div class="card-header">
@@ -198,10 +281,7 @@
                             </table>
                         </div>
                     </div>
-                </div>
 
-                {{-- DATA BANK --}}
-                <div class="col-md-6">
                     <div class="card card-outline card-danger">
                         <div class="card-header">
                             <h3 class="card-title">
@@ -240,6 +320,42 @@
                 });
             </script>
         @endif
+
+        @if (session('swal_error'))
+            <script>
+                Swal.fire({
+                    title: 'Gagal',
+                    text: "{{ session('swal_error') }}",
+                    icon: 'error',
+                    confirmButtonColor: '#0D47A1'
+                });
+            </script>
+        @endif
+
+        <script>
+            document.getElementById('btnTolak')?.addEventListener('click', function() {
+                const form = document.getElementById('formTolak');
+
+                Swal.fire({
+                    title: 'Tolak Usulan?',
+                    text: 'Tuliskan data apa saja yang belum lengkap / tidak sesuai.',
+                    icon: 'warning',
+                    input: 'textarea',
+                    inputPlaceholder: 'Contoh: Link EMIS GTK tidak bisa dibuka, NPWP tidak sesuai...',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc3545',
+                    cancelButtonColor: '#adb5bd',
+                    confirmButtonText: 'Ya, tolak',
+                    cancelButtonText: 'Batal',
+                    inputValidator: value => !value.trim() ? 'Alasan penolakan wajib diisi' : undefined
+                }).then(result => {
+                    if (result.isConfirmed) {
+                        form.querySelector('[name="alasan_ditolak"]').value = result.value.trim();
+                        form.submit();
+                    }
+                });
+            });
+        </script>
     @endpush
 
 @endsection

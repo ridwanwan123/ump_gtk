@@ -16,6 +16,7 @@ class Pegawai extends Model
     const NON_AKTIF             = 'NON AKTIF'; //sisi admin pusat
     const PROSES_USULAN         = 'PROSES USULAN'; //sisi operator
     const USULAN                = 'USULAN'; //sisi admin pusat
+    const DITOLAK               = 'DITOLAK'; //usulan ditolak admin pusat
 
     const ALASAN = [
                         'MENINGGAL DUNIA',
@@ -61,6 +62,7 @@ class Pegawai extends Model
         'link_drive_emis40',
         'nik_terdaftar_emis_gtk',
         'link_drive_emis_gtk',
+        'alasan_ditolak',
     ];
 
     protected static function booted()

@@ -52,7 +52,8 @@ class PengusulanPegawaiController extends Controller
                 ->when($request->filled('search'), fn($q) =>
                     $q->where('nama_rekening', 'like', "%{$request->search}%")
                 )
-                ->where('status_pegawai', 'USULAN')
+                ->whereIn('status_pegawai', [Pegawai::USULAN, Pegawai::DITOLAK])
+                ->orderByRaw('status_pegawai = ? desc', [Pegawai::USULAN])
                 ->orderBy('id_madrasah')
                 ->orderBy('nama_rekening')
                 ->paginate(10, ['*'], 'usulan_page')
@@ -166,7 +167,14 @@ class PengusulanPegawaiController extends Controller
                 'no_rek_bank_dki'   => 'required|digits:11',
                 'id_madrasah'       => 'required|exists:madrasah,id',
                 'npsn_tempat_tugas' => 'required|string|max:20',
-                'nik'               => 'required|digits:16|unique:pegawai,nik',
+                'nik'               => [
+                    'required',
+                    'digits:16',
+                    // NIK dari usulan yang ditolak boleh diajukan ulang
+                    Rule::unique('pegawai', 'nik')->where(fn($q) =>
+                        $q->where('status_pegawai', '!=', Pegawai::DITOLAK)
+                    ),
+                ],
                 'pegid'             => 'required|digits:14',
                 'tempat_lahir'      => 'required|string|max:100',
                 'tanggal_lahir'     => 'required|date',
@@ -192,9 +200,16 @@ class PengusulanPegawaiController extends Controller
             );
 
             DB::transaction(function () use ($validated) {
-                $validated['status_pegawai'] = 'USULAN';
+                $validated['status_pegawai'] = Pegawai::USULAN;
+                $validated['alasan_ditolak'] = null;
 
-                Pegawai::create($validated);
+                // usulan ulang dari data yang pernah ditolak -> perbarui data lama
+                $ditolak = Pegawai::withoutGlobalScopes()
+                    ->where('nik', $validated['nik'])
+                    ->where('status_pegawai', Pegawai::DITOLAK)
+                    ->first();
+
+                $ditolak ? $ditolak->update($validated) : Pegawai::create($validated);
             });
 
             Log::info('Pegawai berhasil ditambahkan', [
@@ -249,6 +264,50 @@ class PengusulanPegawaiController extends Controller
                 'message' => $e->getMessage(),
                 'user_id' => auth()->id(),
                 'ip' => request()->ip(),
+            ]);
+
+            return back()->with('swal_error', 'Terjadi kesalahan saat proses.');
+        }
+    }
+
+    public function tolak_pengusulan_pegawai(Request $request, $id)
+    {
+        $request->validate([
+            'alasan_ditolak' => 'required|string|max:1000',
+        ], [
+            'alasan_ditolak.required' => 'Alasan penolakan wajib diisi.',
+        ]);
+
+        $pegawai = Pegawai::withoutGlobalScopes()
+            ->where('status_pegawai', Pegawai::USULAN)
+            ->findOrFail($id);
+
+        try {
+            DB::transaction(function () use ($pegawai, $request) {
+                $pegawai->update([
+                    'status_pegawai' => Pegawai::DITOLAK,
+                    'alasan_ditolak' => $request->alasan_ditolak,
+                ]);
+            });
+
+            Log::info('Pengajuan pegawai ditolak', [
+                'user_id' => auth()->id(),
+                'pegawai_id' => $pegawai->id,
+                'alasan' => $request->alasan_ditolak,
+                'ip' => $request->ip(),
+            ]);
+
+            return redirect()
+                ->route('pengusulan-pegawai.index')
+                ->with('swal_success', 'Usulan pegawai ditolak.');
+
+        } catch (Throwable $e) {
+
+            Log::error('Gagal menolak usulan pegawai', [
+                'pegawai_id' => $pegawai->id,
+                'message' => $e->getMessage(),
+                'user_id' => auth()->id(),
+                'ip' => $request->ip(),
             ]);
 
             return back()->with('swal_error', 'Terjadi kesalahan saat proses.');
