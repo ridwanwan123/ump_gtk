@@ -21,6 +21,17 @@
         <form action="{{ route('pengusulan-pegawai.store') }}" method="POST">
             @csrf
 
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <strong>Data belum bisa disimpan:</strong>
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <div class="row">
 
                 {{-- Kiri: Data Pribadi --}}
@@ -376,7 +387,9 @@
 
                             <div class="form-group">
                                 <label>Dapodik</label>
-                                <input type="text" class="form-control" value="TIDAK" readonly>
+                                <input type="text" class="form-control @error('dapodik') is-invalid @enderror"
+                                    value="TIDAK" readonly>
+                                <input type="hidden" name="dapodik" value="TIDAK">
                                 @error('dapodik')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
