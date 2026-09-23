@@ -53,8 +53,7 @@ class PengusulanPegawaiController extends Controller
                 ->when($request->filled('search'), fn($q) =>
                     $q->where('nama_rekening', 'like', "%{$request->search}%")
                 )
-                ->whereIn('status_pegawai', [Pegawai::USULAN, Pegawai::DITOLAK])
-                ->orderByRaw('status_pegawai = ? desc', [Pegawai::USULAN])
+                ->where('status_pegawai', Pegawai::USULAN)
                 ->orderBy('id_madrasah')
                 ->orderBy('nama_rekening')
                 ->paginate(10, ['*'], 'usulan_page')

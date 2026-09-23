@@ -5,7 +5,6 @@
 @section('content')
     <div class="container-fluid">
 
-        {{-- HEADER --}}
         <div class="row mb-3">
             <div class="col-sm-6">
                 <h1 class="fw-bold">Pengusulan Pegawai</h1>
