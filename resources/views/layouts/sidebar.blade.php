@@ -91,16 +91,17 @@
                 </li>
                 <li class="nav-header">Management</li>
                 <li class="nav-item">
+                    <a href="{{ route('admin.pusat-data.index') }}"
+                        class="nav-link {{ request()->routeIs('admin.pusat-data.*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-database"></i>
+                        <p>Pusat Data</p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{{ route('admin.users.index') }}"
                         class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-user-cog"></i>
                         <p>Manajemen User</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="" class="nav-link {{ request()->routeIs('admin.madrasah.*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-school"></i>
-                        <p>Data Madrasah</p>
                     </a>
                 </li>
             @endrole

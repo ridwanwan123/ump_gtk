@@ -26,6 +26,15 @@ class AttendancePeriod extends Model
     ];
 
     /**
+     * Daftar bulan (angka) untuk nomor triwulan 1-4. Misal 2 -> [4,5,6].
+     * Satu-satunya sumber mapping TW -> bulan, dipakai controller & export.
+     */
+    public static function bulanDariTw($tw): array
+    {
+        return self::BULAN_PER_TW['TW ' . (int) $tw] ?? [];
+    }
+
+    /**
      * Daftar bulan (angka) milik triwulan periode ini. Misal TW 1 -> [1,2,3]
      */
     public function getBulanListAttribute(): array

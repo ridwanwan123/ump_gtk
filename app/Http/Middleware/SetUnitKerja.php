@@ -16,7 +16,9 @@ class SetUnitKerja
             if (!$user->hasRole('superadmin')) {
                 app()->instance(
                     'current_madrasah_id',
-                    $user->unit_kerja // id madrasah
+                    // 0 = tidak cocok dengan madrasah mana pun, supaya operator
+                    // yang belum punya unit kerja tidak melihat data semua madrasah
+                    $user->unit_kerja ?? 0 // id madrasah
                 );
             }
         }

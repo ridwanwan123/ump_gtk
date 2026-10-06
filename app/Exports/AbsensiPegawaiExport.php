@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Models\AttendancePeriod;
 use App\Models\Pegawai;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithEvents;
@@ -46,13 +47,6 @@ class AbsensiPegawaiExport implements
         'DAPODIK',
     ];
 
-    protected $bulanPerTW = [
-        1 => [1, 2, 3],
-        2 => [4, 5, 6],
-        3 => [7, 8, 9],
-        4 => [10, 11, 12],
-    ];
-
     protected $subHeaders = ['S', 'I', 'TK', 'DL', 'C'];
 
     public function __construct($tahun, $tw)
@@ -68,13 +62,13 @@ class AbsensiPegawaiExport implements
     {
         return Pegawai::whereHas('absensi', function ($q) {
                 $q->where('tahun', $this->tahun)
-                  ->whereIn('bulan', $this->bulanPerTW[$this->tw]);
+                  ->whereIn('bulan', AttendancePeriod::bulanDariTw($this->tw));
             })
             ->with([
                 'madrasah',
                 'absensi' => function ($q) {
                     $q->where('tahun', $this->tahun)
-                      ->whereIn('bulan', $this->bulanPerTW[$this->tw]);
+                      ->whereIn('bulan', AttendancePeriod::bulanDariTw($this->tw));
                 }
             ])
             ->orderBy('id_madrasah')
@@ -90,7 +84,7 @@ class AbsensiPegawaiExport implements
         $row1 = $this->pegawaiHeaders;
         $row2 = array_fill(0, count($this->pegawaiHeaders), '');
 
-        foreach ($this->bulanPerTW[$this->tw] as $bulan) {
+        foreach (AttendancePeriod::bulanDariTw($this->tw) as $bulan) {
             foreach ($this->subHeaders as $sh) {
                 $row1[] = '';
                 $row2[] = $sh;
@@ -131,7 +125,7 @@ class AbsensiPegawaiExport implements
 
         $absensiByBulan = $pegawai->absensi->keyBy('bulan');
 
-        foreach ($this->bulanPerTW[$this->tw] as $bulan) {
+        foreach (AttendancePeriod::bulanDariTw($this->tw) as $bulan) {
             $a = $absensiByBulan[$bulan] ?? null;
             $row[] = $a->sakit ?? 0;
             $row[] = $a->izin ?? 0;
@@ -181,7 +175,7 @@ class AbsensiPegawaiExport implements
                     10 => 'OKTOBER', 11 => 'NOVEMBER', 12 => 'DESEMBER',
                 ];
 
-                foreach ($this->bulanPerTW[$this->tw] as $i => $bulan) {
+                foreach (AttendancePeriod::bulanDariTw($this->tw) as $i => $bulan) {
                     $start = $startCol + ($i * $subCount);
                     $end   = $start + $subCount - 1;
 
@@ -202,7 +196,7 @@ class AbsensiPegawaiExport implements
 
                 // Style header pegawai
                 $lastCol = $numToLetter(
-                    $startCol + (count($this->bulanPerTW[$this->tw]) * $subCount) - 1
+                    $startCol + (count(AttendancePeriod::bulanDariTw($this->tw)) * $subCount) - 1
                 );
 
                 $highestRow = $sheet->getHighestRow();

@@ -105,18 +105,13 @@
                     <a href="{{ route('pegawai.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> Tambah
                         Pegawai</a>
                 @endcan
-                {{-- @can('viewAny', App\Models\Pegawai::class)
+                {{-- Operator juga boleh export: isinya otomatis hanya pegawai aktif madrasahnya --}}
+                @can('viewAny', App\Models\Pegawai::class)
                     <a href="{{ route('pegawai.export') }}" class="btn btn-success btn-sm">
                         <i class="fas fa-file-export"></i>
                         Export
                     </a>
-                @endcan --}}
-                @role('superadmin')
-                    <a href="{{ route('pegawai.export') }}" class="btn btn-success btn-sm">
-                        <i class="fas fa-file-export"></i>
-                        Export
-                    </a>
-                @endrole
+                @endcan
             </div>
         </div>
 
@@ -181,7 +176,7 @@
                 </table>
 
                 <div class="mt-3">
-                    {{ $pegawais->links('pagination::bootstrap-5') }}
+                    {{ $pegawais->links('pagination::bootstrap-4') }}
                 </div>
             </div>
         </div>

@@ -28,14 +28,7 @@ class RekapHonorController extends Controller
 
         $tahunList = collect([$activePeriod->tahun]);
 
-        $triwulanMap = [
-            'TW 1' => [1, 2, 3],
-            'TW 2' => [4, 5, 6],
-            'TW 3' => [7, 8, 9],
-            'TW 4' => [10, 11, 12],
-        ];
-
-        $bulanList = collect($triwulanMap[$activePeriod->triwulan] ?? []);
+        $bulanList = collect($activePeriod->bulan_list);
 
         $bulanNama = [
             1 => 'Januari',
@@ -128,11 +121,30 @@ class RekapHonorController extends Controller
 
     public function export(Request $request)
     {
+        $activePeriod = AttendancePeriod::where('is_active', true)->first();
+
+        if (!$activePeriod) {
+            abort(404, 'Belum ada periode aktif.');
+        }
+
+        $request->validate([
+            'honor'       => 'required|numeric|min:0',
+            'tahun'       => 'nullable|integer',
+            'bulan'       => 'nullable|array',
+            'bulan.*'     => 'integer|between:1,12',
+            'madrasah'    => 'nullable|integer',
+            'jabatan_ump' => 'nullable|string',
+        ]);
+
+        // Sama seperti halaman rekap: tanpa pilihan -> periode aktif.
+        // Filter madrasah & jabatan ikut dipakai supaya isi file sama dengan yang tampil di layar.
         return Excel::download(
             new RekapHonorExport(
-                $request->bulan,
-                $request->tahun,
-                $request->honor
+                $request->bulan ?? $activePeriod->bulan_list,
+                $request->tahun ?? $activePeriod->tahun,
+                $request->honor,
+                $request->madrasah,
+                $request->jabatan_ump
             ),
             'rekap-honor.xlsx'
         );

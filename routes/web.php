@@ -9,6 +9,7 @@ use App\Http\Controllers\AbsensiPegawaiController;
 use App\Http\Controllers\PengusulanPegawaiController;
 use App\Http\Controllers\PenonaktifanPegawaiController;
 use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\Admin\PusatDataController;
 use App\Http\Controllers\AttendancePeriodController;
 use App\Http\Controllers\HakPembayaranPegawaiController;
 
@@ -76,8 +77,11 @@ Route::middleware(['auth', 'set.unit'])->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::prefix('pengusulan-pegawai')->name('pengusulan-pegawai.')->group(function () {
-        Route::post('{pegawai}/terima_pengusulan_pegawai', [PengusulanPegawaiController::class, 'terima_pengusulan_pegawai'])->name('terima_pengusulan_pegawai');
-        Route::post('{pegawai}/tolak_pengusulan_pegawai', [PengusulanPegawaiController::class, 'tolak_pengusulan_pegawai'])->name('tolak_pengusulan_pegawai');
+        // Persetujuan / penolakan usulan hanya boleh dilakukan Kanwil (superadmin)
+        Route::middleware('role:superadmin')->group(function () {
+            Route::post('{pegawai}/terima_pengusulan_pegawai', [PengusulanPegawaiController::class, 'terima_pengusulan_pegawai'])->name('terima_pengusulan_pegawai');
+            Route::post('{pegawai}/tolak_pengusulan_pegawai', [PengusulanPegawaiController::class, 'tolak_pengusulan_pegawai'])->name('tolak_pengusulan_pegawai');
+        });
     });
 
     Route::resource('pengusulan-pegawai', PengusulanPegawaiController::class);
@@ -89,8 +93,12 @@ Route::middleware(['auth', 'set.unit'])->group(function () {
     */
     Route::prefix('penonaktifan-pegawai')->name('penonaktifan-pegawai.')->group(function () {
         Route::post('{pegawai}/proses', [PenonaktifanPegawaiController::class, 'pengajuan_nonaktif_pegawai'])->name('proses');
-        Route::post('{pegawai}/nonaktif', [PenonaktifanPegawaiController::class, 'terima_nonaktif_pegawai'])->name('nonaktif');
-        Route::post('{pegawai}/tolak', [PenonaktifanPegawaiController::class, 'tolak_nonaktif_pegawai'])->name('tolak');
+
+        // Persetujuan / penolakan penonaktifan hanya boleh dilakukan Kanwil (superadmin)
+        Route::middleware('role:superadmin')->group(function () {
+            Route::post('{pegawai}/nonaktif', [PenonaktifanPegawaiController::class, 'terima_nonaktif_pegawai'])->name('nonaktif');
+            Route::post('{pegawai}/tolak', [PenonaktifanPegawaiController::class, 'tolak_nonaktif_pegawai'])->name('tolak');
+        });
     });
 
     // baru resource di bawah
@@ -101,15 +109,19 @@ Route::middleware(['auth', 'set.unit'])->group(function () {
     Route::resource('rekap-honor', RekapHonorController::class);
 
 
-    Route::patch('/attendance-period/{id}/toggle', [AttendancePeriodController::class, 'toggle'])
-        ->name('attendance-period.toggle');
+    // Pengelolaan periode absensi khusus superadmin
+    Route::middleware('role:superadmin')->group(function () {
+        Route::patch('/attendance-period/{id}/toggle', [AttendancePeriodController::class, 'toggle'])
+            ->name('attendance-period.toggle');
 
-    // Superadmin memindahkan bulan aktif (bulan yang boleh diinput operator)
-    // dalam triwulan yang sedang berjalan.
-    Route::patch('/attendance-period/{id}/set-bulan', [AttendancePeriodController::class, 'setBulanAktif'])
-        ->name('attendance-period.setBulan');
+        // Superadmin memindahkan bulan aktif (bulan yang boleh diinput operator)
+        // dalam triwulan yang sedang berjalan.
+        Route::patch('/attendance-period/{id}/set-bulan', [AttendancePeriodController::class, 'setBulanAktif'])
+            ->name('attendance-period.setBulan');
 
-    Route::resource('attendance-period', AttendancePeriodController::class);
+        Route::resource('attendance-period', AttendancePeriodController::class)
+            ->only(['index', 'store']);
+    });
 
     /*
     |--------------------------------------------------------------------------
@@ -131,6 +143,11 @@ Route::prefix('admin')
     ->group(function () {
         Route::get('users', [UserManagementController::class, 'index'])->name('users.index');
         Route::post('users/{user}/role', [UserManagementController::class, 'updateRole'])->name('users.updateRole');
+
+        // Pusat Data: export seluruh data pegawai (dengan filter) & data pensiun
+        Route::get('pusat-data', [PusatDataController::class, 'index'])->name('pusat-data.index');
+        Route::get('pusat-data/export-pegawai', [PusatDataController::class, 'exportPegawai'])->name('pusat-data.export-pegawai');
+        Route::get('pusat-data/export-pensiun', [PusatDataController::class, 'exportPensiun'])->name('pusat-data.export-pensiun');
     });
 
 /*

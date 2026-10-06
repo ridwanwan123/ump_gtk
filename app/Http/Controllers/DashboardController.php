@@ -6,6 +6,7 @@ use App\Models\Pegawai;
 use App\Models\Madrasah;
 use App\Models\AttendancePeriod;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Throwable;
 use Carbon\Carbon;
 
@@ -35,7 +36,7 @@ class DashboardController extends Controller
             }
 
             $tahun = $activePeriod->tahun;
-            $tw = (int) str_replace('TW ', '', $activePeriod->triwulan);
+            $tw = $activePeriod->tw_number;
             $bulanAktif = $activePeriod->bulan_aktif;
             $namaBulanAktif = $bulanAktif ? ($this->namaBulan[$bulanAktif] ?? null) : null;
 
@@ -128,7 +129,7 @@ class DashboardController extends Controller
             $usiaPensiunMap = function ($pegawai) {
                 $lahir = \Carbon\Carbon::parse($pegawai->tanggal_lahir);
 
-                $usiaPensiun = $pegawai->jabatan_dinas === 'PENDIDIK' ? 60 : 58;
+                $usiaPensiun = Pegawai::usiaPensiun($pegawai->jabatan_dinas);
 
                 $pegawai->usia = $lahir->age;
                 $pegawai->usia_pensiun = $usiaPensiun;
@@ -138,27 +139,29 @@ class DashboardController extends Controller
                 return $pegawai;
             };
 
+            // Disaring & diurutkan di database (bukan memuat semua pegawai ke memori):
+            // tampil mulai 2 tahun sebelum usia pensiun -> PENDIDIK usia >= 58, lainnya >= 56.
+            $batasLahirPendidik = now()->subYears(58)->toDateString();
+            $batasLahirLainnya  = now()->subYears(56)->toDateString();
+
             $pegawaiAkanPensiun = (clone $pegawaiQuery)
                 ->with('madrasah')
-                ->get()
-                ->map($usiaPensiunMap)
-                ->filter(function ($pegawai) {
-                    return $pegawai->usia >= ($pegawai->usia_pensiun - 2);
+                ->where(function ($q) use ($batasLahirPendidik, $batasLahirLainnya) {
+                    $q->where(function ($q) use ($batasLahirPendidik) {
+                        $q->where('jabatan_dinas', 'PENDIDIK')
+                            ->whereDate('tanggal_lahir', '<=', $batasLahirPendidik);
+                    })->orWhere(function ($q) use ($batasLahirLainnya) {
+                        $q->where(function ($q) {
+                            $q->where('jabatan_dinas', '!=', 'PENDIDIK')
+                                ->orWhereNull('jabatan_dinas');
+                        })->whereDate('tanggal_lahir', '<=', $batasLahirLainnya);
+                    });
                 })
-                ->sortBy('tanggal_pensiun')
-                ->values();
-
-            // manual pagination
-            $page = request()->get('page', 1);
-            $perPage = 10;
-
-            $pegawaiAkanPensiun = new \Illuminate\Pagination\LengthAwarePaginator(
-                $pegawaiAkanPensiun->forPage($page, $perPage),
-                $pegawaiAkanPensiun->count(),
-                $perPage,
-                $page,
-                ['path' => request()->url(), 'query' => request()->query()]
-            );
+                // urut berdasarkan tanggal pensiun terdekat
+                ->orderByRaw("DATE_ADD(tanggal_lahir, INTERVAL (CASE WHEN jabatan_dinas = 'PENDIDIK' THEN 60 ELSE 58 END) YEAR)")
+                ->paginate(10)
+                ->withQueryString()
+                ->through($usiaPensiunMap);
 
             /*
             |--------------------------------------------------------------------------
@@ -183,11 +186,17 @@ class DashboardController extends Controller
             // tidak ada "bulan yang sedang berjalan" untuk dibandingkan ->
             // anggap semua madrasah masih "belum mengisi" (bukan whereNull('bulan')
             // yang salah makna kalau bulan_aktif kosong).
+            // Status input hanya dihitung untuk madrasah yang punya pegawai (aktif),
+            // madrasah tanpa pegawai tidak perlu mengisi absensi / hak pembayaran.
+            $madrasahBerpegawaiQuery = (clone $madrasahQuery)->has('pegawai');
+
+            $totalMadrasahBerpegawai = (clone $madrasahBerpegawaiQuery)->count();
+
             if (!$bulanAktif) {
-                $madrasahSudahAbsensi = (clone $madrasahQuery)->whereRaw('1 = 0')->get();
-                $madrasahBelumAbsensi = (clone $madrasahQuery)->get();
+                $madrasahSudahAbsensi = (clone $madrasahBerpegawaiQuery)->whereRaw('1 = 0')->get();
+                $madrasahBelumAbsensi = (clone $madrasahBerpegawaiQuery)->get();
             } else {
-                $madrasahSudahAbsensi = (clone $madrasahQuery)
+                $madrasahSudahAbsensi = (clone $madrasahBerpegawaiQuery)
                     ->whereHas('pegawai.absensi', function ($q) use ($tahun, $tw, $bulanAktif) {
                         $q->where('tahun', $tahun)
                             ->where('tw', $tw)
@@ -195,7 +204,7 @@ class DashboardController extends Controller
                     })
                     ->get();
 
-                $madrasahBelumAbsensi = (clone $madrasahQuery)
+                $madrasahBelumAbsensi = (clone $madrasahBerpegawaiQuery)
                     ->whereDoesntHave('pegawai.absensi', function ($q) use ($tahun, $tw, $bulanAktif) {
                         $q->where('tahun', $tahun)
                             ->where('tw', $tw)
@@ -215,8 +224,8 @@ class DashboardController extends Controller
             $sudahCount = $madrasahSudahAbsensi->count();
             $belumCount = $madrasahBelumAbsensi->count();
 
-            $percentSudah = $totalMadrasah
-                ? round(($sudahCount / $totalMadrasah) * 100, 2)
+            $percentSudah = $totalMadrasahBerpegawai
+                ? round(($sudahCount / $totalMadrasahBerpegawai) * 100, 2)
                 : 0;
 
             $percentBelum = 100 - $percentSudah;
@@ -227,15 +236,21 @@ class DashboardController extends Controller
             |--------------------------------------------------------------------------
             */
 
-            $madrasahSudahHak = (clone $madrasahQuery)
-                ->whereHas('pegawai.hakPembayaranPegawai', function ($q) use ($tahun) {
-                    $q->where('tahun', $tahun);
+            // Sama seperti menu Hak Pembayaran: dihitung per triwulan periode aktif
+            // (tahun + bulan-bulan dalam TW), bukan setahun penuh.
+            $bulanTw = $activePeriod->bulan_list;
+
+            $madrasahSudahHak = (clone $madrasahBerpegawaiQuery)
+                ->whereHas('pegawai.hakPembayaranPegawai', function ($q) use ($tahun, $bulanTw) {
+                    $q->where('tahun', $tahun)
+                        ->whereIn('bulan', $bulanTw);
                 })
                 ->get();
 
-            $madrasahBelumHak = (clone $madrasahQuery)
-                ->whereDoesntHave('pegawai.hakPembayaranPegawai', function ($q) use ($tahun) {
-                    $q->where('tahun', $tahun);
+            $madrasahBelumHak = (clone $madrasahBerpegawaiQuery)
+                ->whereDoesntHave('pegawai.hakPembayaranPegawai', function ($q) use ($tahun, $bulanTw) {
+                    $q->where('tahun', $tahun)
+                        ->whereIn('bulan', $bulanTw);
                 })
                 ->get();
 
@@ -305,6 +320,9 @@ class DashboardController extends Controller
                 'sudahHakCount' => $sudahHakCount,
                 'belumHakCount' => $belumHakCount,
             ]);
+        } catch (HttpExceptionInterface $e) {
+            // abort(404/403) di atas jangan ikut diubah jadi 500
+            throw $e;
         } catch (Throwable $e) {
             Log::error('Gagal memuat dashboard', [
                 'message' => $e->getMessage(),

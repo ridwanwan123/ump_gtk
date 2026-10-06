@@ -24,11 +24,16 @@ class RekapHonorExport implements FromArray, ShouldAutoSize, WithStyles, WithEve
     protected $tahun;
     protected $honor;
 
-    public function __construct($bulan, $tahun, $honor)
+    protected $madrasah;
+    protected $jabatanUmp;
+
+    public function __construct($bulan, $tahun, $honor, $madrasah = null, $jabatanUmp = null)
     {
         $this->bulan = $bulan;
         $this->tahun = $tahun;
         $this->honor = $honor;
+        $this->madrasah = $madrasah;
+        $this->jabatanUmp = $jabatanUmp;
     }
 
     public function array(): array
@@ -39,6 +44,8 @@ class RekapHonorExport implements FromArray, ShouldAutoSize, WithStyles, WithEve
             ->with('madrasah')
             ->leftJoin('madrasah', 'pegawai.id_madrasah', '=', 'madrasah.id')
             ->select('pegawai.*')
+            ->when($this->madrasah, fn ($q, $v) => $q->where('pegawai.id_madrasah', $v))
+            ->when($this->jabatanUmp, fn ($q, $v) => $q->where('pegawai.jabatan_ump', $v))
             ->orderBy('madrasah.nama_madrasah', 'asc')
             ->orderBy('pegawai.nama_rekening', 'asc')
             ->get();

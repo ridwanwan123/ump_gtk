@@ -14,11 +14,13 @@ use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 class PegawaiExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize, WithColumnFormatting
 {
     /**
-     * Ambil semua data Pegawai (bypass global scope aktif)
+     * Hanya pegawai AKTIF (global scope 'aktif'). Untuk operator, global scope
+     * 'madrasah' otomatis membatasi ke madrasahnya sendiri.
+     * Export semua status (nonaktif, usulan, dll) ada di menu Pusat Data.
      */
     public function collection()
     {
-        return Pegawai::withoutGlobalScope('aktif')
+        return Pegawai::query()
             ->with('madrasah')
             ->join('madrasah', 'pegawai.id_madrasah', '=', 'madrasah.id')
             ->select('pegawai.*')

@@ -18,6 +18,17 @@ class Pegawai extends Model
     const USULAN                = 'USULAN'; //sisi admin pusat
     const DITOLAK               = 'DITOLAK'; //usulan ditolak admin pusat
 
+    // Usia pensiun (tahun) berdasarkan jabatan dinas
+    const USIA_PENSIUN_PENDIDIK = 60;
+    const USIA_PENSIUN_LAINNYA  = 58;
+
+    public static function usiaPensiun($jabatanDinas): int
+    {
+        return $jabatanDinas === 'PENDIDIK'
+            ? self::USIA_PENSIUN_PENDIDIK
+            : self::USIA_PENSIUN_LAINNYA;
+    }
+
     const ALASAN = [
                         'MENINGGAL DUNIA',
                         'PENSIUN',

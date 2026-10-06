@@ -202,7 +202,7 @@
                             </tbody>
                         </table>
 
-                        {{ $pegawaiPending->links('pagination::bootstrap-5') }}
+                        {{ $pegawaiPending->links('pagination::bootstrap-4') }}
                     </div>
                 </div>
             </div>
@@ -257,7 +257,7 @@
                             </tbody>
                         </table>
 
-                        {{ $pegawaiAktif->links('pagination::bootstrap-5') }}
+                        {{ $pegawaiAktif->links('pagination::bootstrap-4') }}
                     </div>
                 </div>
             </div>

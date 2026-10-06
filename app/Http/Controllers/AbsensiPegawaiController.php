@@ -9,6 +9,7 @@ use App\Models\Pegawai;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Throwable;
 
 class AbsensiPegawaiController extends Controller
@@ -48,20 +49,13 @@ class AbsensiPegawaiController extends Controller
                 ->where('triwulan', 'TW ' . $tw)
                 ->first();
 
-            $bulanAngkaPerTW = [
-                1 => [1, 2, 3],
-                2 => [4, 5, 6],
-                3 => [7, 8, 9],
-                4 => [10, 11, 12],
-            ];
-
             if ($period && $period->is_active) {
                 // periode masih berjalan -> bulan yang BOLEH ditampilkan hanya
                 // sampai bulan_aktif yang sudah ditentukan superadmin
                 $bulanTersedia = $period->bulan_terbuka;
             } else {
                 // periode sudah lewat / tidak ditemukan -> seluruh bulan TW tsb sudah "tertutup", boleh ditampilkan penuh
-                $bulanTersedia = $bulanAngkaPerTW[$tw] ?? [];
+                $bulanTersedia = AttendancePeriod::bulanDariTw($tw);
             }
 
             // Filter tambahan: user boleh pilih SATU bulan spesifik dari bulan
@@ -162,6 +156,9 @@ class AbsensiPegawaiController extends Controller
                 'opsiBulan'     => $opsiBulan,
                 'bulanFilter'   => $bulanFilter,
             ]);
+        } catch (HttpExceptionInterface $e) {
+            // abort(404/403) di atas jangan ikut diubah jadi 500
+            throw $e;
         } catch (Throwable $e) {
             // ===== ERROR =====
             Log::error('Gagal membuka halaman absensi pegawai', [
@@ -222,6 +219,9 @@ class AbsensiPegawaiController extends Controller
                 'bulanAktif'      => $bulanAktif,
                 'namaBulanAktif'  => $this->namaBulan[$bulanAktif],
             ]);
+        } catch (HttpExceptionInterface $e) {
+            // abort(404/403) di atas jangan ikut diubah jadi 500
+            throw $e;
         } catch (Throwable $e) {
             // ===== ERROR =====
             Log::error('Gagal membuka form input absensi', [

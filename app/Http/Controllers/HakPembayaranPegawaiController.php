@@ -20,12 +20,12 @@ class HakPembayaranPegawaiController extends Controller
 
         $madrasahId = $request->madrasah;
 
-        $tw = (int) str_replace('TW ', '', $activePeriod->triwulan);
+        $tw = $activePeriod->tw_number;
         $tahun = $activePeriod->tahun;
 
         $madrasahList = Madrasah::orderBy('nama_madrasah')->get();
 
-        $bulan = $this->getBulanFromTW($tw);
+        $bulan = $activePeriod->bulan_list;
 
         // =========================
         // QUERY PEGawai (UNIFIED)
@@ -90,20 +90,6 @@ class HakPembayaranPegawaiController extends Controller
         ]);
     }
 
-    /**
-     * Convert TW ke bulan
-     */
-    private function getBulanFromTW($tw)
-    {
-        return match ((int) $tw) {
-            1 => [1, 2, 3],
-            2 => [4, 5, 6],
-            3 => [7, 8, 9],
-            4 => [10, 11, 12],
-            default => [1, 2, 3],
-        };
-    }
-
     public function store(Request $request)
     {
         $activePeriod = AttendancePeriod::where('is_active', true)->first();
@@ -113,11 +99,25 @@ class HakPembayaranPegawaiController extends Controller
         }
 
         $tahun = $activePeriod->tahun;
-        $tw = (int) str_replace('TW ', '', $activePeriod->triwulan);
+        $tw = $activePeriod->tw_number;
 
-        $bulanList = $this->getBulanFromTW($tw);
+        $bulanList = $activePeriod->bulan_list;
+
+        $request->validate([
+            'hak' => 'nullable|array',
+            'hak.*' => 'array',
+        ]);
 
         $hak = $request->hak ?? [];
+
+        // Pegawai yang dikirim harus pegawai yang boleh diakses user ini.
+        // Global scope Pegawai sudah membatasi ke madrasah operator (dan status aktif).
+        $pegawaiIds = array_keys($hak);
+        $jumlahValid = Pegawai::whereIn('id', $pegawaiIds)->count();
+
+        if ($jumlahValid !== count($pegawaiIds)) {
+            abort(403, 'Terdapat pegawai yang bukan bagian dari madrasah Anda.');
+        }
 
         foreach ($hak as $pegawaiId => $bulanData) {
 

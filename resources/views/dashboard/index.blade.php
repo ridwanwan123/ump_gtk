@@ -409,7 +409,7 @@
 
                             </table>
                             <div>
-                                {{ $pegawaiAkanPensiun->links('pagination::bootstrap-5') }}
+                                {{ $pegawaiAkanPensiun->links('pagination::bootstrap-4') }}
                             </div>
                         </div>
 
