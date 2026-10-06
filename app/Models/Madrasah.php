@@ -15,9 +15,6 @@ class Madrasah extends Model
         'nama_madrasah'
     ];
 
-    // ===========================
-    // Relasi ke pegawai
-    // ===========================
     public function pegawai()
     {
         return $this->hasMany(Pegawai::class, 'id_madrasah'); 
