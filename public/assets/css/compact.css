@@ -85,6 +85,47 @@ body {
     font-size: 1.05rem;
 }
 
+/* Sidebar disusun flex-column: brand mengambil tinggi aslinya (judul 2 baris),
+   area menu mengisi sisa tinggi layar dan scroll sendiri. Bawaan AdminLTE
+   mengasumsikan brand setinggi 3.5rem sehingga menu paling bawah terpotong. */
+.layout-fixed .main-sidebar {
+    display: flex;
+    flex-direction: column;
+}
+
+.layout-fixed .main-sidebar .brand-link {
+    flex: 0 0 auto;
+}
+
+.layout-fixed .main-sidebar .sidebar {
+    flex: 1 1 auto;
+    height: auto;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-bottom: 1.25rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+}
+
+.layout-fixed .main-sidebar .sidebar::-webkit-scrollbar {
+    width: 6px;
+    height: 0;
+}
+
+.layout-fixed .main-sidebar .sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.layout-fixed .main-sidebar .sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+.layout-fixed .main-sidebar .sidebar:hover::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.4);
+}
+
 .main-sidebar .sidebar {
     padding-left: 0.6rem;
     padding-right: 0.6rem;
