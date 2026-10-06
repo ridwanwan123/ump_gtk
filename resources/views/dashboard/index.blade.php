@@ -939,7 +939,7 @@
 
             chart: {
                 type: 'bar',
-                height: 380,
+                height: 300,
                 toolbar: {
                     show: false
                 }
@@ -1025,7 +1025,7 @@
 
             chart: {
                 type: 'donut',
-                height: 350
+                height: 280
             },
 
             labels: @json($pendidikanLabels),
@@ -1098,7 +1098,7 @@
 
             chart: {
                 type: 'bar',
-                height: 350,
+                height: 280,
                 toolbar: {
                     show: false
                 }
@@ -1156,7 +1156,7 @@
 
             chart: {
                 type: 'bar',
-                height: 450,
+                height: 360,
                 toolbar: {
                     show: false
                 }

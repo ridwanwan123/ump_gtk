@@ -24,7 +24,7 @@
                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ========================= */
 
         .page-title {
-            font-size: 28px;
+            font-size: 20px;
             font-weight: 800;
             color: var(--dark);
             margin-bottom: 4px;
@@ -50,19 +50,19 @@
         }
 
         .modern-card-header {
-            padding: 18px 24px;
+            padding: 12px 18px;
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
         }
 
         .modern-card-header h4 {
             margin: 0;
-            font-size: 18px;
+            font-size: 15px;
             font-weight: 700;
         }
 
         .modern-card-body {
-            padding: 24px;
+            padding: 16px;
         }
 
         /* =========================
@@ -73,7 +73,7 @@
             background: linear-gradient(135deg, #eff6ff, #f8fafc);
             border: 1px solid #bfdbfe;
             border-radius: 18px;
-            padding: 22px;
+            padding: 14px;
             margin-bottom: 24px;
         }
 
@@ -107,7 +107,7 @@
         .select2-container--default .select2-selection--multiple {
             border-radius: 12px !important;
             border: 1px solid #dbeafe !important;
-            min-height: 46px;
+            min-height: 38px;
             box-shadow: none !important;
         }
 
@@ -119,7 +119,7 @@
         .btn-modern {
             border: 0;
             border-radius: 12px;
-            height: 46px;
+            height: 38px;
             font-weight: 600;
             transition: .25s;
         }

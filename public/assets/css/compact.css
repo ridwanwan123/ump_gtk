@@ -1,0 +1,208 @@
+/*
+ * Tampilan compact (mengikuti kepadatan project ERKAM BOP).
+ *
+ * AdminLTE/Bootstrap memakai satuan rem hampir di semua tempat, jadi
+ * mengecilkan font dasar <html> ikut mengecilkan tombol, form, kartu,
+ * navbar, dan jarak antar elemen secara proporsional. Sisanya di bawah
+ * ini hanya merapikan bagian yang ukurannya masih terasa besar.
+ *
+ * Dimuat setelah adminlte.min.css dan sebelum style milik tiap halaman,
+ * jadi halaman tetap bisa menimpa aturan di sini.
+ */
+
+html {
+    font-size: 13px;
+}
+
+body {
+    font-family: "Poppins", "Source Sans Pro", sans-serif;
+    color: #34405a;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Judul ---------- */
+.content-wrapper h1,
+.content-wrapper .h1 {
+    font-size: 1.7rem;
+}
+
+.content-wrapper h2,
+.content-wrapper .h2 {
+    font-size: 1.5rem;
+}
+
+.content-wrapper h3,
+.content-wrapper .h3 {
+    font-size: 1.25rem;
+}
+
+.content-wrapper h4,
+.content-wrapper .h4 {
+    font-size: 1.1rem;
+}
+
+.content-wrapper h5,
+.content-wrapper .h5,
+.content-wrapper h6,
+.content-wrapper .h6 {
+    font-size: 1rem;
+}
+
+.content-wrapper .card-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+.content-wrapper {
+    background: #f4f6fa;
+}
+
+.content-header {
+    padding: 14px 6px;
+}
+
+/* ---------- Navbar atas ---------- */
+.main-header.navbar {
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
+}
+
+.main-header .fa-lg {
+    font-size: 1.15em;
+}
+
+.main-header .title-wrap {
+    font-size: 1.05rem;
+}
+
+/* ---------- Sidebar ---------- */
+.brand-link {
+    padding: 0.75rem 0.5rem;
+    line-height: 1.35;
+}
+
+.brand-link .brand-title {
+    font-size: 1.05rem;
+}
+
+.main-sidebar .sidebar {
+    padding-left: 0.6rem;
+    padding-right: 0.6rem;
+}
+
+.main-sidebar .user-panel {
+    padding: 8px 10px;
+    margin-top: 0.75rem !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.main-sidebar .user-panel .user-image {
+    width: 36px;
+    height: 36px;
+    margin: 0;
+}
+
+.main-sidebar .user-panel .info {
+    padding: 0 0 0 4px;
+    line-height: 1.3;
+    min-width: 0;
+}
+
+.main-sidebar .user-panel .info a {
+    font-size: 0.95rem;
+    white-space: normal;
+}
+
+.main-sidebar .user-panel .info small {
+    font-size: 0.8rem;
+}
+
+.nav-sidebar > .nav-item {
+    margin-bottom: 1px;
+}
+
+.nav-sidebar > .nav-item > .nav-link {
+    padding: 0.55rem 0.9rem;
+    font-size: 1rem;
+    font-weight: 400;
+    border-radius: 8px;
+}
+
+.nav-sidebar > .nav-item > .nav-link.active {
+    font-weight: 600;
+}
+
+.nav-sidebar .nav-link p {
+    font-size: 1rem;
+}
+
+.nav-sidebar .nav-link > .nav-icon {
+    font-size: 1.05rem;
+    width: 1.5rem;
+    margin-right: 0.35rem;
+}
+
+.nav-sidebar .nav-header {
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.4rem 0.9rem 0.3rem;
+    margin-top: 10px;
+}
+
+/* ---------- Kartu ---------- */
+.content-wrapper .card {
+    margin-bottom: 1rem;
+}
+
+.content-wrapper .card-header {
+    padding: 0.7rem 1.1rem;
+}
+
+.content-wrapper .card-body {
+    padding: 1.1rem;
+}
+
+/* ---------- Tabel ---------- */
+.content-wrapper .table th,
+.content-wrapper .table td {
+    padding: 0.55rem 0.7rem;
+}
+
+.content-wrapper .table thead th {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* ---------- Form & tombol ---------- */
+.content-wrapper label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+}
+
+.content-wrapper .badge {
+    font-weight: 600;
+}
+
+.content-wrapper .alert {
+    padding: 0.7rem 1rem;
+}
+
+.content-wrapper .pagination .page-link {
+    padding: 0.4rem 0.7rem;
+}
+
+/* ---------- Footer ---------- */
+.main-footer.footer-modern {
+    padding: 9px 18px;
+    font-size: 0.9rem;
+}
+
+.main-footer.footer-modern .footer-logo {
+    height: 22px;
+}
+
+.main-footer.footer-modern .version-badge {
+    font-size: 0.75rem;
+}

@@ -9,6 +9,9 @@
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome-free/css/all.min.css') }}">
     <!-- Theme style -->
@@ -16,13 +19,11 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/images/kemenag/kemenag.png') }}" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.css') }}">
+    {{-- Tampilan compact: dimuat sebelum style halaman supaya halaman tetap bisa menimpa --}}
+    <link rel="stylesheet" href="{{ asset('assets/css/compact.css') }}?v=1">
     @stack('styles')
 
     <style>
-        body {
-            font-family: 'Source Sans Pro', sans-serif;
-        }
-
         /* ---------- Sidebar Gradient & Hover ---------- */
         .main-sidebar {
             background: linear-gradient(180deg, #1e3c72, #2a5298);
@@ -30,7 +31,6 @@
 
         .nav-sidebar>.nav-item>.nav-link {
             color: #ffffff;
-            font-weight: 500;
             transition: all 0.2s ease-in-out;
         }
 
@@ -41,9 +41,7 @@
 
         .nav-sidebar .nav-header {
             color: #ffc107;
-            font-size: 0.9rem;
             font-weight: 600;
-            margin-top: 15px;
         }
 
         .nav-sidebar .nav-link.active {
@@ -64,8 +62,6 @@
 
         /* Gambar user */
         .user-panel .user-image {
-            width: 50px;
-            height: 50px;
             object-fit: cover;
             /* bentuk pentagon */
             clip-path: polygon(50% 0%,
@@ -104,21 +100,17 @@
         .brand-link {
             background-color: rgba(0, 0, 0, 0.1);
             text-align: center;
-            padding: 0.8rem 0;
         }
 
         .brand-link .brand-title {
             color: #ffc107;
-            font-size: 1.1rem;
             font-weight: 700;
         }
 
         .footer-modern {
             background: linear-gradient(90deg, #0D47A1, #1DE9B6);
             color: #ffffff;
-            padding: 15px 20px;
             font-weight: 500;
-            font-size: 0.9rem;
             box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.15);
             transition: background 0.3s;
         }
@@ -130,14 +122,12 @@
         .footer-modern .version-badge {
             background: rgba(255, 255, 255, 0.2);
             color: #fff;
-            font-size: 0.75rem;
             font-weight: 600;
             padding: 2px 8px;
             border-radius: 12px;
         }
 
         .footer-modern .footer-logo {
-            height: 28px;
             object-fit: contain;
         }
 

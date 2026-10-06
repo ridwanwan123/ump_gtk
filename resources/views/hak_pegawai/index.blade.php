@@ -67,14 +67,14 @@
             background: #fff7ed;
             border: 1px solid #fed7aa;
             border-radius: 18px;
-            padding: 18px;
+            padding: 12px;
             display: flex;
             gap: 15px;
             margin-bottom: 20px;
         }
 
         .notice-icon {
-            font-size: 28px;
+            font-size: 22px;
         }
 
         .employee-cell {
@@ -84,8 +84,8 @@
         }
 
         .employee-avatar {
-            width: 42px;
-            height: 42px;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
             background: linear-gradient(135deg, #2563eb, #4f46e5);
             color: white;
@@ -101,7 +101,7 @@
             font-size: 11px;
             text-transform: uppercase;
             border: none;
-            padding: 14px;
+            padding: 10px;
         }
 
         .table-modern tbody td {
