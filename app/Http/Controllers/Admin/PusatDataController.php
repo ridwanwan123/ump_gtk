@@ -95,7 +95,8 @@ class PusatDataController extends Controller
         // Hanya pegawai AKTIF (global scope 'aktif' tetap berlaku)
         $query = $this->baseQuery(Pegawai::query(), $request)
             ->whereNotNull('pegawai.tanggal_lahir')
-            ->whereRaw("$tanggalPensiun <= ?", [now()->addYears($range)->toDateString()])
+            // Batas dihitung sampai akhir tahun: hari ini 6 Okt 2026 + 3 tahun -> s.d. 31 Des 2029
+            ->whereRaw("$tanggalPensiun <= ?", [now()->addYears($range)->endOfYear()->toDateString()])
             ->when(!$request->boolean('termasuk_lewat'), function (Builder $q) use ($tanggalPensiun) {
                 // tanpa centang: yang sudah melewati usia pensiun tidak ikut
                 $q->whereRaw("$tanggalPensiun > ?", [now()->toDateString()]);
@@ -107,7 +108,7 @@ class PusatDataController extends Controller
         $total = (clone $query)->count();
 
         if ($total === 0) {
-            return back()->withInput()->with('swal_error', "Tidak ada pegawai yang pensiun dalam {$range} tahun ke depan.");
+            return back()->withInput()->with('swal_error', 'Tidak ada pegawai yang pensiun sampai dengan 31 Desember ' . now()->addYears($range)->year . '.');
         }
 
         Log::info('Export pusat data pensiun', [

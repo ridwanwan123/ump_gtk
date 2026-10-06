@@ -635,7 +635,7 @@
                                     <p class="pd-step-sub">
                                         Usia pensiun: guru (pendidik) {{ \App\Models\Pegawai::USIA_PENSIUN_PENDIDIK }}
                                         tahun, pegawai lainnya {{ \App\Models\Pegawai::USIA_PENSIUN_LAINNYA }} tahun.
-                                        Hanya pegawai yang masih aktif.
+                                        Hanya pegawai yang masih aktif. Dihitung sampai akhir tahun (31 Desember).
                                     </p>
                                 </div>
                             </div>
@@ -803,9 +803,6 @@
                 });
 
                 // ---------- Pensiun: pilihan cepat & keterangan tanggal ----------
-                var bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus',
-                    'September', 'Oktober', 'November', 'Desember'
-                ];
                 var $range = $('#range_tahun');
 
                 function perbaruiBatas() {
@@ -820,10 +817,8 @@
                         return;
                     }
 
-                    var batas = new Date();
-                    batas.setFullYear(batas.getFullYear() + tahun);
-                    $('#batas-pensiun').text(batas.getDate() + ' ' + bulan[batas.getMonth()] + ' ' + batas
-                        .getFullYear());
+                    // batas selalu akhir tahun: tahun ini + N -> 31 Desember tahun tersebut
+                    $('#batas-pensiun').text('31 Desember ' + (new Date().getFullYear() + tahun));
                 }
 
                 $('#range-cepat .chip').on('click', function() {
